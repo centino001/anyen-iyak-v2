@@ -1,53 +1,134 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Button, Card, CardContent, Chip } from '@mui/material';
+import { Box, Container, Grid, Typography, Card, CardContent, Button, CircularProgress, useTheme } from '@mui/material';
+import { Link } from 'react-router-dom';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArticleIcon from '@mui/icons-material/Article';
+import useDataFetch from '../hooks/useDataFetch';
+import EmptyState from '../components/EmptyState';
+import ImageWithFallback from '../components/ImageWithFallback';
+
+interface NewsArticle {
+  _id: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  image?: string;
+  publishDate: string;
+  author: string;
+  slug: string;
+  isPublished: boolean;
+}
 
 const News: React.FC = () => {
-  const newsItems = [
-    {
-      title: 'Major Grant Initiative Announced',
-      date: 'February 15, 2024',
-      category: 'Press Release',
-      excerpt: 'The AIFAC Foundation announces a new $250 million initiative to support arts and humanities institutions.',
-      image: 'news1.jpg'
-    },
-    {
-      title: 'Supporting Digital Humanities',
-      date: 'February 10, 2024',
-      category: 'Program Update',
-      excerpt: 'New funding opportunities for digital humanities projects and initiatives.',
-      image: 'news2.jpg'
-    },
-    {
-      title: 'Arts Education Impact Study',
-      date: 'February 5, 2024',
-      category: 'Research',
-      excerpt: 'Results from a comprehensive study on the impact of arts education in underserved communities.',
-      image: 'news3.jpg'
-    },
-    {
-      title: 'Cultural Heritage Preservation',
-      date: 'January 30, 2024',
-      category: 'Grant Announcement',
-      excerpt: 'Supporting initiatives to preserve and protect cultural heritage sites and artifacts.',
-      image: 'news4.jpg'
-    }
-  ];
+  const { data: news, loading, error } = useDataFetch<NewsArticle>('/news');
+  const theme = useTheme();
 
-  const categories = ['All', 'Press Release', 'Program Update', 'Research', 'Grant Announcement'];
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+          <CircularProgress />
+        </Box>
+      );
+    }
+
+    if (error) {
+      return (
+        <EmptyState 
+          message="Error loading news articles. Please try again later."
+          icon={<ArticleIcon sx={{ fontSize: 64, color: 'error.main' }} />}
+        />
+      );
+    }
+
+    if (!news || news.length === 0) {
+      return (
+        <EmptyState 
+          message="No news articles available at the moment. Please check back later."
+          icon={<ArticleIcon sx={{ fontSize: 64 }} />}
+        />
+      );
+    }
+
+    return (
+      <Grid container spacing={4}>
+        {news.map((article) => (
+          <Grid item xs={12} md={6} key={article._id}>
+            <Card 
+              sx={{ 
+                display: 'flex',
+                height: '100%',
+                boxShadow: 'none',
+                border: '1px solid #E5E5E5',
+                transition: 'transform 0.2s',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                },
+              }}
+              component={Link}
+              to={`/news/${article.slug}`}
+              style={{ textDecoration: 'none' }}
+            >
+              <Box sx={{ 
+                width: 300,
+                height: 350,
+                backgroundColor: '#E5E5E5',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                padding: '10px',
+                borderRadius: 1
+              }}>
+                <ImageWithFallback 
+                  src={article.image} 
+                  alt={article.title}
+                  fallbackIcon={<ArticleIcon sx={{ fontSize: 60, color: 'grey.400' }} />}
+                  sx={{ width: '100%', height: '100%' }}
+                />
+              </Box>
+              <CardContent sx={{ flex: 1, p: 3 }}>
+                <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                  {new Date(article.publishDate).toLocaleDateString()} | {article.category}
+                </Typography>
+                <Typography variant="h6" sx={{ mb: 1, color: 'text.primary' }}>
+                  {article.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  {article.excerpt}
+                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography variant="caption" color="text.secondary">
+                    By {article.author}
+                  </Typography>
+                  <Button
+                    endIcon={<ArrowForwardIcon />}
+                    sx={{ color: 'var(--primary-color)' }}
+                  >
+                    Read More
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    );
+  };
 
   return (
     <Box>
       {/* Hero Section */}
       <Box sx={{ 
         height: '40vh',
-        backgroundColor: '#E5E5E5',
+        backgroundColor: 'var(--primary-color)',
         display: 'flex',
         alignItems: 'center',
-        position: 'relative'
+        position: 'relative',
+        color: theme.palette.mode === 'light' ? '#000000' : '#FFFFFF'
       }}>
         <Container maxWidth="lg">
-          <Box sx={{ maxWidth: '600px' }}>
+          <Box sx={{ maxWidth: '800px' }}>
             <Typography variant="h1" sx={{ 
               fontSize: { xs: '2.5rem', md: '3.5rem' },
               fontWeight: 'bold',
@@ -56,32 +137,8 @@ const News: React.FC = () => {
               News & Updates
             </Typography>
             <Typography variant="h5" sx={{ mb: 4 }}>
-              Stay informed about our latest initiatives, grants, and impact.
+              Stay informed about our latest initiatives and impact.
             </Typography>
-          </Box>
-        </Container>
-      </Box>
-
-      {/* Category Filter */}
-      <Box sx={{ py: 4, borderBottom: '1px solid #E5E5E5' }}>
-        <Container maxWidth="lg">
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-            {categories.map((category) => (
-              <Chip
-                key={category}
-                label={category}
-                onClick={() => {}}
-                sx={{
-                  backgroundColor: category === 'All' ? 'var(--primary-color)' : 'transparent',
-                  color: category === 'All' ? 'white' : 'var(--primary-color)',
-                  border: '1px solid var(--primary-color)',
-                  '&:hover': {
-                    backgroundColor: 'var(--primary-color)',
-                    color: 'white',
-                  },
-                }}
-              />
-            ))}
           </Box>
         </Container>
       </Box>
@@ -89,101 +146,7 @@ const News: React.FC = () => {
       {/* News Grid */}
       <Box sx={{ py: 8 }}>
         <Container maxWidth="lg">
-          <Grid container spacing={4}>
-            {newsItems.map((item, index) => (
-              <Grid item xs={12} md={6} key={index}>
-                <Card sx={{ height: '100%', boxShadow: 'none', border: '1px solid #E5E5E5' }}>
-                  <Box sx={{ 
-                    height: 250,
-                    backgroundColor: '#E5E5E5',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    News Image
-                  </Box>
-                  <CardContent sx={{ p: 4 }}>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                      {item.date}
-                    </Typography>
-                    <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
-                      {item.title}
-                    </Typography>
-                    <Chip
-                      label={item.category}
-                      size="small"
-                      sx={{ mb: 2 }}
-                    />
-                    <Typography variant="body1" sx={{ mb: 3 }}>
-                      {item.excerpt}
-                    </Typography>
-                    <Button
-                      endIcon={<ArrowForwardIcon />}
-                      sx={{ color: 'var(--primary-color)' }}
-                    >
-                      Read More
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-
-          {/* Load More Button */}
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
-            <Button
-              variant="outlined"
-              sx={{
-                borderColor: 'var(--primary-color)',
-                color: 'var(--primary-color)',
-                '&:hover': {
-                  borderColor: '#002548',
-                  backgroundColor: 'transparent',
-                },
-              }}
-            >
-              Load More News
-            </Button>
-          </Box>
-        </Container>
-      </Box>
-
-      {/* Newsletter Section */}
-      <Box sx={{ py: 8, backgroundColor: '#F5F5F5' }}>
-        <Container maxWidth="lg">
-          <Grid container spacing={6} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
-                Stay Updated
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 4 }}>
-                Subscribe to our newsletter to receive the latest news and updates about our initiatives, grants, and impact in the arts and humanities.
-              </Typography>
-              <Button
-                variant="contained"
-                endIcon={<ArrowForwardIcon />}
-                sx={{
-                  backgroundColor: 'var(--primary-color)',
-                  '&:hover': {
-                    backgroundColor: '#002548',
-                  },
-                }}
-              >
-                Subscribe Now
-              </Button>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Box sx={{ 
-                height: 300,
-                backgroundColor: '#E5E5E5',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                Newsletter Image
-              </Box>
-            </Grid>
-          </Grid>
+          {renderContent()}
         </Container>
       </Box>
     </Box>

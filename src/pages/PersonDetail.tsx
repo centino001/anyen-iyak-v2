@@ -1,53 +1,82 @@
-import React from 'react';
-import { Box, Container, Grid, Typography, Card, CardContent, Button } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Box, Container, Grid, Typography, Button, CircularProgress, Fade, Grow } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import PersonIcon from '@mui/icons-material/Person';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
+import { useNavigate } from 'react-router-dom';
+import useDataFetch from '../hooks/useDataFetch';
+import ImageWithFallback from '../components/ImageWithFallback';
+import EmptyState from '../components/EmptyState';
 
-interface StaffMember {
-  id: string;
+interface Person {
+  _id: string;
   name: string;
   title: string;
   department: string;
-  image: string;
-  bio?: string;
-  email?: string;
+  image?: string;
+  bio: string;
+  email: string;
   phone?: string;
+  slug: string;
+  socialLinks?: {
+    twitter?: string;
+    linkedin?: string;
+  };
 }
 
-const staff: StaffMember[] = [
-  {
-    id: 'elizabeth-alexander',
-    name: 'Elizabeth Alexander',
-    title: 'President',
-    department: 'Executive Leadership',
-    image: 'elizabeth-alexander.jpg',
-    bio: 'Elizabeth Alexander is a renowned poet, educator, and scholar. As president of the Anyen Iyak Foundation for Art and Culture, she has focused on arts and culture, higher education, and social justice initiatives.',
-    email: 'chris@aifac.com',
-    phone: '(212) 555-0123',
-  },
-  {
-    id: 'mohamed-haian-abdirahman',
-    name: 'Mohamed Haian Abdirahman',
-    title: 'Archives Manager',
-    department: 'Archives',
-    image: 'mohamed-haian-abdirahman.jpg',
-    bio: `Mohamed Haian Abdirahman leads the Foundation's archives team, ensuring the preservation and accessibility of our historical records and cultural heritage materials.`,
-    email: 'mabdirahman@aifac.com',
-    phone: '(212) 555-0124',
-  },
-  // Add more staff members here
-];
-
 const PersonDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const person = staff.find(p => p.id === id);
-  const colleagues = staff.filter(p => p.department === person?.department && p.id !== id);
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+  const { data, loading, error } = useDataFetch<Person>(`/people/${slug}`);
+  
+  const person = data?.[0];
 
-  if (!person) {
+  // Log data for debugging
+  useEffect(() => {
+    if (data) {
+      console.log("Person data:", data);
+    }
+    if (error) {
+      console.error("Error fetching person:", error);
+    }
+  }, [data, error]);
+
+  if (loading) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 8, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <CircularProgress size={60} sx={{ color: 'var(--primary-color)' }} />
+      </Container>
+    );
+  }
+
+  if (error || !person) {
     return (
       <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Typography variant="h4">Staff member not found</Typography>
+        <Fade in timeout={800}>
+          <Box>
+            <EmptyState 
+              message="Person not found or error loading data."
+              icon={<PersonIcon sx={{ fontSize: 64, color: 'error.main' }} />}
+            />
+            <Button
+              startIcon={<ArrowBackIcon />}
+              component={Link}
+              to="/people"
+              sx={{ 
+                color: 'var(--primary-color)',
+                mt: 4,
+                transition: 'transform 0.3s ease',
+                '&:hover': {
+                  transform: 'translateX(-5px)'
+                }
+              }}
+            >
+              Back to People
+            </Button>
+          </Box>
+        </Fade>
       </Container>
     );
   }
@@ -57,127 +86,143 @@ const PersonDetail: React.FC = () => {
       {/* Hero Section */}
       <Box sx={{ 
         minHeight: '60vh',
-        backgroundColor: '#F5F5F5',
+        backgroundColor: theme => theme.palette.mode === 'light' ? '#F5F5F5' : '#121212',
         py: 8
       }}>
         <Container maxWidth="lg">
-          <Button
-            startIcon={<ArrowBackIcon />}
-            component={Link}
-            to="/people"
-            sx={{ 
-              color: 'var(--primary-color)',
-              mb: 4
-            }}
-          >
-            Back to People
-          </Button>
+          <Fade in timeout={500}>
+            <Button
+              startIcon={<ArrowBackIcon />}
+              component={Link}
+              to="/people"
+              sx={{ 
+                color: 'var(--primary-color)',
+                mb: 4,
+                transition: 'transform 0.3s ease',
+                '&:hover': {
+                  transform: 'translateX(-5px)'
+                }
+              }}
+            >
+              Back to People
+            </Button>
+          </Fade>
 
           <Grid container spacing={6}>
             <Grid item xs={12} md={4}>
-              <Box sx={{ 
-                height: 400,
-                backgroundColor: '#E5E5E5',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                mb: 3
-              }}>
-                Staff Photo
-              </Box>
-              <Box sx={{ mb: 4 }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                  Contact Information
-                </Typography>
-                {person.email && (
-                  <Typography variant="body1" sx={{ mb: 1 }}>
-                    Email: {person.email}
+              <Grow in timeout={800}>
+                <Box sx={{ 
+                  height: 600,
+                  width: '100%',
+                  backgroundColor: theme => theme.palette.mode === 'light' ? '#E5E5E5' : '#1A1A1A',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  mb: 3,
+                  overflow: 'hidden',
+                  padding: '10px',
+                  borderRadius: 1,
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateY(-5px)',
+                    boxShadow: '0 10px 25px rgba(0,0,0,0.2)'
+                  }
+                }}>
+                  <ImageWithFallback 
+                    src={person.image} 
+                    alt={person.name}
+                    fallbackIcon={<PersonIcon sx={{ fontSize: 80, color: 'grey.400' }} />}
+                    sx={{ 
+                      width: '100%', 
+                      height: '100%',
+                      objectFit: 'contain',
+                      objectPosition: 'center'
+                    }}
+                  />
+                </Box>
+              </Grow>
+              <Fade in timeout={1200}>
+                <Box sx={{ 
+                  mb: 4,
+                  p: 3,
+                  backgroundColor: theme => theme.palette.mode === 'light' ? 'white' : '#1A1A1A',
+                  borderRadius: 1,
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
+                }}>
+                  <Typography variant="h6" color="var(--primary-color)" sx={{ mb: 2, fontWeight: 'bold' }}>
+                    Contact Information
                   </Typography>
-                )}
-                {person.phone && (
-                  <Typography variant="body1">
-                    Phone: {person.phone}
-                  </Typography>
-                )}
-              </Box>
+                  {person.email && (
+                    <Box sx={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      mb: 2,
+                      transition: 'transform 0.2s ease',
+                      '&:hover': { transform: 'translateX(5px)' }
+                    }}>
+                      <EmailIcon sx={{ mr: 1, color: 'var(--primary-color)' }} />
+                      <Typography variant="body1">
+                        {person.email}
+                      </Typography>
+                    </Box>
+                  )}
+                  {person.phone && (
+                    <Box sx={{ 
+                      display: 'flex', 
+                      alignItems: 'center',
+                      transition: 'transform 0.2s ease',
+                      '&:hover': { transform: 'translateX(5px)' }
+                    }}>
+                      <PhoneIcon sx={{ mr: 1, color: 'var(--primary-color)' }} />
+                      <Typography variant="body1">
+                        {person.phone}
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
+              </Fade>
             </Grid>
+
             <Grid item xs={12} md={8}>
-              <Typography variant="h2" sx={{ 
-                fontSize: { xs: '2rem', md: '2.5rem' },
-                fontWeight: 'bold',
-                mb: 2
-              }}>
-                {person.name}
-              </Typography>
-              <Typography variant="h5" color="text.secondary" sx={{ mb: 4 }}>
-                {person.title}
-              </Typography>
-              <Typography variant="body1" sx={{ 
-                fontSize: '1.125rem',
-                lineHeight: 1.8,
-                mb: 4
-              }}>
-                {person.bio}
-              </Typography>
+              <Fade in timeout={600}>
+                <Typography variant="h3" sx={{ 
+                  mb: 2,
+                  fontWeight: 'bold',
+                  position: 'relative',
+                  display: 'inline-block',
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: -8,
+                    left: 0,
+                    width: '60px',
+                    height: '4px',
+                    backgroundColor: 'var(--primary-color)'
+                  }
+                }}>
+                  {person.name}
+                </Typography>
+              </Fade>
+              <Fade in timeout={800}>
+                <Typography variant="h5" color="text.secondary" sx={{ mb: 4 }}>
+                  {person.title}
+                </Typography>
+              </Fade>
+              <Fade in timeout={1000}>
+                <Typography variant="body1" sx={{ 
+                  mb: 4, 
+                  whiteSpace: 'pre-line',
+                  lineHeight: 1.8,
+                  fontSize: '1.1rem'
+                }}>
+                  {person.bio}
+                </Typography>
+              </Fade>
             </Grid>
           </Grid>
         </Container>
       </Box>
-
-      {/* Department Colleagues Section */}
-      {colleagues.length > 0 && (
-        <Box sx={{ py: 8 }}>
-          <Container maxWidth="lg">
-            <Typography variant="h4" sx={{ mb: 6, fontWeight: 'bold' }}>
-              Other {person.department} Team Members
-            </Typography>
-            <Grid container spacing={4}>
-              {colleagues.map((colleague) => (
-                <Grid item xs={12} sm={6} md={4} key={colleague.id}>
-                  <Card 
-                    sx={{ 
-                      height: '100%',
-                      boxShadow: 'none',
-                      border: '1px solid #E5E5E5',
-                      transition: 'transform 0.2s',
-                      '&:hover': {
-                        transform: 'translateY(-4px)',
-                      },
-                    }}
-                    component={Link}
-                    to={`/people/${colleague.id}`}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    <Box sx={{ 
-                      height: 300,
-                      backgroundColor: '#E5E5E5',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      Staff Photo
-                    </Box>
-                    <CardContent sx={{ p: 3 }}>
-                      <Typography variant="h6" sx={{ mb: 1, color: 'text.primary' }}>
-                        {colleague.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                        {colleague.title}
-                      </Typography>
-                      <Button
-                        endIcon={<ArrowForwardIcon />}
-                        sx={{ color: 'var(--primary-color)' }}
-                      >
-                        View Profile
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </Container>
-        </Box>
-      )}
     </Box>
   );
 };

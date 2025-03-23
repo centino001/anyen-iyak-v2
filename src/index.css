@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #003C71;
-  --secondary-color: #E5E5E5;
+  --primary-color: #B8860B;
+  --secondary-color: #000000;
   --text-color: #333333;
 }
 
@@ -37,12 +37,12 @@ code {
 }
 
 .nav-link:hover {
-  color: #002548;
+  color: #8B6914;
 }
 
 .btn-primary {
   background-color: var(--primary-color);
-  color: white;
+  color: black;
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
   border: none;
@@ -51,5 +51,5 @@ code {
 }
 
 .btn-primary:hover {
-  background-color: #002548;
+  background-color: #8B6914;
 }

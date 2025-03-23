@@ -1,142 +1,176 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Button } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Box, Container, Typography, Grid, Paper, Divider } from '@mui/material';
 
 const About: React.FC = () => {
   return (
     <Box>
       {/* Hero Section */}
-      <Box sx={{ 
-        height: '60vh',
-        backgroundColor: '#E5E5E5',
-        display: 'flex',
-        alignItems: 'center',
+      <Box sx={{
+        backgroundColor: 'var(--primary-color)',
+        color: 'white',
+        py: { xs: 8, md: 12 },
         position: 'relative'
       }}>
         <Container maxWidth="lg">
-          <Box sx={{ maxWidth: '600px' }}>
-            <Typography variant="h1" sx={{ 
-              fontSize: { xs: '2.5rem', md: '3.5rem' },
-              fontWeight: 'bold',
-              mb: 3
-            }}>
-              About The Foundation
-            </Typography>
-            <Typography variant="h5" sx={{ mb: 4 }}>
-              The Anyen Iyak Foundation for Art and Culture is the nation's largest supporter of the arts and humanities.
-            </Typography>
-          </Box>
-        </Container>
-      </Box>
-
-      {/* Mission Section */}
-      <Box sx={{ py: 8 }}>
-        <Container maxWidth="lg">
-          <Grid container spacing={6}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
-                Our Mission
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 4 }}>
-                The Anyen Iyak Foundation for Art and Culture believes that the arts and humanities are where we express our complex humanity. We support the flourishing of culture through grants to arts organizations, universities, libraries, and other institutions that sustain our shared cultural record and create new possibilities for understanding.
-              </Typography>
-              <Button
-                variant="contained"
-                endIcon={<ArrowForwardIcon />}
-                sx={{
-                  backgroundColor: 'var(--primary-color)',
-                  '&:hover': {
-                    backgroundColor: '#002548',
-                  },
-                }}
-              >
-                Learn More About Our Mission
-              </Button>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Box sx={{ 
-                height: 400,
-                backgroundColor: '#E5E5E5',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                Mission Image
-              </Box>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
-
-      {/* Leadership Section */}
-      <Box sx={{ py: 8, backgroundColor: '#F5F5F5' }}>
-        <Container maxWidth="lg">
-          <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold' }}>
-            Our Leadership
+          <Typography variant="h1" sx={{
+            fontSize: { xs: '2.5rem', md: '3.5rem' },
+            fontWeight: 'bold',
+            mb: 3
+          }}>
+            Our History
           </Typography>
-          <Grid container spacing={4}>
-            {[1, 2, 3, 4].map((item) => (
-              <Grid item xs={12} sm={6} md={3} key={item}>
-                <Box sx={{ 
-                  height: 300,
-                  backgroundColor: '#E5E5E5',
-                  mb: 2,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  Leader Image {item}
-                </Box>
-                <Typography variant="h6" sx={{ mb: 1 }}>
-                  Leader Name
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Position Title
-                </Typography>
-              </Grid>
-            ))}
-          </Grid>
+          <Typography variant="h5" sx={{ maxWidth: '800px', mb: 4, lineHeight: 1.6 }}>
+            Since our founding in 1990, the Anyen Iyak Foundation has been dedicated to supporting arts,
+            culture, and humanities through strategic grantmaking and innovative programs.
+          </Typography>
         </Container>
       </Box>
 
-      {/* History Section */}
-      <Box sx={{ py: 8 }}>
-        <Container maxWidth="lg">
-          <Grid container spacing={6} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <Box sx={{ 
-                height: 400,
-                backgroundColor: '#E5E5E5',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                History Image
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
-                Our History
+      {/* Main Content */}
+      <Container maxWidth="lg" sx={{ py: 8 }}>
+        <Grid container spacing={6}>
+          {/* Left Column - Timeline */}
+          <Grid item xs={12} md={4}>
+            <Box sx={{ position: 'sticky', top: 24 }}>
+              <Typography variant="h6" sx={{ mb: 4, fontWeight: 'bold' }}>
+                Key Milestones
               </Typography>
-              <Typography variant="body1" sx={{ mb: 4 }}>
-                Since 1969, the Anyen Iyak Foundation for Art and Culture has demonstrated an abiding commitment to the humanities and the arts. We believe that these fields are essential to human flourishing and to the wellbeing of diverse and democratic societies.
-              </Typography>
-              <Button
-                variant="contained"
-                endIcon={<ArrowForwardIcon />}
-                sx={{
-                  backgroundColor: 'var(--primary-color)',
-                  '&:hover': {
-                    backgroundColor: '#002548',
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {[
+                  {
+                    year: '1990',
+                    title: 'Foundation Established',
+                    description: 'The Anyen Iyak Foundation was established with a mission to support arts and culture.'
                   },
-                }}
-              >
-                Explore Our History
-              </Button>
-            </Grid>
+                  {
+                    year: '1995',
+                    title: 'First Grant Program',
+                    description: 'Launched our first major grant program supporting local artists and cultural institutions.'
+                  },
+                  {
+                    year: '2000',
+                    title: 'Expansion of Mission',
+                    description: 'Expanded our focus to include support for humanities and educational initiatives.'
+                  },
+                  {
+                    year: '2010',
+                    title: 'International Programs',
+                    description: 'Began supporting international cultural exchange programs and global arts initiatives.'
+                  },
+                  {
+                    year: '2020',
+                    title: 'Digital Transformation',
+                    description: 'Launched digital initiatives to support arts and culture in the digital age.'
+                  }
+                ].map((event, index) => (
+                  <Box key={index} sx={{ display: 'flex', gap: 2 }}>
+                    <Typography 
+                      sx={{ 
+                        color: 'var(--primary-color)',
+                        fontWeight: 'bold',
+                        minWidth: '60px'
+                      }}
+                    >
+                      {event.year}
+                    </Typography>
+                    <Box>
+                      <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
+                        {event.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {event.description}
+                      </Typography>
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
           </Grid>
-        </Container>
-      </Box>
+
+          {/* Right Column - Main Content */}
+          <Grid item xs={12} md={8}>
+            <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold' }}>
+              A Legacy of Supporting Arts and Culture
+            </Typography>
+            
+            <Typography paragraph>
+              The Anyen Iyak Foundation was established in 1990 with a clear vision: to nurture and
+              sustain the arts and humanities as essential elements of vibrant human communities.
+              Our founder believed that cultural expression and artistic innovation are fundamental
+              to social progress and human understanding.
+            </Typography>
+
+            <Typography paragraph>
+              Over the past three decades, we have evolved and adapted our approach while staying
+              true to our core mission. We've supported thousands of artists, scholars, and cultural
+              institutions, helping to bring transformative ideas and creative works to life.
+            </Typography>
+
+            <Box sx={{ my: 6 }}>
+              <Paper sx={{ p: 4, bgcolor: '#f5f5f5' }}>
+                <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+                  Our Impact
+                </Typography>
+                <Grid container spacing={4}>
+                  <Grid item xs={12} sm={4}>
+                    <Typography variant="h3" sx={{ color: 'var(--primary-color)', mb: 1 }}>
+                      1000+
+                    </Typography>
+                    <Typography>
+                      Grants Awarded
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Typography variant="h3" sx={{ color: 'var(--primary-color)', mb: 1 }}>
+                      50M+
+                    </Typography>
+                    <Typography>
+                      Total Funding
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Typography variant="h3" sx={{ color: 'var(--primary-color)', mb: 1 }}>
+                      30+
+                    </Typography>
+                    <Typography>
+                      Countries Reached
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Box>
+
+            <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
+              Looking to the Future
+            </Typography>
+
+            <Typography paragraph>
+              As we look to the future, we remain committed to supporting innovative work in the
+              arts and humanities. We're expanding our focus to address contemporary challenges,
+              including digital transformation in the arts, cultural preservation in a rapidly
+              changing world, and promoting diversity and inclusion in creative fields.
+            </Typography>
+
+            <Typography paragraph>
+              Through our grantmaking, research initiatives, and collaborative programs, we continue
+              to work towards our vision of a world where arts and culture thrive as essential
+              components of human flourishing.
+            </Typography>
+
+            <Box sx={{ mt: 6 }}>
+              <Divider sx={{ mb: 4 }} />
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+                Our Commitment
+              </Typography>
+              <Typography>
+                We remain dedicated to supporting transformative ideas and creative expression
+                that enrich our shared cultural heritage and promote understanding across
+                communities.
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
     </Box>
   );
 };

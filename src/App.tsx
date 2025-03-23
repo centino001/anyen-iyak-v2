@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
@@ -13,7 +13,34 @@ import History from './pages/History';
 import People from './pages/People';
 import PersonDetail from './pages/PersonDetail';
 import Financials from './pages/Financials';
+import AdminLogin from './pages/AdminLogin';
+import AdminLayout from './components/Admin/AdminLayout';
+import Dashboard from './pages/Admin/Dashboard';
+import NewsManagement from './pages/Admin/NewsManagement';
+import ProgramManagement from './pages/Admin/ProgramManagement';
+import PeopleManagement from './pages/Admin/PeopleManagement';
+import { AdminProvider } from './contexts/AdminContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
+
+interface MainLayoutProps {
+  onToggleTheme: () => void;
+}
+
+const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
+  return (
+    <div className="App">
+      <Header onToggleTheme={onToggleTheme} />
+      <main style={{ 
+        minHeight: 'calc(100vh - 70px - 300px)',
+        width: '100%'
+      }}>
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
+};
 
 function App() {
   const [mode, setMode] = useState<'light' | 'dark'>('light');
@@ -24,72 +51,47 @@ function App() {
         palette: {
           mode,
           primary: {
-            main: '#003C71',
-            dark: '#002548',
+            main: '#B8860B',
           },
           secondary: {
-            main: '#E5E5E5',
-          },
-          text: {
-            primary: mode === 'light' ? '#333333' : '#FFFFFF',
-            secondary: mode === 'light' ? '#666666' : '#AAAAAA',
+            main: '#000000',
           },
           background: {
-            default: mode === 'light' ? '#FFFFFF' : '#121212',
-            paper: mode === 'light' ? '#FFFFFF' : '#1E1E1E',
+            default: mode === 'light' ? '#ffffff' : '#000000',
+            paper: mode === 'light' ? '#ffffff' : '#000000',
           },
-        },
-        typography: {
-          fontFamily: [
-            '-apple-system',
-            'BlinkMacSystemFont',
-            '"Segoe UI"',
-            'Roboto',
-            '"Helvetica Neue"',
-            'Arial',
-            'sans-serif',
-          ].join(','),
-          h1: {
-            fontWeight: 700,
-            fontSize: '3.5rem',
-            '@media (max-width:600px)': {
-              fontSize: '2.5rem',
-            },
-          },
-          h4: {
-            fontWeight: 700,
-            fontSize: '2rem',
-            '@media (max-width:600px)': {
-              fontSize: '1.75rem',
-            },
-          },
-          h5: {
-            fontWeight: 500,
-            fontSize: '1.5rem',
-            lineHeight: 1.4,
-          },
-          body1: {
-            fontSize: '1.125rem',
-            lineHeight: 1.6,
-          },
-          button: {
-            textTransform: 'none',
-            fontWeight: 500,
+          text: {
+            primary: mode === 'light' ? '#000000' : '#ffffff',
+            secondary: mode === 'light' ? '#000000' : '#ffffff',
           },
         },
         components: {
-          MuiButton: {
+          MuiPaper: {
             styleOverrides: {
               root: {
-                borderRadius: 4,
-                padding: '0.75rem 1.5rem',
+                backgroundColor: mode === 'light' ? '#ffffff' : '#000000',
+                color: mode === 'light' ? '#000000' : '#ffffff',
               },
             },
           },
           MuiCard: {
             styleOverrides: {
               root: {
-                borderRadius: 8,
+                backgroundColor: mode === 'light' ? '#ffffff' : '#000000',
+                color: mode === 'light' ? '#000000' : '#ffffff',
+              },
+            },
+          },
+          MuiButton: {
+            styleOverrides: {
+              root: {
+                '&.MuiButton-containedPrimary': {
+                  backgroundColor: '#B8860B',
+                  color: '#000000',
+                  '&:hover': {
+                    backgroundColor: '#8B6914',
+                  },
+                },
               },
             },
           },
@@ -99,13 +101,29 @@ function App() {
   );
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <div className="App">
-          <Header onToggleTheme={() => setMode(mode === 'light' ? 'dark' : 'light')} />
-          <main style={{ minHeight: 'calc(100vh - 64px - 300px)' }}>
-            <Routes>
+    <AdminProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <Routes>
+            {/* Admin Routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="news" element={<NewsManagement />} />
+              <Route path="programs" element={<ProgramManagement />} />
+              <Route path="people" element={<PeopleManagement />} />
+            </Route>
+
+            {/* Public Routes */}
+            <Route element={<MainLayout onToggleTheme={() => setMode(mode === 'light' ? 'dark' : 'light')} />}>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
               <Route path="/programs" element={<Programs />} />
@@ -116,12 +134,11 @@ function App() {
               <Route path="/people" element={<People />} />
               <Route path="/people/:id" element={<PersonDetail />} />
               <Route path="/financials" element={<Financials />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
-    </ThemeProvider>
+            </Route>
+          </Routes>
+        </Router>
+      </ThemeProvider>
+    </AdminProvider>
   );
 }
 

@@ -1,43 +1,126 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Button, Card, CardContent } from '@mui/material';
+import { Box, Container, Grid, Typography, Card, CardContent, Button, CircularProgress } from '@mui/material';
+import { Link } from 'react-router-dom';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import useDataFetch from '../hooks/useDataFetch';
+import EmptyState from '../components/EmptyState';
+import ImageWithFallback from '../components/ImageWithFallback';
+import ImageIcon from '@mui/icons-material/Image';
+import { useTheme } from '@mui/material/styles';
+
+interface Program {
+  _id: string;
+  title: string;
+  shortDescription: string;
+  category: string;
+  image?: string;
+  slug: string;
+  isActive: boolean;
+}
 
 const Programs: React.FC = () => {
-  const programs = [
-    {
-      title: 'Higher Learning',
-      description: 'Supporting inclusive excellence in higher education.',
-      image: 'higher-learning.jpg'
-    },
-    {
-      title: 'Arts and Culture',
-      description: 'Nurturing artistic expression and cultural heritage.',
-      image: 'arts-culture.jpg'
-    },
-    {
-      title: 'Public Knowledge',
-      description: 'Advancing the creation and preservation of knowledge as a public good.',
-      image: 'public-knowledge.jpg'
-    },
-    {
-      title: 'Humanities in Place',
-      description: 'Supporting communities in their efforts to preserve and revitalize spaces of meaning and memory.',
-      image: 'humanities-place.jpg'
+  const { data: programs, loading, error } = useDataFetch<Program>('/programs');
+  const theme = useTheme();
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+          <CircularProgress />
+        </Box>
+      );
     }
-  ];
+
+    if (error) {
+      return (
+        <EmptyState 
+          message="Error loading programs. Please try again later."
+          icon={<AssignmentIcon sx={{ fontSize: 64, color: 'error.main' }} />}
+        />
+      );
+    }
+
+    if (!programs || programs.length === 0) {
+      return (
+        <EmptyState 
+          message="No programs available at the moment. Please check back later."
+          icon={<AssignmentIcon sx={{ fontSize: 64 }} />}
+        />
+      );
+    }
+
+    return (
+      <Grid container spacing={4}>
+        {programs.map((program) => (
+          <Grid item xs={12} sm={6} md={4} key={program._id}>
+            <Card 
+              sx={{ 
+                height: '100%',
+                boxShadow: 'none',
+                border: '1px solid #E5E5E5',
+                transition: 'transform 0.2s',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                },
+              }}
+              component={Link}
+              to={`/programs/${program.slug}`}
+              style={{ textDecoration: 'none' }}
+            >
+              <Box 
+                sx={{ 
+                  height: 350,
+                  width: '100%',
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  backgroundColor: '#E5E5E5',
+                  padding: '10px',
+                  borderRadius: 1
+                }}
+              >
+                <ImageWithFallback
+                  src={program.image}
+                  alt={program.title}
+                  fallbackIcon={<ImageIcon sx={{ fontSize: 60, color: 'grey.400' }} />}
+                  sx={{ width: '100%', height: '100%' }}
+                />
+              </Box>
+              <CardContent sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ mb: 1, color: 'text.primary' }}>
+                  {program.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  {program.shortDescription}
+                </Typography>
+                <Button
+                  endIcon={<ArrowForwardIcon />}
+                  sx={{ color: 'var(--primary-color)' }}
+                >
+                  Learn More
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    );
+  };
 
   return (
     <Box>
       {/* Hero Section */}
       <Box sx={{ 
-        height: '60vh',
-        backgroundColor: '#E5E5E5',
+        height: '40vh',
+        backgroundColor: 'var(--primary-color)',
         display: 'flex',
         alignItems: 'center',
-        position: 'relative'
+        position: 'relative',
+        color: theme.palette.mode === 'light' ? '#000000' : '#FFFFFF'
       }}>
         <Container maxWidth="lg">
-          <Box sx={{ maxWidth: '600px' }}>
+          <Box sx={{ maxWidth: '800px' }}>
             <Typography variant="h1" sx={{ 
               fontSize: { xs: '2.5rem', md: '3.5rem' },
               fontWeight: 'bold',
@@ -46,7 +129,7 @@ const Programs: React.FC = () => {
               Our Programs
             </Typography>
             <Typography variant="h5" sx={{ mb: 4 }}>
-              Supporting transformative work in the arts and humanities through strategic grantmaking.
+              Discover our initiatives supporting arts and culture.
             </Typography>
           </Box>
         </Container>
@@ -55,76 +138,7 @@ const Programs: React.FC = () => {
       {/* Programs Grid */}
       <Box sx={{ py: 8 }}>
         <Container maxWidth="lg">
-          <Grid container spacing={4}>
-            {programs.map((program, index) => (
-              <Grid item xs={12} md={6} key={index}>
-                <Card sx={{ height: '100%', boxShadow: 'none', border: '1px solid #E5E5E5' }}>
-                  <Box sx={{ 
-                    height: 300,
-                    backgroundColor: '#E5E5E5',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    Program Image
-                  </Box>
-                  <CardContent sx={{ p: 4 }}>
-                    <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
-                      {program.title}
-                    </Typography>
-                    <Typography variant="body1" sx={{ mb: 3 }}>
-                      {program.description}
-                    </Typography>
-                    <Button
-                      endIcon={<ArrowForwardIcon />}
-                      sx={{ color: 'var(--primary-color)' }}
-                    >
-                      Learn More
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
-
-      {/* Impact Section */}
-      <Box sx={{ py: 8, backgroundColor: '#F5F5F5' }}>
-        <Container maxWidth="lg">
-          <Grid container spacing={6} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
-                Program Impact
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 4 }}>
-                Our programs have supported thousands of institutions and individuals worldwide, fostering innovation and preserving cultural heritage.
-              </Typography>
-              <Button
-                variant="contained"
-                endIcon={<ArrowForwardIcon />}
-                sx={{
-                  backgroundColor: 'var(--primary-color)',
-                  '&:hover': {
-                    backgroundColor: '#002548',
-                  },
-                }}
-              >
-                View Impact Report
-              </Button>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Box sx={{ 
-                height: 400,
-                backgroundColor: '#E5E5E5',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                Impact Image
-              </Box>
-            </Grid>
-          </Grid>
+          {renderContent()}
         </Container>
       </Box>
     </Box>
