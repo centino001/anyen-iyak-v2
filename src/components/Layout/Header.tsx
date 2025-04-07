@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Toolbar, Box, Button, Container, Menu, MenuItem, IconButton, Popper, Paper, ClickAwayListener, MenuList, Grow, useTheme, Stack, Typography, Fade, Slide } from '@mui/material';
-import { Link } from 'react-router-dom';
-import SearchIcon from '@mui/icons-material/Search';
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  IconButton,
+  useTheme,
+  Fade,
+  Slide
+} from '@mui/material';
+import { Link, useLocation } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
 
-interface HeaderProps {
-  onToggleTheme: () => void;
-}
+interface HeaderProps {}
 
-const Header: React.FC<HeaderProps> = ({ onToggleTheme }) => {
+const Header: React.FC<HeaderProps> = () => {
   const theme = useTheme();
+  const location = useLocation();
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null);
-  const [insideAifacAnchor, setInsideAifacAnchor] = useState<null | HTMLElement>(null);
-  const logoSrc = theme.palette.mode === 'dark' ? '/logos/19.png' : '/logos/18.png';
+  const logoSrc = '/logos/19.png';
   const [scrolled, setScrolled] = useState(false);
 
   // Add scroll effect
@@ -41,74 +43,15 @@ const Header: React.FC<HeaderProps> = ({ onToggleTheme }) => {
     setMobileMenuAnchor(null);
   };
 
-  const handleInsideAifacOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setInsideAifacAnchor(event.currentTarget);
-  };
-
-  const handleInsideAifacClose = () => {
-    setInsideAifacAnchor(null);
-  };
-
-  const handleThemeChange = (mode: 'light' | 'dark') => {
-    if (theme.palette.mode !== mode) {
-      onToggleTheme();
-    }
-  };
-
-  const insideAifacItems = [
-    { title: 'Mission', path: '/mission' },
-    // { title: 'History', path: '/history' },
-    { title: 'People', path: '/people' },
-    // { title: 'Financials', path: '/financials' },
-    { title: 'News', path: '/news' },
-    // { title: 'Events', path: '/events' },
-  ];
-
   const menuItems = [
     { title: 'About', path: '/about' },
-    { title: 'Programs', path: '/programs' },
-    // { title: 'Grants', path: '/grants' },
+    { title: 'Mission', path: '/mission' },
+    { title: 'People', path: '/people' },
+    { title: 'Projects', path: '/programs' },
+    { title: 'Open Calls', path: '/grants' },
+    { title: 'News', path: '/news' },
+    { title: 'Shop', path: '/shop' },
   ];
-
-  const ThemeButtons = () => (
-    <Stack 
-      direction="row" 
-      spacing={1} 
-      alignItems="center" 
-      sx={{ 
-        p: 0.5
-      }}
-    >
-      <Button
-        onClick={() => handleThemeChange('light')}
-        startIcon={<LightModeIcon />}
-        sx={{
-          color: theme.palette.mode === 'light' ? 'secondary.main' : 'text.secondary',
-          textTransform: 'none',
-          minWidth: 'auto',
-          px: 1,
-          '&:hover': { bgcolor: 'transparent' },
-          cursor: theme.palette.mode === 'light' ? 'default' : 'pointer'
-        }}
-      >
-        Light
-      </Button>
-      <Button
-        onClick={() => handleThemeChange('dark')}
-        startIcon={<DarkModeIcon />}
-        sx={{
-          color: theme.palette.mode === 'dark' ? 'secondary.main' : 'text.secondary',
-          textTransform: 'none',
-          minWidth: 'auto',
-          px: 1,
-          '&:hover': { bgcolor: 'transparent' },
-          cursor: theme.palette.mode === 'dark' ? 'default' : 'pointer'
-        }}
-      >
-        Dark
-      </Button>
-    </Stack>
-  );
 
   return (
     <AppBar 
@@ -134,9 +77,9 @@ const Header: React.FC<HeaderProps> = ({ onToggleTheme }) => {
               src={logoSrc}
               alt="Anyen Iyak Logo"
               sx={{ 
-                height: scrolled ? '50px' : '60px',
+                height: scrolled ? '60px' : '80px',
                 width: 'auto',
-                maxWidth: scrolled ? '70px' : '80px',
+                maxWidth: scrolled ? '100px' : '120px',
                 objectFit: 'contain',
                 transition: 'all 0.3s ease'
               }}
@@ -162,194 +105,69 @@ const Header: React.FC<HeaderProps> = ({ onToggleTheme }) => {
                   style={{
                     position: 'relative',
                     transition: 'all 0.3s ease',
-                    padding: '5px 0'
+                    padding: '5px 0',
+                    color: location.pathname === item.path ? 'var(--primary-color)' : theme.palette.text.primary,
+                    borderBottom: location.pathname === item.path ? '2px solid var(--primary-color)' : 'none'
                   }}
                 >
                   {item.title}
                 </Link>
               ))}
-              
-              {/* Inside Aifac Dropdown */}
-              <Box>
-                <Button
-                  endIcon={<KeyboardArrowDownIcon />}
-                  onClick={handleInsideAifacOpen}
-                  sx={{ 
-                    color: theme.palette.text.primary,
-                    textTransform: 'none',
-                    fontWeight: 500,
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      backgroundColor: 'transparent',
-                      transform: 'translateY(-2px)'
-                    }
-                  }}
-                >
-                  Inside Aifac
-                </Button>
-                <Popper
-                  open={Boolean(insideAifacAnchor)}
-                  anchorEl={insideAifacAnchor}
-                  placement="bottom-start"
-                  transition
-                  sx={{ zIndex: 1300 }}
-                >
-                  {({ TransitionProps }) => (
-                    <Grow {...TransitionProps}>
-                      <Paper sx={{ 
-                        mt: 1, 
-                        minWidth: 200,
-                        boxShadow: '0 8px 20px rgba(0,0,0,0.1)',
-                        overflow: 'hidden'
-                      }}>
-                        <ClickAwayListener onClickAway={handleInsideAifacClose}>
-                          <MenuList>
-                            {insideAifacItems.map((item, index) => (
-                              <MenuItem 
-                                key={item.path}
-                                onClick={handleInsideAifacClose}
-                                component={Link}
-                                to={item.path}
-                                sx={{ 
-                                  color: theme.palette.text.primary,
-                                  transition: 'all 0.2s ease',
-                                  '&:hover': {
-                                    backgroundColor: theme.palette.mode === 'light' 
-                                      ? 'rgba(184, 134, 11, 0.05)' 
-                                      : 'rgba(184, 134, 11, 0.15)',
-                                    paddingLeft: '24px'
-                                  }
-                                }}
-                              >
-                                {item.title}
-                              </MenuItem>
-                            ))}
-                          </MenuList>
-                        </ClickAwayListener>
-                      </Paper>
-                    </Grow>
-                  )}
-                </Popper>
-              </Box>
             </Box>
           </Slide>
         </Box>
 
-        {/* Theme Toggle - Desktop */}
-        <Fade in timeout={1000}>
-          <Box sx={{ display: { xs: 'none', md: 'block' }, ml: 'auto' }}>
-            <ThemeButtons />
-          </Box>
-        </Fade>
+        {/* Mobile Menu Button */}
+        <IconButton
+          size="large"
+          edge="end"
+          color="inherit"
+          aria-label="menu"
+          onClick={handleMobileMenuOpen}
+          sx={{ 
+            display: { xs: 'flex', md: 'none' },
+            ml: 'auto'
+          }}
+        >
+          <MenuIcon />
+        </IconButton>
 
         {/* Mobile Menu */}
-        <Box sx={{ 
-          display: { xs: 'flex', md: 'none' }, 
-          gap: 1,
-          ml: 'auto'
-        }}>
-          <Fade in timeout={1000}>
-            <Box>
-              <ThemeButtons />
-            </Box>
-          </Fade>
-          <IconButton
-            size="large"
-            edge="end"
-            color="inherit"
-            aria-label="menu"
-            onClick={handleMobileMenuOpen}
+        {mobileMenuAnchor && (
+          <Box
             sx={{
-              transition: 'transform 0.3s ease',
-              '&:hover': {
-                transform: 'rotate(10deg)'
-              }
+              position: 'fixed',
+              top: scrolled ? '60px' : '70px',
+              left: 0,
+              right: 0,
+              backgroundColor: theme.palette.background.paper,
+              borderTop: `1px solid ${theme.palette.divider}`,
+              boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+              zIndex: 1200,
+              display: { xs: 'block', md: 'none' }
             }}
           >
-            <MenuIcon />
-          </IconButton>
-          <Menu
-            anchorEl={mobileMenuAnchor}
-            open={Boolean(mobileMenuAnchor)}
-            onClose={handleMobileMenuClose}
-            sx={{
-              '& .MuiPaper-root': {
-                width: '100%',
-                maxWidth: '300px',
-                mt: 1,
-                boxShadow: '0 8px 20px rgba(0,0,0,0.1)',
-                animation: 'fadeIn 0.3s ease'
-              },
-              '@keyframes fadeIn': {
-                '0%': {
-                  opacity: 0,
-                  transform: 'translateY(-10px)'
-                },
-                '100%': {
-                  opacity: 1,
-                  transform: 'translateY(0)'
-                }
-              }
-            }}
-          >
-            {menuItems.map((item) => (
-              <MenuItem 
-                key={item.path} 
-                onClick={handleMobileMenuClose}
-                sx={{
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    backgroundColor: theme.palette.mode === 'light' 
-                      ? 'rgba(184, 134, 11, 0.05)' 
-                      : 'rgba(184, 134, 11, 0.15)',
-                    paddingLeft: '24px'
-                  }
-                }}
-              >
-                <Link to={item.path} className="nav-link" style={{ width: '100%' }}>
+            <Box sx={{ p: 2 }}>
+              {menuItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={handleMobileMenuClose}
+                  style={{
+                    display: 'block',
+                    padding: '12px 16px',
+                    color: location.pathname === item.path ? 'var(--primary-color)' : theme.palette.text.primary,
+                    textDecoration: 'none',
+                    borderLeft: location.pathname === item.path ? '3px solid var(--primary-color)' : 'none',
+                    backgroundColor: location.pathname === item.path ? 'rgba(184, 134, 11, 0.1)' : 'transparent'
+                  }}
+                >
                   {item.title}
                 </Link>
-              </MenuItem>
-            ))}
-            <Box sx={{ px: 2, py: 1, fontWeight: 'bold', color: 'var(--primary-color)' }}>
-              Inside Aifac
+              ))}
             </Box>
-            {insideAifacItems.map((item) => (
-              <MenuItem 
-                key={item.path} 
-                onClick={handleMobileMenuClose}
-                sx={{
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    backgroundColor: theme.palette.mode === 'light' 
-                      ? 'rgba(184, 134, 11, 0.05)' 
-                      : 'rgba(184, 134, 11, 0.15)',
-                    paddingLeft: '32px'
-                  }
-                }}
-              >
-                <Link to={item.path} className="nav-link" style={{ width: '100%', paddingLeft: '1rem' }}>
-                  {item.title}
-                </Link>
-              </MenuItem>
-            ))}
-            <MenuItem>
-              <Button
-                fullWidth
-                variant="contained"
-                startIcon={<SearchIcon />}
-                sx={{
-                  backgroundColor: 'var(--primary-color)',
-                  '&:hover': {
-                    backgroundColor: '#8B6914',
-                  },
-                }}
-              >
-                Search
-              </Button>
-            </MenuItem>
-          </Menu>
-        </Box>
+          </Box>
+        )}
       </Toolbar>
     </AppBar>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Button, Card, CardContent, CardMedia, CircularProgress, Fade, Grow, Slide, Zoom } from '@mui/material';
+import { Box, Container, Grid, Typography, Button, Card, CardContent, CardMedia, CircularProgress, Fade, Grow, Slide, Zoom, Stack } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Link } from 'react-router-dom';
 import useDataFetch from '../hooks/useDataFetch';
@@ -323,7 +323,20 @@ const Home: React.FC = () => {
       </Box>
 
       {/* Featured Programs Section */}
-      <Box sx={{ py: 8 }}>
+      <Box sx={{ 
+        py: 8, 
+        backgroundColor: '#1e1e1e',
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '5px',
+          background: 'linear-gradient(90deg, var(--primary-color) 0%, transparent 100%)'
+        }
+      }}>
         <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 } }}>
           <Fade in timeout={800}>
             <Typography variant="h4" sx={{ 
@@ -351,7 +364,7 @@ const Home: React.FC = () => {
       {/* News & Updates Section */}
       <Box sx={{ 
         py: 8, 
-        backgroundColor: theme => theme.palette.mode === 'light' ? '#F5F5F5' : '#121212',
+        backgroundColor: '#121212',
         position: 'relative',
         '&::before': {
           content: '""',
@@ -388,7 +401,7 @@ const Home: React.FC = () => {
       </Box>
 
       {/* Impact Section */}
-      <Box sx={{ py: 8 }}>
+      <Box sx={{ py: 8, backgroundColor: '#1e1e1e' }}>
         <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 } }}>
           <Grid container spacing={6} alignItems="center">
             <Grid item xs={12} md={6}>
@@ -429,29 +442,64 @@ const Home: React.FC = () => {
                       backgroundColor: 'var(--primary-color)'
                     }
                   }}>
-                    Our Impact
+                    Contribute to OUR MISSION
                   </Typography>
                   <Typography variant="body1" sx={{ mb: 4, lineHeight: 1.8 }}>
-                    Through our grantmaking and research, we're working to strengthen and promote the arts and humanities in service of a more just and equitable society.
+                    Support our work to strengthen and promote the arts and humanities in service of a more just and equitable society.
                   </Typography>
-                  <Button
-                    component={Link}
-                    to="/about"
-                    variant="outlined"
-                    endIcon={<ArrowForwardIcon />}
-                    sx={{ 
-                      borderColor: 'var(--primary-color)',
-                      color: 'var(--primary-color)',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
+                  <Stack spacing={2} direction="column" sx={{ mb: 3 }}>
+                    <Button
+                      variant="outlined"
+                      endIcon={<ArrowForwardIcon />}
+                      sx={{ 
                         borderColor: 'var(--primary-color)',
-                        backgroundColor: 'rgba(184, 134, 11, 0.05)',
-                        transform: 'translateX(5px)'
-                      }
-                    }}
-                  >
-                    Learn More
-                  </Button>
+                        color: 'var(--primary-color)',
+                        transition: 'all 0.3s ease',
+                        justifyContent: 'flex-start',
+                        '&:hover': {
+                          borderColor: 'var(--primary-color)',
+                          backgroundColor: 'rgba(184, 134, 11, 0.05)',
+                          transform: 'translateX(5px)'
+                        }
+                      }}
+                    >
+                      Become a Member
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      endIcon={<ArrowForwardIcon />}
+                      sx={{ 
+                        borderColor: 'var(--primary-color)',
+                        color: 'var(--primary-color)',
+                        transition: 'all 0.3s ease',
+                        justifyContent: 'flex-start',
+                        '&:hover': {
+                          borderColor: 'var(--primary-color)',
+                          backgroundColor: 'rgba(184, 134, 11, 0.05)',
+                          transform: 'translateX(5px)'
+                        }
+                      }}
+                    >
+                      Become a Corporate Partner
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      endIcon={<ArrowForwardIcon />}
+                      sx={{ 
+                        borderColor: 'var(--primary-color)',
+                        color: 'var(--primary-color)',
+                        transition: 'all 0.3s ease',
+                        justifyContent: 'flex-start',
+                        '&:hover': {
+                          borderColor: 'var(--primary-color)',
+                          backgroundColor: 'rgba(184, 134, 11, 0.05)',
+                          transform: 'translateX(5px)'
+                        }
+                      }}
+                    >
+                      Donate
+                    </Button>
+                  </Stack>
                 </Box>
               </Slide>
             </Grid>

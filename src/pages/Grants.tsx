@@ -35,10 +35,12 @@ const Grants: React.FC = () => {
       {/* Hero Section */}
       <Box sx={{ 
         height: '60vh',
-        backgroundColor: '#E5E5E5',
+        backgroundColor: '#121212',
+        backgroundImage: 'linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7))',
         display: 'flex',
         alignItems: 'center',
-        position: 'relative'
+        position: 'relative',
+        color: '#FFFFFF'
       }}>
         <Container maxWidth="lg">
           <Box sx={{ maxWidth: '600px' }}>
@@ -47,7 +49,7 @@ const Grants: React.FC = () => {
               fontWeight: 'bold',
               mb: 3
             }}>
-              Grants & Funding
+              OPEN CALLS
             </Typography>
             <Typography variant="h5" sx={{ mb: 4 }}>
               Supporting transformative ideas and initiatives in the arts and humanities.
@@ -69,7 +71,7 @@ const Grants: React.FC = () => {
       </Box>
 
       {/* Grants Navigation */}
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: '#121212' }}>
         <Container maxWidth="lg">
           <Tabs value={tabValue} onChange={handleTabChange} aria-label="grants navigation">
             <Tab label="Recent Grants" />
@@ -144,7 +146,7 @@ const Grants: React.FC = () => {
       </Box>
 
       {/* Resources Section */}
-      <Box sx={{ py: 8, backgroundColor: '#F5F5F5' }}>
+      <Box sx={{ py: 8, backgroundColor: '#1e1e1e', color: '#FFFFFF' }}>
         <Container maxWidth="lg">
           <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold' }}>
             Grant Resources

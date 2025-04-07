@@ -113,11 +113,12 @@ const Programs: React.FC = () => {
       {/* Hero Section */}
       <Box sx={{ 
         height: '40vh',
-        backgroundColor: 'var(--primary-color)',
+        backgroundColor: '#121212',
+        backgroundImage: 'linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7))',
         display: 'flex',
         alignItems: 'center',
         position: 'relative',
-        color: theme.palette.mode === 'light' ? '#000000' : '#FFFFFF'
+        color: '#FFFFFF'
       }}>
         <Container maxWidth="lg">
           <Box sx={{ maxWidth: '800px' }}>
@@ -126,7 +127,7 @@ const Programs: React.FC = () => {
               fontWeight: 'bold',
               mb: 3
             }}>
-              Our Programs
+              OUR PROJECTS
             </Typography>
             <Typography variant="h5" sx={{ mb: 4 }}>
               Discover our initiatives supporting arts and culture.
@@ -136,7 +137,7 @@ const Programs: React.FC = () => {
       </Box>
 
       {/* Programs Grid */}
-      <Box sx={{ py: 8 }}>
+      <Box sx={{ py: 8, backgroundColor: '#121212' }}>
         <Container maxWidth="lg">
           {renderContent()}
         </Container>

@@ -27,10 +27,7 @@ const People: React.FC = () => {
     'All',
     'Executive Leadership',
     'Board of Governors',
-    'Programs',
-    'Finance & Administration',
-    'Communications',
-    'Archives'
+    'Core Team'
   ];
 
   const handleDepartmentChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -63,14 +60,12 @@ const People: React.FC = () => {
       );
     }
 
-    if (!filteredPeople || filteredPeople.length === 0) {
+    if (!people || people.length === 0) {
       return (
         <Fade in timeout={800}>
           <Box>
             <EmptyState 
-              message={selectedDepartment === 0 
-                ? "No team members available at the moment."
-                : `No team members in ${departments[selectedDepartment]} department.`}
+              message="No team members available at the moment."
               icon={<PersonIcon sx={{ fontSize: 64 }} />}
             />
           </Box>
@@ -80,7 +75,7 @@ const People: React.FC = () => {
 
     return (
       <Grid container spacing={4}>
-        {filteredPeople.map((person, index) => (
+        {people.map((person, index) => (
           <Grid item xs={12} sm={6} md={4} key={person._id}>
             <Grow 
               in 
@@ -189,66 +184,33 @@ const People: React.FC = () => {
   return (
     <Box>
       {/* Hero Section */}
-      <Fade in timeout={800}>
-        <Box sx={{ 
-          height: '40vh',
-          backgroundImage: theme => `url(/images/people/${theme.palette.mode === 'light' ? 'manyblack.jpg' : 'manywhite.jpg'})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          width: '100%',
-          position: 'relative',
-          display: 'flex',
-          alignItems: 'center',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: theme => theme.palette.mode === 'light' 
-              ? 'rgba(255, 255, 255, 0.75)'
-              : 'rgba(0, 0, 0, 0.65)',
-            zIndex: 1
-          }
-        }}>
-          <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
-            <Zoom in timeout={1000}>
-              <Box sx={{ maxWidth: '800px' }}>
-                <Typography variant="h1" sx={{ 
-                  fontSize: { xs: '2.5rem', md: '3.5rem' },
-                  fontWeight: 'bold',
-                  mb: 3,
-                  color: theme => theme.palette.mode === 'light' ? 'text.primary' : 'common.white',
-                  position: 'relative',
-                  display: 'inline-block',
-                  '&::after': {
-                    content: '""',
-                    position: 'absolute',
-                    bottom: -10,
-                    left: 0,
-                    width: '80px',
-                    height: '4px',
-                    backgroundColor: 'var(--primary-color)'
-                  }
-                }}>
-                  Our People
-                </Typography>
-                <Typography variant="h5" sx={{ 
-                  mb: 4,
-                  color: theme => theme.palette.mode === 'light' ? 'text.secondary' : 'common.white'
-                }}>
-                  Meet the team dedicated to supporting the arts and humanities.
-                </Typography>
-              </Box>
-            </Zoom>
-          </Container>
-        </Box>
-      </Fade>
+      <Box sx={{ 
+        height: '40vh',
+        backgroundColor: '#121212',
+        backgroundImage: 'linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7))',
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+        color: '#FFFFFF'
+      }}>
+        <Container maxWidth="lg">
+          <Box sx={{ maxWidth: '800px' }}>
+            <Typography variant="h1" sx={{ 
+              fontSize: { xs: '2.5rem', md: '3.5rem' },
+              fontWeight: 'bold',
+              mb: 3
+            }}>
+              Our People
+            </Typography>
+            <Typography variant="h5" sx={{ mb: 4 }}>
+              Meet the dedicated individuals who bring our mission to life.
+            </Typography>
+          </Box>
+        </Container>
+      </Box>
 
       {/* Department Tabs */}
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: '#121212' }}>
         <Container maxWidth="lg">
           <Fade in timeout={1000}>
             <Tabs 
@@ -261,21 +223,19 @@ const People: React.FC = () => {
                   textTransform: 'none',
                   fontSize: '1rem',
                   fontWeight: 500,
-                  color: 'var(--primary-color)',
+                  color: '#b8860b',
                   transition: 'all 0.3s ease',
                   '&.Mui-selected': {
-                    color: 'var(--primary-color)',
+                    color: '#b8860b',
                     fontWeight: 700,
                   },
                   '&:hover': {
-                    backgroundColor: theme => theme.palette.mode === 'light' 
-                      ? 'rgba(184, 134, 11, 0.05)' 
-                      : 'rgba(184, 134, 11, 0.15)',
-                    color: 'var(--primary-color)'
+                    backgroundColor: 'rgba(184, 134, 11, 0.15)',
+                    color: '#b8860b'
                   }
                 },
                 '& .MuiTabs-indicator': {
-                  backgroundColor: 'var(--primary-color)',
+                  backgroundColor: '#b8860b',
                   height: '3px',
                   borderRadius: '3px'
                 },
@@ -290,7 +250,7 @@ const People: React.FC = () => {
       </Box>
 
       {/* Staff Grid */}
-      <Box sx={{ py: 8 }}>
+      <Box sx={{ py: 8, backgroundColor: '#121212' }}>
         <Container maxWidth="lg">
           {renderContent()}
         </Container>

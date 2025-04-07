@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import Header from './components/Layout/Header';
@@ -12,6 +12,7 @@ import Mission from './pages/Mission';
 import History from './pages/History';
 import People from './pages/People';
 import PersonDetail from './pages/PersonDetail';
+import Shop from './pages/Shop';
 import Financials from './pages/Financials';
 import AdminLogin from './pages/AdminLogin';
 import AdminLayout from './components/Admin/AdminLayout';
@@ -23,81 +24,54 @@ import { AdminProvider } from './contexts/AdminContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
 
-interface MainLayoutProps {
-  onToggleTheme: () => void;
-}
+interface MainLayoutProps {}
 
-const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
+const MainLayout: React.FC<MainLayoutProps> = () => {
   return (
-    <div className="App">
-      <Header onToggleTheme={onToggleTheme} />
-      <main style={{ 
-        minHeight: 'calc(100vh - 70px - 300px)',
-        width: '100%'
-      }}>
+    <>
+      <Header />
+      <main
+        style={{
+          minHeight: 'calc(100vh - 70px - 300px)',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
         <Outlet />
       </main>
       <Footer />
-    </div>
+    </>
   );
 };
 
 function App() {
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
-
   const theme = useMemo(
     () =>
       createTheme({
         palette: {
-          mode,
+          mode: 'dark',
           primary: {
-            main: '#B8860B',
+            main: '#b8860b',
           },
           secondary: {
-            main: '#000000',
-          },
-          background: {
-            default: mode === 'light' ? '#ffffff' : '#000000',
-            paper: mode === 'light' ? '#ffffff' : '#000000',
-          },
-          text: {
-            primary: mode === 'light' ? '#000000' : '#ffffff',
-            secondary: mode === 'light' ? '#000000' : '#ffffff',
+            main: '#9c27b0',
           },
         },
+        typography: {
+          fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
+        },
         components: {
-          MuiPaper: {
-            styleOverrides: {
-              root: {
-                backgroundColor: mode === 'light' ? '#ffffff' : '#000000',
-                color: mode === 'light' ? '#000000' : '#ffffff',
-              },
-            },
-          },
-          MuiCard: {
-            styleOverrides: {
-              root: {
-                backgroundColor: mode === 'light' ? '#ffffff' : '#000000',
-                color: mode === 'light' ? '#000000' : '#ffffff',
-              },
-            },
-          },
           MuiButton: {
             styleOverrides: {
               root: {
-                '&.MuiButton-containedPrimary': {
-                  backgroundColor: '#B8860B',
-                  color: '#000000',
-                  '&:hover': {
-                    backgroundColor: '#8B6914',
-                  },
-                },
+                textTransform: 'none',
+                borderRadius: 4,
               },
             },
           },
         },
       }),
-    [mode]
+    []
   );
 
   return (
@@ -123,7 +97,7 @@ function App() {
             </Route>
 
             {/* Public Routes */}
-            <Route element={<MainLayout onToggleTheme={() => setMode(mode === 'light' ? 'dark' : 'light')} />}>
+            <Route element={<MainLayout />}>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
               <Route path="/programs" element={<Programs />} />
@@ -133,6 +107,7 @@ function App() {
               <Route path="/history" element={<History />} />
               <Route path="/people" element={<People />} />
               <Route path="/people/:id" element={<PersonDetail />} />
+              <Route path="/shop" element={<Shop />} />
               <Route path="/financials" element={<Financials />} />
             </Route>
           </Routes>

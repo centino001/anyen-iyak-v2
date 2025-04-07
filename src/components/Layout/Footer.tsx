@@ -154,7 +154,7 @@ const Footer: React.FC = () => {
                         backgroundColor: theme.palette.mode === 'light' ? '#000000' : '#FFFFFF',
                       }
                     }}>
-                      Programs
+                      PROJECTS
                     </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                       <Link 
@@ -169,7 +169,21 @@ const Footer: React.FC = () => {
                           }
                         }}
                       >
-                        Grants
+                        OPEN CALLS
+                      </Link>
+                      <Link 
+                        href="/shop" 
+                        color="inherit"
+                        sx={{
+                          transition: 'all 0.3s ease',
+                          '&:hover': {
+                            paddingLeft: '8px',
+                            textDecoration: 'none',
+                            fontWeight: 'bold'
+                          }
+                        }}
+                      >
+                        SHOP
                       </Link>
                       <Link 
                         href="/initiatives" 

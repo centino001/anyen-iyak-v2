@@ -89,10 +89,7 @@ const INITIAL_FORM_DATA: FormData = {
 const DEPARTMENTS = [
   'Executive Leadership',
   'Board of Governors',
-  'Programs',
-  'Finance & Administration',
-  'Communications',
-  'Archives'
+  'Core Team'
 ];
 
 const PeopleManagement = () => {
