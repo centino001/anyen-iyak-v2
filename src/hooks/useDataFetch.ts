@@ -8,6 +8,7 @@ interface FetchState<T> {
 
 interface FetchOptions {
   isAdminRoute?: boolean;
+  refreshTrigger?: boolean;
 }
 
 const useDataFetch = <T>(endpoint: string, options: FetchOptions = {}): FetchState<T> => {
@@ -85,7 +86,7 @@ const useDataFetch = <T>(endpoint: string, options: FetchOptions = {}): FetchSta
     };
 
     fetchData();
-  }, [endpoint, options.isAdminRoute]);
+  }, [endpoint, options.isAdminRoute, options.refreshTrigger]);
 
   return state;
 };

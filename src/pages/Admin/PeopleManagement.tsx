@@ -88,7 +88,8 @@ const INITIAL_FORM_DATA: FormData = {
 
 const DEPARTMENTS = [
   'Executive Leadership',
-  'Board of Governors',
+  'Board of Directors',
+  'Expert Advisors',
   'Core Team'
 ];
 
@@ -106,7 +107,11 @@ const PeopleManagement = () => {
   });
   const { submitForm, isSubmitting } = useFormSubmit();
 
-  const { data: people, loading, error } = useDataFetch<Person>('/people/admin/all', { isAdminRoute: true });
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const { data: people, loading, error } = useDataFetch<Person>('/people/admin/all', { 
+    isAdminRoute: true,
+    refreshTrigger: refreshTrigger > 0
+  });
 
   const showSnackbar = (message: string, severity: 'success' | 'error') => {
     setSnackbar({ open: true, message, severity });
@@ -165,36 +170,32 @@ const PeopleManagement = () => {
   const handleSubmit = async () => {
     try {
       // Validate required fields
-      if (!formData.name.trim()) {
-        showSnackbar('Name is required', 'error');
-        return;
-      }
-      if (!formData.title.trim()) {
-        showSnackbar('Title is required', 'error');
-        return;
-      }
-      if (!formData.department) {
-        showSnackbar('Department is required', 'error');
-        return;
-      }
-      if (!formData.bio.trim()) {
-        showSnackbar('Bio is required', 'error');
-        return;
-      }
-      if (!formData.email.trim()) {
-        showSnackbar('Email is required', 'error');
+      const errors = [];
+      if (!formData.name) errors.push('Name is required');
+      if (!formData.title) errors.push('Title is required');
+      if (!formData.department) errors.push('Department is required');
+      if (!formData.bio) errors.push('Bio is required');
+      if (!formData.email) errors.push('Email is required');
+
+      if (errors.length > 0) {
+        setSnackbar({
+          open: true,
+          message: `Validation failed: ${errors.join(', ')}`,
+          severity: 'error'
+        });
         return;
       }
 
       const formDataToSend = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        if (key === 'socialLinks') {
-          formDataToSend.append(key, JSON.stringify(value));
-        } else {
-          formDataToSend.append(key, String(value));
-        }
-      });
-
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('department', formData.department);
+      formDataToSend.append('bio', formData.bio);
+      formDataToSend.append('email', formData.email);
+      if (formData.phone) formDataToSend.append('phone', formData.phone);
+      formDataToSend.append('order', formData.order.toString());
+      formDataToSend.append('isLeadership', formData.isLeadership.toString());
+      formDataToSend.append('socialLinks', JSON.stringify(formData.socialLinks));
       if (selectedImage) {
         formDataToSend.append('image', selectedImage);
       }
@@ -203,26 +204,36 @@ const PeopleManagement = () => {
         ? `${process.env.REACT_APP_API_URL}/people/${selectedPerson._id}`
         : `${process.env.REACT_APP_API_URL}/people`;
 
-      await submitForm(url, formDataToSend, selectedPerson ? 'PUT' : 'POST', {
-        onSuccess: () => {
-          showSnackbar(
-            `Person ${selectedPerson ? 'updated' : 'created'} successfully`,
-            'success'
-          );
-          handleClose();
-          window.location.reload();
-        },
-        onError: (error) => {
-          console.error('Error details:', error);
-          showSnackbar(error.message || 'Error saving person', 'error');
-        },
+      const response = await fetch(url, {
+        method: selectedPerson ? 'PUT' : 'POST',
+        body: formDataToSend,
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${admin?.token}`
+        }
       });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to save person');
+      }
+
+      setSnackbar({
+        open: true,
+        message: selectedPerson ? 'Person updated successfully' : 'Person created successfully',
+        severity: 'success'
+      });
+
+      handleClose();
+      setRefreshTrigger(prev => prev + 1);
     } catch (error) {
       console.error('Error saving person:', error);
-      showSnackbar(
-        error instanceof Error ? error.message : 'Error saving person',
-        'error'
-      );
+      setSnackbar({
+        open: true,
+        message: error instanceof Error ? error.message : 'Failed to save person',
+        severity: 'error'
+      });
     }
   };
 
@@ -230,22 +241,31 @@ const PeopleManagement = () => {
     if (!window.confirm('Are you sure you want to delete this person?')) return;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/people/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/people/${id}`, {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
-          Authorization: `Bearer ${admin?.token}`,
-        },
+          'Authorization': `Bearer ${admin?.token}`
+        }
       });
 
       if (!response.ok) {
         throw new Error('Failed to delete person');
       }
 
-      showSnackbar('Person deleted successfully', 'success');
-      window.location.reload();
+      setSnackbar({
+        open: true,
+        message: 'Person deleted successfully',
+        severity: 'success'
+      });
+      setRefreshTrigger(prev => prev + 1);
     } catch (error) {
       console.error('Error deleting person:', error);
-      showSnackbar('Error deleting person', 'error');
+      setSnackbar({
+        open: true,
+        message: error instanceof Error ? error.message : 'Failed to delete person',
+        severity: 'error'
+      });
     }
   };
 

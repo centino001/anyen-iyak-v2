@@ -7,19 +7,23 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Programs from './pages/Programs';
 import Grants from './pages/Grants';
+import GrantDetail from './pages/GrantDetail';
 import News from './pages/News';
 import Mission from './pages/Mission';
 import History from './pages/History';
 import People from './pages/People';
 import PersonDetail from './pages/PersonDetail';
 import Shop from './pages/Shop';
+import Membership from './pages/Membership';
 import Financials from './pages/Financials';
+import Donate from './pages/Donate';
 import AdminLogin from './pages/AdminLogin';
 import AdminLayout from './components/Admin/AdminLayout';
 import Dashboard from './pages/Admin/Dashboard';
 import NewsManagement from './pages/Admin/NewsManagement';
 import ProgramManagement from './pages/Admin/ProgramManagement';
 import PeopleManagement from './pages/Admin/PeopleManagement';
+import GrantManagement from './pages/Admin/GrantManagement';
 import { AdminProvider } from './contexts/AdminContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
@@ -58,7 +62,7 @@ function App() {
           },
         },
         typography: {
-          fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
+          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
         },
         components: {
           MuiButton: {
@@ -94,6 +98,7 @@ function App() {
               <Route path="news" element={<NewsManagement />} />
               <Route path="programs" element={<ProgramManagement />} />
               <Route path="people" element={<PeopleManagement />} />
+              <Route path="grants" element={<GrantManagement />} />
             </Route>
 
             {/* Public Routes */}
@@ -102,12 +107,15 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/programs" element={<Programs />} />
               <Route path="/grants" element={<Grants />} />
+              <Route path="/grants/:id" element={<GrantDetail />} />
               <Route path="/news" element={<News />} />
               <Route path="/mission" element={<Mission />} />
               <Route path="/history" element={<History />} />
               <Route path="/people" element={<People />} />
               <Route path="/people/:id" element={<PersonDetail />} />
               <Route path="/shop" element={<Shop />} />
+              <Route path="/membership" element={<Membership />} />
+              <Route path="/donate" element={<Donate />} />
               <Route path="/financials" element={<Financials />} />
             </Route>
           </Routes>

@@ -132,28 +132,50 @@ const NewsManagement = () => {
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    // Validate file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+      showSnackbar('File size exceeds 5MB limit', 'error');
+      event.target.value = '';
+      return;
     }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+    if (!allowedTypes.includes(file.type)) {
+      showSnackbar('Invalid file type. Please upload a JPEG, PNG, or GIF image.', 'error');
+      event.target.value = '';
+      return;
+    }
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImagePreview(e.target?.result as string);
+    };
+    reader.onerror = () => {
+      showSnackbar('Error reading file', 'error');
+      event.target.value = '';
+    };
+    reader.readAsDataURL(file);
+    setSelectedImage(file);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     try {
       // Validate required fields
-      if (!formData.title.trim()) {
+      if (!formData.title?.trim()) {
         showSnackbar('Title is required', 'error');
         return;
       }
-      if (!formData.content.trim()) {
+      if (!formData.content?.trim()) {
         showSnackbar('Content is required', 'error');
         return;
       }
-      if (!formData.excerpt.trim()) {
+      if (!formData.excerpt?.trim()) {
         showSnackbar('Excerpt is required', 'error');
         return;
       }
@@ -163,47 +185,45 @@ const NewsManagement = () => {
       }
 
       const formDataToSend = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value instanceof Date) {
-          formDataToSend.append(key, value.toISOString());
-        } else {
-          formDataToSend.append(key, String(value));
-        }
-      });
-
-      // Add author information
-      if (!admin?.firstName || !admin?.lastName) {
-        showSnackbar('Admin information is missing', 'error');
-        return;
+      formDataToSend.append('title', formData.title.trim());
+      formDataToSend.append('content', formData.content.trim());
+      formDataToSend.append('excerpt', formData.excerpt.trim());
+      formDataToSend.append('category', formData.category);
+      formDataToSend.append('isPublished', formData.isPublished.toString());
+      if (formData.publishDate) {
+        formDataToSend.append('publishDate', formData.publishDate.toISOString());
       }
-      formDataToSend.append('author', `${admin.firstName} ${admin.lastName}`);
-
       if (selectedImage) {
         formDataToSend.append('image', selectedImage);
       }
 
-      const url = selectedArticle
-        ? `${process.env.REACT_APP_API_URL}/news/${selectedArticle._id}`
-        : `${process.env.REACT_APP_API_URL}/news`;
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/news${selectedArticle ? `/${selectedArticle._id}` : ''}`,
+        {
+          method: selectedArticle ? 'PUT' : 'POST',
+          headers: {
+            Authorization: `Bearer ${admin?.token}`,
+          },
+          body: formDataToSend,
+        }
+      );
 
-      await submitForm(url, formDataToSend, selectedArticle ? 'PUT' : 'POST', {
-        onSuccess: () => {
-          showSnackbar(
-            `News article ${selectedArticle ? 'updated' : 'created'} successfully`,
-            'success'
-          );
-          handleClose();
-          window.location.reload();
-        },
-        onError: (error) => {
-          console.error('Error details:', error);
-          showSnackbar(error.message || 'Error saving news article', 'error');
-        },
-      });
-    } catch (error) {
-      console.error('Error saving news article:', error);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to save news article');
+      }
+
       showSnackbar(
-        error instanceof Error ? error.message : 'Error saving news article',
+        `News article ${selectedArticle ? 'updated' : 'created'} successfully`,
+        'success'
+      );
+      handleClose();
+      window.location.reload();
+    } catch (error) {
+      console.error('Error saving news:', error);
+      showSnackbar(
+        error instanceof Error ? error.message : 'Failed to save news article',
         'error'
       );
     }

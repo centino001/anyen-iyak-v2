@@ -1,176 +1,387 @@
 import React from 'react';
-import { Box, Container, Typography, Grid, Paper, Divider } from '@mui/material';
+import { Box, Container, Typography, Grid, Paper, Divider, Fade, Zoom } from '@mui/material';
 
 const About: React.FC = () => {
   return (
     <Box>
       {/* Hero Section */}
-      <Box sx={{
-        backgroundColor: 'var(--primary-color)',
+      <Box sx={{ 
+        backgroundColor: '#121212',
+        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(/images/hero.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
         color: 'white',
         py: { xs: 8, md: 12 },
-        position: 'relative'
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '5px',
+          background: 'linear-gradient(90deg, var(--primary-color) 0%, transparent 100%)'
+        }
       }}>
         <Container maxWidth="lg">
-          <Typography variant="h1" sx={{
-            fontSize: { xs: '2.5rem', md: '3.5rem' },
-            fontWeight: 'bold',
-            mb: 3
-          }}>
-            Our History
-          </Typography>
-          <Typography variant="h5" sx={{ maxWidth: '800px', mb: 4, lineHeight: 1.6 }}>
-            Since our founding in 1990, the Anyen Iyak Foundation has been dedicated to supporting arts,
-            culture, and humanities through strategic grantmaking and innovative programs.
-          </Typography>
+          <Fade in timeout={1000}>
+            <Box>
+            <Typography variant="h1" sx={{ 
+              fontSize: { xs: '2.5rem', md: '3.5rem' },
+              fontWeight: 'bold',
+              mb: 3
+            }}>
+                ABOUT US
+            </Typography>
+              <Typography variant="h5" sx={{ maxWidth: '800px', mb: 4, lineHeight: 1.6 }}>
+                Welcome to the Anyen Iyak Foundation for Art and Culture, where we celebrate and preserve the vibrant heritage of Akwa Ibom.
+            </Typography>
+          </Box>
+          </Fade>
         </Container>
       </Box>
 
+      <Box sx={{
+        backgroundColor: '#121212',
+        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(/images/hero.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        color: 'white',
+        py: { xs: 8, md: 12 },
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '5px',
+          background: 'linear-gradient(90deg, var(--primary-color) 0%, transparent 100%)'
+        }
+      }}>
+        <Container maxWidth="lg">
+          <Fade in timeout={1000}>
+            <Box>
+              <Typography variant="h1" sx={{
+                fontSize: { xs: '2.5rem', md: '3.5rem' },
+                fontWeight: 'bold',
+                mb: 3
+              }}>
+                OUR MISSION
+              </Typography>
+              <Typography variant="h5" sx={{ maxWidth: '800px', mb: 4, lineHeight: 1.6 }}>
+              Our mission is to promote the rich traditions of the region both locally and globally through impactful initiatives. Inspired by the Ibibio term "Anyen Iyak," meaning "Fish Eye," we strive to keep Akwa Ibom's legacy alive for future generations.
+              </Typography>
+            </Box>
+          </Fade>
+        </Container>
+      </Box>
+
+
       {/* Main Content */}
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Grid container spacing={6}>
-          {/* Left Column - Timeline */}
-          <Grid item xs={12} md={4}>
-            <Box sx={{ position: 'sticky', top: 24 }}>
-              <Typography variant="h6" sx={{ mb: 4, fontWeight: 'bold' }}>
-                Key Milestones
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                {[
-                  {
-                    year: '1990',
-                    title: 'Foundation Established',
-                    description: 'The Anyen Iyak Foundation was established with a mission to support arts and culture.'
-                  },
-                  {
-                    year: '1995',
-                    title: 'First Grant Program',
-                    description: 'Launched our first major grant program supporting local artists and cultural institutions.'
-                  },
-                  {
-                    year: '2000',
-                    title: 'Expansion of Mission',
-                    description: 'Expanded our focus to include support for humanities and educational initiatives.'
-                  },
-                  {
-                    year: '2010',
-                    title: 'International Programs',
-                    description: 'Began supporting international cultural exchange programs and global arts initiatives.'
-                  },
-                  {
-                    year: '2020',
-                    title: 'Digital Transformation',
-                    description: 'Launched digital initiatives to support arts and culture in the digital age.'
-                  }
-                ].map((event, index) => (
-                  <Box key={index} sx={{ display: 'flex', gap: 2 }}>
-                    <Typography 
-                      sx={{ 
-                        color: 'var(--primary-color)',
-                        fontWeight: 'bold',
-                        minWidth: '60px'
-                      }}
-                    >
-                      {event.year}
-                    </Typography>
-                    <Box>
-                      <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
-                        {event.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {event.description}
-                      </Typography>
-                    </Box>
-                  </Box>
-                ))}
-              </Box>
-            </Box>
-          </Grid>
-
-          {/* Right Column - Main Content */}
-          <Grid item xs={12} md={8}>
-            <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold' }}>
-              A Legacy of Supporting Arts and Culture
-            </Typography>
-            
-            <Typography paragraph>
-              The Anyen Iyak Foundation was established in 1990 with a clear vision: to nurture and
-              sustain the arts and humanities as essential elements of vibrant human communities.
-              Our founder believed that cultural expression and artistic innovation are fundamental
-              to social progress and human understanding.
-            </Typography>
-
-            <Typography paragraph>
-              Over the past three decades, we have evolved and adapted our approach while staying
-              true to our core mission. We've supported thousands of artists, scholars, and cultural
-              institutions, helping to bring transformative ideas and creative works to life.
-            </Typography>
-
-            <Box sx={{ my: 6 }}>
-              <Paper sx={{ p: 4, bgcolor: '#f5f5f5' }}>
-                <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
-                  Our Impact
+      {/* <Box sx={{ py: 8, backgroundColor: '#1e1e1e' }}>
+        <Container maxWidth="lg">
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <Fade in timeout={800}>
+                <Typography paragraph sx={{ fontSize: '1.1rem', lineHeight: 1.8, mb: 4 }}>
+                  Our mission is to promote the rich traditions of the region both locally and globally through impactful initiatives. Inspired by the Ibibio term "Anyen Iyak," meaning "Fish Eye," we strive to keep Akwa Ibom's legacy alive for future generations.
                 </Typography>
-                <Grid container spacing={4}>
-                  <Grid item xs={12} sm={4}>
-                    <Typography variant="h3" sx={{ color: 'var(--primary-color)', mb: 1 }}>
-                      1000+
-                    </Typography>
-                    <Typography>
-                      Grants Awarded
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Typography variant="h3" sx={{ color: 'var(--primary-color)', mb: 1 }}>
-                      50M+
-                    </Typography>
-                    <Typography>
-                      Total Funding
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Typography variant="h3" sx={{ color: 'var(--primary-color)', mb: 1 }}>
-                      30+
-                    </Typography>
-                    <Typography>
-                      Countries Reached
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Box>
-
-            <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
-              Looking to the Future
-            </Typography>
-
-            <Typography paragraph>
-              As we look to the future, we remain committed to supporting innovative work in the
-              arts and humanities. We're expanding our focus to address contemporary challenges,
-              including digital transformation in the arts, cultural preservation in a rapidly
-              changing world, and promoting diversity and inclusion in creative fields.
-            </Typography>
-
-            <Typography paragraph>
-              Through our grantmaking, research initiatives, and collaborative programs, we continue
-              to work towards our vision of a world where arts and culture thrive as essential
-              components of human flourishing.
-            </Typography>
-
-            <Box sx={{ mt: 6 }}>
-              <Divider sx={{ mb: 4 }} />
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-                Our Commitment
-              </Typography>
-              <Typography>
-                We remain dedicated to supporting transformative ideas and creative expression
-                that enrich our shared cultural heritage and promote understanding across
-                communities.
-              </Typography>
-            </Box>
+              </Fade>
+            </Grid>
           </Grid>
-        </Grid>
-      </Container>
+        </Container>
+      </Box> */}
+
+      {/* Three Pillars Section */}
+      <Box sx={{ 
+        py: 8, 
+        backgroundColor: '#121212',
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '5px',
+          background: 'linear-gradient(90deg, var(--primary-color) 0%, transparent 100%)'
+        }
+      }}>
+        <Container maxWidth="lg">
+          <Fade in timeout={800}>
+            <Typography variant="h4" sx={{ 
+              mb: 5, 
+              fontWeight: 'bold',
+              position: 'relative',
+              display: 'inline-block',
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: -8,
+                left: 0,
+                width: '60px',
+                height: '3px',
+                backgroundColor: 'var(--primary-color)'
+              }
+            }}>
+              Our work is built on three core pillars:
+            </Typography>
+          </Fade>
+
+          <Grid container spacing={4} direction="column">
+            <Grid item xs={12}>
+              <Zoom in timeout={800}>
+                <Paper sx={{ 
+                  p: 4, 
+                  backgroundColor: '#1e1e1e',
+                  borderLeft: '4px solid var(--primary-color)',
+                  borderRadius: 2,
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateX(8px)',
+                    boxShadow: '0 10px 20px rgba(0,0,0,0.2)'
+                  }
+                }}>
+                  <Box>
+                    <Typography variant="h5" sx={{ 
+                      mb: 2, 
+                      fontWeight: 'bold',
+                      display: 'block',
+                      whiteSpace: 'nowrap',
+                      overflow: 'visible'
+                    }}>
+                      Cultural Regeneration, Preservation, and Continuity
+                    </Typography>
+                    <Typography sx={{ lineHeight: 1.8 }}>
+                      We are committed to preserving Akwa Ibom's traditions through research and documentation.
+                    </Typography>
+                  </Box>
+                </Paper>
+              </Zoom>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Zoom in timeout={1000}>
+                <Paper sx={{ 
+                  p: 4, 
+                  backgroundColor: '#1e1e1e',
+                  borderLeft: '4px solid var(--primary-color)',
+                  borderRadius: 2,
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateX(8px)',
+                    boxShadow: '0 10px 20px rgba(0,0,0,0.2)'
+                  }
+                }}>
+                  <Box>
+                    <Typography variant="h5" sx={{ 
+                      mb: 2, 
+                      fontWeight: 'bold',
+                      display: 'block',
+                      whiteSpace: 'nowrap',
+                      overflow: 'visible'
+                    }}>
+                      Artistic Development
+                    </Typography>
+                    <Typography sx={{ lineHeight: 1.8 }}>
+                      We empower both emerging and veteran artists by offering tools and platforms to amplify their voices.
+                    </Typography>
+                  </Box>
+                </Paper>
+              </Zoom>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Zoom in timeout={1200}>
+                <Paper sx={{ 
+                  p: 4, 
+                  backgroundColor: '#1e1e1e',
+                  borderLeft: '4px solid var(--primary-color)',
+                  borderRadius: 2,
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateX(8px)',
+                    boxShadow: '0 10px 20px rgba(0,0,0,0.2)'
+                  }
+                }}>
+                  <Box>
+                    <Typography variant="h5" sx={{ 
+                      mb: 2, 
+                      fontWeight: 'bold',
+                      display: 'block',
+                      whiteSpace: 'nowrap',
+                      overflow: 'visible'
+                    }}>
+                      Unification of the African Art and Culture Ecosystem
+                    </Typography>
+                    <Typography sx={{ lineHeight: 1.8 }}>
+                      We are building a strong network of African artists and cultural advocates to promote collaboration and eliminate barriers.
+                    </Typography>
+              </Box>
+                </Paper>
+              </Zoom>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* Core Values Section */}
+      <Box sx={{ 
+        py: 8, 
+        backgroundColor: '#1e1e1e',
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '5px',
+          background: 'linear-gradient(90deg, var(--primary-color) 0%, transparent 100%)'
+        }
+      }}>
+        <Container maxWidth="lg">
+          <Fade in timeout={800}>
+            <Typography variant="h4" sx={{ 
+              mb: 5, 
+              fontWeight: 'bold',
+              position: 'relative',
+              display: 'inline-block',
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: -8,
+                left: 0,
+                width: '60px',
+                height: '3px',
+                backgroundColor: 'var(--primary-color)'
+              }
+            }}>
+              At the heart of everything we do are our fundamental values:
+          </Typography>
+          </Fade>
+
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={6} lg={4}>
+              <Fade in timeout={800}>
+                <Box sx={{ 
+                  mb: 4,
+                  p: 3,
+                  borderLeft: '3px solid var(--primary-color)', 
+                  backgroundColor: 'rgba(184, 134, 11, 0.05)',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateX(5px)',
+                    backgroundColor: 'rgba(184, 134, 11, 0.1)',
+                  }
+                }}>
+                  <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+                    • Teamwork
+                  </Typography>
+                  <Typography sx={{ lineHeight: 1.7 }}>
+                    Collaboration is key—every effort, big or small, adds to the bigger picture.
+                  </Typography>
+                </Box>
+              </Fade>
+            </Grid>
+
+            <Grid item xs={12} md={6} lg={4}>
+              <Fade in timeout={1000}>
+                <Box sx={{ 
+                  mb: 4,
+                  p: 3,
+                  borderLeft: '3px solid var(--primary-color)', 
+                  backgroundColor: 'rgba(184, 134, 11, 0.05)',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateX(5px)',
+                    backgroundColor: 'rgba(184, 134, 11, 0.1)',
+                  }
+                }}>
+                  <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+                    • Leadership
+                </Typography>
+                  <Typography sx={{ lineHeight: 1.7 }}>
+                    Leadership is not just for the few; it is for everyone. We empower individuals to inspire change and lead with intention.
+                </Typography>
+                </Box>
+              </Fade>
+          </Grid>
+
+            <Grid item xs={12} md={6} lg={4}>
+              <Fade in timeout={1200}>
+              <Box sx={{ 
+                  mb: 4,
+                  p: 3,
+                  borderLeft: '3px solid var(--primary-color)', 
+                  backgroundColor: 'rgba(184, 134, 11, 0.05)',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateX(5px)',
+                    backgroundColor: 'rgba(184, 134, 11, 0.1)',
+                  }
+                }}>
+                  <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+                    • Integrity
+                  </Typography>
+                  <Typography sx={{ lineHeight: 1.7 }}>
+                    Our actions are built on honesty and transparency, earning us trust through consistent integrity.
+                  </Typography>
+              </Box>
+              </Fade>
+            </Grid>
+
+            <Grid item xs={12} md={6} lg={6}>
+              <Fade in timeout={1400}>
+                <Box sx={{ 
+                  mb: 4,
+                  p: 3,
+                  borderLeft: '3px solid var(--primary-color)', 
+                  backgroundColor: 'rgba(184, 134, 11, 0.05)',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateX(5px)',
+                    backgroundColor: 'rgba(184, 134, 11, 0.1)',
+                  }
+                }}>
+                  <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+                    • Mutual Respect
+              </Typography>
+                  <Typography sx={{ lineHeight: 1.7 }}>
+                    We honor every voice, creating an inclusive environment where our diverse perspectives bring us closer.
+              </Typography>
+                </Box>
+              </Fade>
+            </Grid>
+
+            <Grid item xs={12} md={6} lg={6}>
+              <Fade in timeout={1600}>
+                <Box sx={{ 
+                  mb: 4,
+                  p: 3,
+                  borderLeft: '3px solid var(--primary-color)', 
+                  backgroundColor: 'rgba(184, 134, 11, 0.05)',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateX(5px)',
+                    backgroundColor: 'rgba(184, 134, 11, 0.1)',
+                  }
+                }}>
+                  <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+                    • Resilience
+                  </Typography>
+                  <Typography sx={{ lineHeight: 1.7 }}>
+                    Challenges are opportunities for growth, so we face them head-on while staying focused on our mission.
+                  </Typography>
+                </Box>
+              </Fade>
+            </Grid>
+          </Grid>
+
+          
+        </Container>
+      </Box>
     </Box>
   );
 };

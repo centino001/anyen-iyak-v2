@@ -16,35 +16,50 @@ import {
   AttachMoney as MoneyIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import useDataFetch from '../../hooks/useDataFetch';
+
+interface CountResponse {
+  count: number;
+}
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { data: newsCountData } = useDataFetch<CountResponse>('/news/count');
+  const { data: programsCountData } = useDataFetch<CountResponse>('/programs/count');
+  const { data: peopleCountData } = useDataFetch<CountResponse>('/people/count');
+  const { data: grantsCountData } = useDataFetch<CountResponse>('/grants/count');
+
+  // Extract counts from response data
+  const newsCount = newsCountData && newsCountData.length > 0 ? newsCountData[0].count : 0;
+  const programsCount = programsCountData && programsCountData.length > 0 ? programsCountData[0].count : 0;
+  const peopleCount = peopleCountData && peopleCountData.length > 0 ? peopleCountData[0].count : 0;
+  const grantsCount = grantsCountData && grantsCountData.length > 0 ? grantsCountData[0].count : 0;
 
   const stats = [
     {
       title: 'News Articles',
-      count: '24',
+      count: newsCount.toString(),
       icon: <ArticleIcon sx={{ fontSize: 40 }} />,
       path: '/admin/news',
       color: '#1976d2',
     },
     {
       title: 'Programs',
-      count: '12',
+      count: programsCount.toString(),
       icon: <AssignmentIcon sx={{ fontSize: 40 }} />,
       path: '/admin/programs',
       color: '#2e7d32',
     },
     {
       title: 'Team Members',
-      count: '18',
+      count: peopleCount.toString(),
       icon: <PeopleIcon sx={{ fontSize: 40 }} />,
       path: '/admin/people',
       color: '#ed6c02',
     },
     {
-      title: 'Active Grants',
-      count: '8',
+      title: 'Open Calls',
+      count: grantsCount.toString(),
       icon: <MoneyIcon sx={{ fontSize: 40 }} />,
       path: '/admin/grants',
       color: '#9c27b0',
@@ -118,15 +133,12 @@ const Dashboard: React.FC = () => {
                 Grant Management
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Review and manage grant applications and programs.
+                Create and manage open calls and grant opportunities.
               </Typography>
             </CardContent>
             <CardActions>
               <Button size="small" onClick={() => navigate('/admin/grants')}>
-                View Grants
-              </Button>
-              <Button size="small" onClick={() => navigate('/admin/grants/applications')}>
-                Review Applications
+                Manage Open Calls
               </Button>
             </CardActions>
           </Card>

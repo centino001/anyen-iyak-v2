@@ -277,46 +277,43 @@ const Home: React.FC = () => {
           zIndex: 1
         }
       }}>
-        <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 }, position: 'relative', zIndex: 2 }}>
+        <Container 
+          maxWidth={false} 
+          sx={{ 
+            px: { xs: 2, sm: 3 }, 
+            position: 'relative', 
+            zIndex: 2, 
+            pt: '300px',
+            ml: '5px',
+            mr: 'auto',
+            width: 'auto'
+          }}
+        >
           <Slide direction="right" in timeout={1000}>
-            <Box sx={{ maxWidth: '600px' }}>
+            <Box sx={{ maxWidth: '1200px', pl: '20px', textAlign: 'left' }}>
               <Typography variant="h1" sx={{ 
-                fontSize: { xs: '2.5rem', md: '3.5rem' },
-                fontWeight: 'bold',
+                fontSize: { xs: '2.0rem', md: '3.0rem' },
                 mb: 3,
                 color: 'white',
-                textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
+                textAlign: 'justify',
+                textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+                fontFamily: 'var(--font-family)',
+                fontWeight: 300
               }}>
-                Advancing Transformative Ideas
+                Like the eyes of a fish that never closes in life or death,{'\n'}
+                We see our Past, as we bring it to the Present in order to carry it forth to the Future.
               </Typography>
               <Typography variant="h5" sx={{ 
                 mb: 4, 
+                fontSize: { xs: '1.5rem', md: '2.5rem' },
                 color: 'white',
-                textShadow: '1px 1px 3px rgba(0,0,0,0.5)'
+                fontWeight: 'bolder',
+                textShadow: '1px 1px 3px rgba(0,0,0,0.5)',
+                fontFamily: 'var(--font-family)'
               }}>
-                Supporting arts and humanities through grants and research initiatives.
+                Our eyes will never be shut in life or death.
               </Typography>
-              <Zoom in timeout={1500}>
-                <Button
-                  component={Link}
-                  to="/about"
-                  variant="contained"
-                  endIcon={<ArrowForwardIcon />}
-                  sx={{
-                    backgroundColor: 'var(--primary-color)',
-                    padding: '10px 24px',
-                    fontSize: '1.1rem',
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      backgroundColor: '#8B6914',
-                      transform: 'translateY(-3px)',
-                      boxShadow: '0 6px 15px rgba(0,0,0,0.2)'
-                    },
-                  }}
-                >
-                  Learn More
-                </Button>
-              </Zoom>
+
             </Box>
           </Slide>
         </Container>
@@ -420,7 +417,15 @@ const Home: React.FC = () => {
                     transform: 'scale(1.02)'
                   }
                 }}>
-                  Impact Image
+                  <img 
+                    src="/images/john.jpg" 
+                    alt="Ibibio Dancer" 
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover'
+                    }}
+                  />
                 </Box>
               </Zoom>
             </Grid>
@@ -445,11 +450,13 @@ const Home: React.FC = () => {
                     Contribute to OUR MISSION
                   </Typography>
                   <Typography variant="body1" sx={{ mb: 4, lineHeight: 1.8 }}>
-                    Support our work to strengthen and promote the arts and humanities in service of a more just and equitable society.
+                  Support our mission to preserve and promote art and culture, foster artistic development and unify the African Art and culture ecosystem.
                   </Typography>
                   <Stack spacing={2} direction="column" sx={{ mb: 3 }}>
                     <Button
                       variant="outlined"
+                      component={Link}
+                      to="/membership"
                       endIcon={<ArrowForwardIcon />}
                       sx={{ 
                         borderColor: 'var(--primary-color)',
@@ -467,23 +474,8 @@ const Home: React.FC = () => {
                     </Button>
                     <Button
                       variant="outlined"
-                      endIcon={<ArrowForwardIcon />}
-                      sx={{ 
-                        borderColor: 'var(--primary-color)',
-                        color: 'var(--primary-color)',
-                        transition: 'all 0.3s ease',
-                        justifyContent: 'flex-start',
-                        '&:hover': {
-                          borderColor: 'var(--primary-color)',
-                          backgroundColor: 'rgba(184, 134, 11, 0.05)',
-                          transform: 'translateX(5px)'
-                        }
-                      }}
-                    >
-                      Become a Corporate Partner
-                    </Button>
-                    <Button
-                      variant="outlined"
+                      component={Link}
+                      to="/donate"
                       endIcon={<ArrowForwardIcon />}
                       sx={{ 
                         borderColor: 'var(--primary-color)',

@@ -45,12 +45,13 @@ const Header: React.FC<HeaderProps> = () => {
 
   const menuItems = [
     { title: 'About', path: '/about' },
-    { title: 'Mission', path: '/mission' },
+    // { title: 'Mission', path: '/mission' },
     { title: 'People', path: '/people' },
     { title: 'Projects', path: '/programs' },
     { title: 'Open Calls', path: '/grants' },
     { title: 'News', path: '/news' },
-    { title: 'Shop', path: '/shop' },
+    { title: 'Membership', path: '/membership' },
+    // { title: 'Shop', path: '/shop' },
   ];
 
   return (

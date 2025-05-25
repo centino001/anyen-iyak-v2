@@ -25,8 +25,9 @@ const People: React.FC = () => {
 
   const departments = [
     'All',
+    'Board of Directors',
     'Executive Leadership',
-    'Board of Governors',
+    'Expert Advisors',
     'Core Team'
   ];
 

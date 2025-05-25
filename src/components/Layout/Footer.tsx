@@ -49,7 +49,7 @@ const Footer: React.FC = () => {
               Anyen lyak Foundation for Art & Culture<br />
               Plot 94-Unit A, Ewet Housing Estate<br />
               Uyo, Akwa Ibom State<br />
-              Nigeria
+              Nigeria.
               </Typography>
             </Fade>
           </Grid>
@@ -76,20 +76,7 @@ const Footer: React.FC = () => {
                       About
                     </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                      <Link 
-                        href="/mission" 
-                        color="inherit"
-                        sx={{
-                          transition: 'all 0.3s ease',
-                          '&:hover': {
-                            paddingLeft: '8px',
-                            textDecoration: 'none',
-                            fontWeight: 'bold'
-                          }
-                        }}
-                      >
-                        Our Mission
-                      </Link>
+                      
                       <Link 
                         href="/history" 
                         color="inherit"

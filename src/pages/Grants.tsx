@@ -1,40 +1,140 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Button, Card, CardContent, Tabs, Tab } from '@mui/material';
+import { Box, Container, Grid, Typography, Card, CardContent, Button, CircularProgress, Tabs, Tab } from '@mui/material';
+import { Link } from 'react-router-dom';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import useDataFetch from '../hooks/useDataFetch';
+import EmptyState from '../components/EmptyState';
+import ImageWithFallback from '../components/ImageWithFallback';
+import ImageIcon from '@mui/icons-material/Image';
+import { useTheme } from '@mui/material/styles';
+
+interface Grant {
+  _id: string;
+  title: string;
+  shortDescription: string;
+  category: string;
+  image?: string;
+  startDate: string;
+  deadline: string;
+  isActive: boolean;
+  fundingAmount: string;
+  slug: string;
+}
+
+interface GrantsResponse {
+  grants: Grant[];
+  totalPages: number;
+  currentPage: number;
+}
 
 const Grants: React.FC = () => {
+  const { data, loading, error } = useDataFetch<GrantsResponse>('/grants');
+  const theme = useTheme();
   const [tabValue, setTabValue] = React.useState(0);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
-  const recentGrants = [
-    {
-      recipient: 'Cultural Institution Name',
-      amount: '$2,500,000',
-      program: 'Arts and Culture',
-      description: 'Supporting the development of innovative cultural programs and exhibitions.'
-    },
-    {
-      recipient: 'University Name',
-      amount: '$1,750,000',
-      program: 'Higher Learning',
-      description: 'Advancing inclusive teaching and learning initiatives in higher education.'
-    },
-    {
-      recipient: 'Research Institute',
-      amount: '$3,000,000',
-      program: 'Public Knowledge',
-      description: 'Preserving and digitizing important historical archives.'
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+          <CircularProgress />
+        </Box>
+      );
     }
-  ];
+
+    if (error) {
+      return (
+        <EmptyState 
+          message="Error loading open calls. Please try again later."
+          icon={<AssignmentIcon sx={{ fontSize: 64, color: 'error.main' }} />}
+        />
+      );
+    }
+
+    if (!data || data.length === 0 || !data[0]?.grants || data[0].grants.length === 0) {
+      return (
+        <EmptyState 
+          message="No open calls available at the moment. Please check back later."
+          icon={<AssignmentIcon sx={{ fontSize: 64 }} />}
+        />
+      );
+    }
+
+    const grants = data[0]?.grants || [];
+
+    return (
+      <Grid container spacing={4}>
+        {grants.map((grant: Grant) => (
+          <Grid item xs={12} sm={6} md={4} key={grant._id}>
+            <Card 
+              sx={{ 
+                height: '100%',
+                boxShadow: 'none',
+                border: '1px solid #E5E5E5',
+                transition: 'transform 0.2s',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                },
+              }}
+              component={Link}
+              to={`/grants/${grant.slug}`}
+              style={{ textDecoration: 'none' }}
+            >
+              <Box 
+                sx={{ 
+                  height: 350,
+                  width: '100%',
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  backgroundColor: '#E5E5E5',
+                  padding: '10px',
+                  borderRadius: 1
+                }}
+              >
+                <ImageWithFallback
+                  src={grant.image}
+                  alt={grant.title}
+                  fallbackIcon={<ImageIcon sx={{ fontSize: 60, color: 'grey.400' }} />}
+                  sx={{ width: '100%', height: '100%' }}
+                />
+              </Box>
+              <CardContent sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ mb: 1, color: 'text.primary' }}>
+                  {grant.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  {grant.shortDescription}
+                </Typography>
+                <Typography variant="subtitle2" color="primary" sx={{ mb: 2 }}>
+                  Funding: {grant.fundingAmount}
+                </Typography>
+                <Typography variant="caption" display="block" sx={{ mb: 2, color: 'text.secondary' }}>
+                  Deadline: {new Date(grant.deadline).toLocaleDateString()}
+                </Typography>
+                <Button
+                  endIcon={<ArrowForwardIcon />}
+                  sx={{ color: 'var(--primary-color)' }}
+                >
+                  View Details
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    );
+  };
 
   return (
     <Box>
       {/* Hero Section */}
       <Box sx={{ 
-        height: '60vh',
+        height: '40vh',
         backgroundColor: '#121212',
         backgroundImage: 'linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7))',
         display: 'flex',
@@ -43,7 +143,7 @@ const Grants: React.FC = () => {
         color: '#FFFFFF'
       }}>
         <Container maxWidth="lg">
-          <Box sx={{ maxWidth: '600px' }}>
+          <Box sx={{ maxWidth: '800px' }}>
             <Typography variant="h1" sx={{ 
               fontSize: { xs: '2.5rem', md: '3.5rem' },
               fontWeight: 'bold',
@@ -54,18 +154,6 @@ const Grants: React.FC = () => {
             <Typography variant="h5" sx={{ mb: 4 }}>
               Supporting transformative ideas and initiatives in the arts and humanities.
             </Typography>
-            <Button
-              variant="contained"
-              endIcon={<ArrowForwardIcon />}
-              sx={{
-                backgroundColor: 'var(--primary-color)',
-                '&:hover': {
-                  backgroundColor: '#002548',
-                },
-              }}
-            >
-              Apply for a Grant
-            </Button>
           </Box>
         </Container>
       </Box>
@@ -74,82 +162,32 @@ const Grants: React.FC = () => {
       <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: '#121212' }}>
         <Container maxWidth="lg">
           <Tabs value={tabValue} onChange={handleTabChange} aria-label="grants navigation">
-            <Tab label="Recent Grants" />
-            <Tab label="Grant Programs" />
-            <Tab label="Application Process" />
+            <Tab label="Current Open Calls" />
+
           </Tabs>
         </Container>
       </Box>
 
-      {/* Recent Grants Section */}
-      <Box sx={{ py: 8 }}>
+      {/* Grants Grid */}
+      <Box sx={{ py: 8, backgroundColor: '#121212' }}>
         <Container maxWidth="lg">
-          {tabValue === 0 && (
-            <Grid container spacing={4}>
-              {recentGrants.map((grant, index) => (
-                <Grid item xs={12} key={index}>
-                  <Card sx={{ boxShadow: 'none', border: '1px solid #E5E5E5' }}>
-                    <CardContent sx={{ p: 4 }}>
-                      <Grid container spacing={4}>
-                        <Grid item xs={12} md={8}>
-                          <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
-                            {grant.recipient}
-                          </Typography>
-                          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                            {grant.description}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Program: {grant.program}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: { md: 'flex-end' } }}>
-                          <Typography variant="h4" sx={{ mb: 2, color: 'var(--primary-color)' }}>
-                            {grant.amount}
-                          </Typography>
-                          <Button
-                            endIcon={<ArrowForwardIcon />}
-                            sx={{ color: 'var(--primary-color)' }}
-                          >
-                            View Details
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          )}
+          {tabValue === 0 && renderContent()}
 
           {tabValue === 1 && (
             <Box sx={{ py: 4 }}>
-              <Typography variant="h4" sx={{ mb: 4 }}>
-                Grant Programs
+              <Typography variant="h4" sx={{ mb: 4, color: 'white' }}>
+                Past Opportunities
               </Typography>
-              <Typography variant="body1">
-                Information about our grant programs will be displayed here.
+              <Typography variant="body1" sx={{ color: 'white' }}>
+                Archive of our previous open calls and grant opportunities.
               </Typography>
             </Box>
           )}
 
           {tabValue === 2 && (
             <Box sx={{ py: 4 }}>
-              <Typography variant="h4" sx={{ mb: 4 }}>
-                Application Process
-              </Typography>
-              <Typography variant="body1">
-                Details about the grant application process will be shown here.
-              </Typography>
-            </Box>
-          )}
-        </Container>
-      </Box>
-
-      {/* Resources Section */}
-      <Box sx={{ py: 8, backgroundColor: '#1e1e1e', color: '#FFFFFF' }}>
-        <Container maxWidth="lg">
-          <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold' }}>
-            Grant Resources
+              <Typography variant="h4" sx={{ mb: 4, color: 'white' }}>
+                Grant Resources
           </Typography>
           <Grid container spacing={4}>
             <Grid item xs={12} md={4}>
@@ -207,6 +245,8 @@ const Grants: React.FC = () => {
               </Card>
             </Grid>
           </Grid>
+            </Box>
+          )}
         </Container>
       </Box>
     </Box>

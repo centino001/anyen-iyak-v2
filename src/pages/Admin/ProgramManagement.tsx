@@ -139,10 +139,26 @@ const ProgramManagement = () => {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        showSnackbar('File size too large. Maximum size is 5MB.', 'error');
+        return;
+      }
+
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        showSnackbar('Invalid file type. Only JPEG, PNG, GIF, and JPG are allowed.', 'error');
+        return;
+      }
+
       setSelectedImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
+      };
+      reader.onerror = () => {
+        showSnackbar('Error reading file. Please try another image.', 'error');
       };
       reader.readAsDataURL(file);
     }
@@ -150,6 +166,28 @@ const ProgramManagement = () => {
 
   const handleSubmit = async () => {
     try {
+      // Validate required fields
+      if (!formData.title.trim()) {
+        showSnackbar('Title is required', 'error');
+        return;
+      }
+      if (!formData.description.trim()) {
+        showSnackbar('Description is required', 'error');
+        return;
+      }
+      if (!formData.shortDescription.trim()) {
+        showSnackbar('Short description is required', 'error');
+        return;
+      }
+      if (!formData.category) {
+        showSnackbar('Category is required', 'error');
+        return;
+      }
+      if (!formData.startDate) {
+        showSnackbar('Start date is required', 'error');
+        return;
+      }
+
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
         if (Array.isArray(value)) {
@@ -178,7 +216,8 @@ const ProgramManagement = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save program');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to save program');
       }
 
       showSnackbar(
@@ -189,7 +228,7 @@ const ProgramManagement = () => {
       window.location.reload();
     } catch (error) {
       console.error('Error saving program:', error);
-      showSnackbar('Error saving program', 'error');
+      showSnackbar(error instanceof Error ? error.message : 'Error saving program', 'error');
     }
   };
 
