@@ -4,7 +4,7 @@ import { Box, Container, Grid, Typography, Link, useTheme, Fade, Zoom } from '@m
 const Footer: React.FC = () => {
   const theme = useTheme();
   // Use black logo on blue background (light mode), white logo on black background (dark mode)
-  const logoSrc = theme.palette.mode === 'light' ? '/logos/18.png' : '/logos/19.png';
+  const logoSrc = theme.palette.mode === 'light' ? '/logos/new-black.PNG' : '/logos/new-black.PNG';
 
   return (
     <Box sx={{ 

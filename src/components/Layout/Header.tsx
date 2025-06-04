@@ -17,7 +17,7 @@ const Header: React.FC<HeaderProps> = () => {
   const theme = useTheme();
   const location = useLocation();
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null);
-  const logoSrc = '/logos/19.png';
+  const logoSrc = '/logos/new-black.PNG';
   const [scrolled, setScrolled] = useState(false);
 
   // Add scroll effect
