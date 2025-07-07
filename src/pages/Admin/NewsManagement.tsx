@@ -39,7 +39,6 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import useDataFetch from '../../hooks/useDataFetch';
 import useFormSubmit from '../../hooks/useFormSubmit';
 import ImageWithFallback from '../../components/ImageWithFallback';
-import 'react-quill/dist/quill.snow.css';
 
 interface NewsArticle {
   _id: string;

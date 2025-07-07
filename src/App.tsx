@@ -27,6 +27,7 @@ import SubscriberManagement from './pages/Admin/SubscriberManagement';
 import { AdminProvider } from './contexts/AdminContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
+import 'react-quill/dist/quill.snow.css';
 import ProgramDetail from './pages/ProgramDetail';
 
 interface MainLayoutProps {}

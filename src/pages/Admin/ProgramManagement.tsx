@@ -38,7 +38,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import ImageWithFallback from '../../components/ImageWithFallback';
-import 'react-quill/dist/quill.snow.css';
 
 interface Program {
   _id: string;
