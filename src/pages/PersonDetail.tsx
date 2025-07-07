@@ -31,17 +31,8 @@ const PersonDetail: React.FC = () => {
   const navigate = useNavigate();
   const { data, loading, error } = useDataFetch<Person>(`/people/${slug}`);
   
+  // Now useDataFetch properly extracts result.person and wraps it in an array
   const person = data?.[0];
-
-  // Log data for debugging
-  useEffect(() => {
-    if (data) {
-      console.log("Person data:", data);
-    }
-    if (error) {
-      console.error("Error fetching person:", error);
-    }
-  }, [data, error]);
 
   if (loading) {
     return (

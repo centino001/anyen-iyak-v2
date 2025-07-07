@@ -65,6 +65,12 @@ const useDataFetch = <T>(endpoint: string, options: FetchOptions = {}): FetchSta
           data = result.news;
         } else if (result.people) {
           data = result.people;
+        } else if (result.person) {
+          // Handle single person response
+          data = [result.person];
+        } else if (result && typeof result === 'object') {
+          // If the result is a single object, wrap it in an array
+          data = [result];
         } else {
           console.warn('Unexpected response format:', result);
           data = [];

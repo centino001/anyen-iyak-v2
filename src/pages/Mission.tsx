@@ -35,10 +35,10 @@ const Mission: React.FC = () => {
           <Grid container spacing={6}>
             <Grid item xs={12} md={8}>
               <Typography variant="body1" sx={{ mb: 4, fontSize: '1.25rem', lineHeight: 1.8 }}>
-                We support the flourishing of culture through grants to arts organizations, universities, libraries, and other institutions that sustain our shared cultural record and create new possibilities for understanding.
+                We support the flourishing of culture through programs for arts organizations, universities, libraries, and other institutions that sustain our shared cultural record and create new possibilities for understanding.
               </Typography>
               <Typography variant="body1" sx={{ mb: 4, fontSize: '1.25rem', lineHeight: 1.8 }}>
-                Our grantmaking aims to build just communities where ideas and imagination can thrive through the arts and humanities.
+                Our programs aim to build just communities where ideas and imagination can thrive through the arts and humanities.
               </Typography>
             </Grid>
             <Grid item xs={12} md={4}>
@@ -117,7 +117,7 @@ const Mission: React.FC = () => {
                 Our Impact
               </Typography>
               <Typography variant="body1" sx={{ mb: 4 }}>
-                Through strategic grantmaking and thoughtful collaboration, we've supported countless initiatives that strengthen the arts and humanities across the United States and beyond.
+                Through strategic programming and thoughtful collaboration, we've supported countless initiatives that strengthen the arts and humanities across the United States and beyond.
               </Typography>
               <Button
                 variant="contained"

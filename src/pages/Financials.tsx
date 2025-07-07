@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Container, Grid, Typography, Card, CardContent, Button } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DownloadIcon from '@mui/icons-material/Download';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 
 interface FinancialReport {
   year: string;
@@ -15,6 +16,7 @@ interface FinancialHighlight {
   title: string;
   value: string;
   description: string;
+  icon?: React.ReactNode;
 }
 
 const Financials: React.FC = () => {
@@ -49,9 +51,10 @@ const Financials: React.FC = () => {
       description: 'Market value as of December 31, 2023',
     },
     {
-      title: 'Annual Grantmaking',
-      value: '$500 Million',
-      description: 'Total grants awarded in 2023',
+      title: 'Annual Programs',
+      value: '$2.4M',
+      description: 'Total program funding in 2023',
+      icon: <TrendingUpIcon sx={{ fontSize: 40 }} />
     },
     {
       title: 'Investment Return',
@@ -110,6 +113,7 @@ const Financials: React.FC = () => {
                     <Typography variant="body2" color="text.secondary">
                       {highlight.description}
                     </Typography>
+                    {highlight.icon && <Box sx={{ mt: 2 }}>{highlight.icon}</Box>}
                   </CardContent>
                 </Card>
               </Grid>

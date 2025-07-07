@@ -144,7 +144,7 @@ const History: React.FC = () => {
                 Since its founding, the Anyen Iyak Foundation for Art and Culture has demonstrated an abiding commitment to the humanities and the arts. We believe that these fields are essential to human flourishing and to the wellbeing of diverse and democratic societies.
               </Typography>
               <Typography variant="body1" sx={{ fontSize: '1.125rem', lineHeight: 1.8 }}>
-                Through our grantmaking, we seek to build just communities enriched by meaning and empowered by critical thinking, where ideas and imagination can thrive.
+                Through our programming, we seek to build just communities enriched by meaning and empowered by critical thinking, where ideas and imagination can thrive.
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>

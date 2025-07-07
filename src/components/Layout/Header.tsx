@@ -48,7 +48,6 @@ const Header: React.FC<HeaderProps> = () => {
     // { title: 'Mission', path: '/mission' },
     { title: 'People', path: '/people' },
     { title: 'Projects', path: '/programs' },
-    { title: 'Open Calls', path: '/grants' },
     { title: 'News', path: '/news' },
     { title: 'Membership', path: '/membership' },
     // { title: 'Shop', path: '/shop' },

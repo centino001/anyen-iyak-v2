@@ -27,13 +27,11 @@ const Dashboard: React.FC = () => {
   const { data: newsCountData } = useDataFetch<CountResponse>('/news/count');
   const { data: programsCountData } = useDataFetch<CountResponse>('/programs/count');
   const { data: peopleCountData } = useDataFetch<CountResponse>('/people/count');
-  const { data: grantsCountData } = useDataFetch<CountResponse>('/grants/count');
 
   // Extract counts from response data
   const newsCount = newsCountData && newsCountData.length > 0 ? newsCountData[0].count : 0;
   const programsCount = programsCountData && programsCountData.length > 0 ? programsCountData[0].count : 0;
   const peopleCount = peopleCountData && peopleCountData.length > 0 ? peopleCountData[0].count : 0;
-  const grantsCount = grantsCountData && grantsCountData.length > 0 ? grantsCountData[0].count : 0;
 
   const stats = [
     {
@@ -56,13 +54,6 @@ const Dashboard: React.FC = () => {
       icon: <PeopleIcon sx={{ fontSize: 40 }} />,
       path: '/admin/people',
       color: '#ed6c02',
-    },
-    {
-      title: 'Open Calls',
-      count: grantsCount.toString(),
-      icon: <MoneyIcon sx={{ fontSize: 40 }} />,
-      path: '/admin/grants',
-      color: '#9c27b0',
     },
   ];
 
@@ -121,24 +112,6 @@ const Dashboard: React.FC = () => {
               </Button>
               <Button size="small" onClick={() => navigate('/admin/people')}>
                 Manage People
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Grant Management
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Create and manage open calls and grant opportunities.
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" onClick={() => navigate('/admin/grants')}>
-                Manage Open Calls
               </Button>
             </CardActions>
           </Card>

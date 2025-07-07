@@ -370,7 +370,7 @@ const Membership: React.FC = () => {
                   At Anyen Iyak, we share a deep love for cultural heritage. That's why we're committed to preserving Akwa Ibom art and culture so they are not just remembered but passed on.
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 4, fontSize: '1.1rem', lineHeight: 1.8 }}>
-                  Whether you're a student discovering your roots, a creative looking for inspiration or a company that values cultural preservation, our membership is an invitation for you to belong. Membership grants access to programs, networks, and initiatives that help preserve and grow Nigeria's creative and cultural economy.
+                  Whether you're a student discovering your roots, a creative looking for inspiration or a company that values cultural preservation, our membership is an invitation for you to belong. Membership provides access to programs, networks, and initiatives that help preserve and grow Nigeria's creative and cultural economy.
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold', color: 'var(--primary-color)' }}>
                   Become a Member today!

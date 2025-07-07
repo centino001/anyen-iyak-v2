@@ -39,6 +39,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import useDataFetch from '../../hooks/useDataFetch';
 import useFormSubmit from '../../hooks/useFormSubmit';
 import ImageWithFallback from '../../components/ImageWithFallback';
+import 'react-quill/dist/quill.snow.css';
 
 interface NewsArticle {
   _id: string;
@@ -74,8 +75,7 @@ const INITIAL_FORM_DATA: FormData = {
 const NEWS_CATEGORIES = [
   'Press Release',
   'Program Update',
-  'Research',
-  'Grant Announcement'
+  'Research'
 ];
 
 const NewsManagement = () => {
@@ -90,6 +90,13 @@ const NewsManagement = () => {
     message: '',
     severity: 'success' as 'success' | 'error',
   });
+  const [ReactQuill, setReactQuill] = useState<any>(null);
+  
+  useEffect(() => {
+    import('react-quill').then((module) => {
+      setReactQuill(() => module.default);
+    });
+  }, []);
 
   const { data: news, loading, error } = useDataFetch<NewsArticle>('/news/admin/all', { isAdminRoute: true });
   const { submitForm, isSubmitting } = useFormSubmit();
@@ -385,15 +392,15 @@ const NewsManagement = () => {
               required
             />
 
-            <TextField
-              label="Content"
-              value={formData.content}
-              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-              multiline
-              rows={6}
-              fullWidth
-              required
-            />
+            {ReactQuill ? (
+              <ReactQuill
+                value={formData.content}
+                onChange={(value: string) => setFormData({ ...formData, content: value })}
+                style={{ height: '200px', marginBottom: '24px' }}
+              />
+            ) : (
+              <div>Loading editor...</div>
+            )}
 
             <TextField
               label="Excerpt"

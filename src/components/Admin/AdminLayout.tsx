@@ -22,6 +22,8 @@ import {
   AttachMoney as MoneyIcon,
   ExitToApp as LogoutIcon,
   Dashboard as DashboardIcon,
+  Event as EventIcon,
+  Email as EmailIcon,
 } from '@mui/icons-material';
 import { useAdmin } from '../../contexts/AdminContext';
 
@@ -37,11 +39,11 @@ const AdminLayout: React.FC = () => {
   };
 
   const menuItems = [
-    { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin/dashboard' },
-    { text: 'News', icon: <ArticleIcon />, path: '/admin/news' },
-    { text: 'Programs', icon: <AssignmentIcon />, path: '/admin/programs' },
-    { text: 'People', icon: <PeopleIcon />, path: '/admin/people' },
-    { text: 'Grants', icon: <MoneyIcon />, path: '/admin/grants' },
+    { title: 'Dashboard', path: '/admin/dashboard', icon: <DashboardIcon /> },
+    { title: 'News', path: '/admin/news', icon: <ArticleIcon /> },
+    { title: 'Programs', path: '/admin/programs', icon: <EventIcon /> },
+    { title: 'People', path: '/admin/people', icon: <PeopleIcon /> },
+    { title: 'Subscribers', path: '/admin/subscribers', icon: <EmailIcon /> },
   ];
 
   const drawer = (
@@ -55,11 +57,11 @@ const AdminLayout: React.FC = () => {
       <List>
         {menuItems.map((item) => (
           <ListItemButton
-            key={item.text}
+            key={item.title}
             onClick={() => navigate(item.path)}
           >
             <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.text} />
+            <ListItemText primary={item.title} />
           </ListItemButton>
         ))}
       </List>

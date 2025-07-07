@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -38,6 +38,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import ImageWithFallback from '../../components/ImageWithFallback';
+import 'react-quill/dist/quill.snow.css';
 
 interface Program {
   _id: string;
@@ -82,6 +83,14 @@ const INITIAL_FORM_DATA: FormData = {
 };
 
 const ProgramManagement = () => {
+  const [ReactQuill, setReactQuill] = useState<any>(null);
+  
+  useEffect(() => {
+    import('react-quill').then((module) => {
+      setReactQuill(() => module.default);
+    });
+  }, []);
+
   const { admin } = useAdmin();
   const [open, setOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
@@ -387,15 +396,15 @@ const ProgramManagement = () => {
               required
             />
 
-            <TextField
-              label="Description"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              multiline
-              rows={4}
-              fullWidth
-              required
-            />
+            {ReactQuill ? (
+              <ReactQuill
+                value={formData.description}
+                onChange={(value: string) => setFormData({ ...formData, description: value })}
+                style={{ height: '200px', marginBottom: '24px' }}
+              />
+            ) : (
+              <div>Loading editor...</div>
+            )}
 
             <TextField
               label="Short Description"

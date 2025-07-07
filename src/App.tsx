@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import About from './pages/About';
 import Programs from './pages/Programs';
-import Grants from './pages/Grants';
-import GrantDetail from './pages/GrantDetail';
 import News from './pages/News';
+import NewsDetail from './pages/NewsDetail';
 import Mission from './pages/Mission';
 import History from './pages/History';
 import People from './pages/People';
@@ -23,10 +23,11 @@ import Dashboard from './pages/Admin/Dashboard';
 import NewsManagement from './pages/Admin/NewsManagement';
 import ProgramManagement from './pages/Admin/ProgramManagement';
 import PeopleManagement from './pages/Admin/PeopleManagement';
-import GrantManagement from './pages/Admin/GrantManagement';
+import SubscriberManagement from './pages/Admin/SubscriberManagement';
 import { AdminProvider } from './contexts/AdminContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
+import ProgramDetail from './pages/ProgramDetail';
 
 interface MainLayoutProps {}
 
@@ -83,6 +84,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Router>
+          <ScrollToTop />
           <Routes>
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLogin />} />
@@ -98,7 +100,7 @@ function App() {
               <Route path="news" element={<NewsManagement />} />
               <Route path="programs" element={<ProgramManagement />} />
               <Route path="people" element={<PeopleManagement />} />
-              <Route path="grants" element={<GrantManagement />} />
+              <Route path="subscribers" element={<SubscriberManagement />} />
             </Route>
 
             {/* Public Routes */}
@@ -106,13 +108,13 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
               <Route path="/programs" element={<Programs />} />
-              <Route path="/grants" element={<Grants />} />
-              <Route path="/grants/:id" element={<GrantDetail />} />
+              <Route path="/programs/:slug" element={<ProgramDetail />} />
               <Route path="/news" element={<News />} />
+              <Route path="/news/:slug" element={<NewsDetail />} />
               <Route path="/mission" element={<Mission />} />
               <Route path="/history" element={<History />} />
               <Route path="/people" element={<People />} />
-              <Route path="/people/:id" element={<PersonDetail />} />
+              <Route path="/people/:slug" element={<PersonDetail />} />
               <Route path="/shop" element={<Shop />} />
               <Route path="/membership" element={<Membership />} />
               <Route path="/donate" element={<Donate />} />

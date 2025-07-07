@@ -17,6 +17,7 @@ interface NewsArticle {
   author: string;
   slug: string;
   isPublished: boolean;
+  content: string; // Added content field
 }
 
 const News: React.FC = () => {
@@ -94,7 +95,7 @@ const News: React.FC = () => {
                 <Typography variant="h6" sx={{ mb: 1, color: 'text.primary' }}>
                   {article.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                <Typography variant="body1" sx={{ mb: 3 }}>
                   {article.excerpt}
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

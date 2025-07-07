@@ -23,6 +23,15 @@ const People: React.FC = () => {
   const [selectedDepartment, setSelectedDepartment] = useState(0);
   const { data: people, loading, error } = useDataFetch<Person>('/people');
 
+  // Debug: Log people data to see if images are included
+  React.useEffect(() => {
+    if (people && people.length > 0) {
+      console.log('People data received:', people);
+      console.log('Sample person with image:', people.find(p => p.image));
+      console.log('People without images:', people.filter(p => !p.image).length);
+    }
+  }, [people]);
+
   const departments = [
     'All',
     'Board of Directors',
@@ -61,12 +70,14 @@ const People: React.FC = () => {
       );
     }
 
-    if (!people || people.length === 0) {
+    if (!filteredPeople || filteredPeople.length === 0) {
       return (
         <Fade in timeout={800}>
           <Box>
             <EmptyState 
-              message="No team members available at the moment."
+              message={selectedDepartment === 0 
+                ? "No team members available at the moment." 
+                : `No team members in ${departments[selectedDepartment]} department.`}
               icon={<PersonIcon sx={{ fontSize: 64 }} />}
             />
           </Box>
@@ -76,7 +87,7 @@ const People: React.FC = () => {
 
     return (
       <Grid container spacing={4}>
-        {people.map((person, index) => (
+        {filteredPeople.map((person, index) => (
           <Grid item xs={12} sm={6} md={4} key={person._id}>
             <Grow 
               in 
@@ -105,7 +116,6 @@ const People: React.FC = () => {
                   overflow: 'hidden',
                   padding: '10px',
                   borderRadius: 2,
-                  // backgroundColor: theme => theme.palette.mode === 'light' ? '#F5F5F5' : '#1A1A1A',
                   transition: 'all 0.3s ease',
                 }}>
                   <Box 
@@ -159,6 +169,9 @@ const People: React.FC = () => {
                   </Typography>
                   <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                     {person.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2, fontWeight: 'bold' }}>
+                    {person.department}
                   </Typography>
                   <Button
                     endIcon={<ArrowForwardIcon />}
