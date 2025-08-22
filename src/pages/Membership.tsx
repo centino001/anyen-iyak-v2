@@ -49,7 +49,7 @@ const membershipTypes = [
     title: 'Kids Membership',
     subtitle: 'Ages 5-16',
     price: '5,000 NGN/month',
-    icon: <ChildCareIcon sx={{ fontSize: 40 }} />,
+    icon: <img src="/images/kids.svg" alt="Kids" style={{ width: 80, height: 80, color: '#D05A34', fill: '#D05A34' }} />,
     benefits: [
       'Free access to kid-friendly workshops, storytelling sessions, and art activities',
       'Special invitations to kids-only exhibitions and interactive events',
@@ -57,14 +57,14 @@ const membershipTypes = [
       'Birthday shoutout on the foundation\'s social media',
       '10% discount on merchandise at the foundation\'s shop'
     ],
-    color: '#b8860b'
+    color: '#FF6B35'
   },
   {
     id: 'student',
     title: 'Student Membership',
     subtitle: 'Valid student ID required',
     price: '10,000 NGN/month',
-    icon: <SchoolIcon sx={{ fontSize: 40 }} />,
+    icon: <img src="/images/grad_cap.svg" alt="Student" style={{ width: 80, height: 80, color: '#D05A34', fill: '#D05A34' }} />,
     benefits: [
       'Free access to exhibitions and student-only art forums & mentorship sessions',
       'Discounts on art materials, workshops, and masterclasses',
@@ -72,28 +72,28 @@ const membershipTypes = [
       'Priority access to internship and volunteer opportunities',
       '15% discount at the foundation\'s shop and workspace'
     ],
-    color: '#b8860b'
+    color: '#FF6B35'
   },
   {
     id: 'individual',
     title: 'Individual Membership',
     subtitle: 'For art and culture enthusiasts',
     price: '25,000 NGN/month',
-    icon: <PersonIcon sx={{ fontSize: 40 }} />,
+    icon: <img src="/images/individual.svg" alt="Individual" style={{ width: 80, height: 80, color: '#D05A34', fill: '#D05A34' }} />,
     benefits: [
       'Free year-round admission to the foundation\'s exhibitions and events',
       'Invitations to exclusive exhibition openings and member-only events',
       'Monthly e-newsletter with updates on programs and activities',
       '5% discount at the foundation\'s shop and workspace'
     ],
-    color: '#b8860b'
+    color: '#FF6B35'
   },
   {
     id: 'family',
     title: 'Family Membership',
     subtitle: 'For up to 4 family members',
     price: '50,000 NGN/month',
-    icon: <FamilyRestroomIcon sx={{ fontSize: 40 }} />,
+    icon: <img src="/images/family.svg" alt="Family" style={{ width: 80, height: 80, color: '#D05A34', fill: '#D05A34' }} />,
     benefits: [
       'Admission for up to 4 family members to all exhibitions and events',
       'Special family-friendly workshops and interactive activities',
@@ -101,7 +101,7 @@ const membershipTypes = [
       'Exclusive invitations to family-oriented events',
       '10% discount at the foundation\'s shop and café'
     ],
-    color: '#b8860b'
+    color: '#FF6B35'
   }
 ];
 
@@ -111,7 +111,7 @@ const premiumMemberships = [
     title: 'Corporate Membership',
     subtitle: 'For businesses and organizations',
     price: '5,000,000 NGN/year',
-    icon: <BusinessIcon sx={{ fontSize: 40 }} />,
+    icon: <img src="/images/corporate.svg" alt="Corporate" style={{ width: 60, height: 60, color: '#D05A34', fill: '#D05A34' }} />,
     benefits: [
       'Opportunities to host corporate events at the foundation\'s venue',
       'Invitations to exclusive member-only events',
@@ -119,14 +119,34 @@ const premiumMemberships = [
       'Free access to the foundation\'s workspace',
       'Discounted rates for corporate cultural retreats and team-building activities'
     ],
-    color: '#DAA520'
+    color: '#FF6B35'
   },
   {
     id: 'elite',
     title: 'Anyen Iyak Circle',
     subtitle: 'Elite Membership',
     price: '2,500,000 NGN/year',
-    icon: <StarIcon sx={{ fontSize: 40 }} />,
+    icon: (
+      <Box sx={{ position: 'relative' }}>
+        <img src="/images/elite.svg" alt="Elite" style={{ width: 60, height: 60, color: '#D05A34', fill: '#D05A34' }} />
+        <Box sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: 60,
+          height: 60,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '30px',
+          color: 'white',
+          fontWeight: 'bold',
+          opacity: 0.8
+        }}>
+          ★
+        </Box>
+      </Box>
+    ),
     benefits: [
       'All benefits of supporting membership',
       'Monthly e-newsletter with updates on programs and activities',
@@ -135,7 +155,7 @@ const premiumMemberships = [
       'Prominent recognition on AIFAC platforms and event materials',
       'Exclusive access to behind-the-scenes cultural and artistic projects'
     ],
-    color: '#DAA520'
+    color: '#FF6B35'
   }
 ];
 
@@ -303,407 +323,594 @@ const Membership: React.FC = () => {
   };
 
   return (
-    <Box>
-      {/* Hero Section */}
+    <Box sx={{ backgroundColor: '#1a1a1a', minHeight: '100vh', color: 'white' }}>
+      {/* Header Section */}
       <Box sx={{ 
-        height: '60vh',
-        backgroundColor: '#121212',
-        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(/images/heroo.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center calc(50% + 50px)',
-        display: 'flex',
-        alignItems: 'center',
-        position: 'relative',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '5px',
-          background: 'linear-gradient(90deg, var(--primary-color) 0%, transparent 100%)'
-        }
+        backgroundColor: '#1a1a1a',
+        py: 8,
+        textAlign: 'center',
+        // border: '2px solid #6a4c93',
+        mx: 4,
+        mt: 4,
+        mb: 6
       }}>
         <Container maxWidth="lg">
-          <Slide direction="right" in timeout={1000}>
-            <Box sx={{ maxWidth: '800px' }}>
-              <Typography variant="h1" sx={{ 
-                fontSize: { xs: '2.5rem', md: '3.5rem' },
-                fontWeight: 'bold',
-                mb: 3,
-                color: 'white'
-              }}>
-                Become a Member
+          <Typography
+            variant="h3"
+            sx={{
+              fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+              fontWeight: 400,
+              fontSize: { xs: '1.5rem', md: '2.5rem' },
+              color: 'white',
+              mb: 2,
+              lineHeight: 1.2
+            }}
+          >
+            Join Anyen Iyak Foundation For Art And Culture<br />
+            And Be Part Of Preserving And Promoting Our<br />
+            Rich Heritage.
               </Typography>
-              <Typography variant="h5" sx={{ mb: 4, color: 'white' }}>
-                Join the Anyen Iyak Foundation for Art and Culture and be part of preserving and promoting our rich heritage.
-              </Typography>
-            </Box>
-          </Slide>
         </Container>
       </Box>
 
-      {/* Introduction Section */}
-      <Box sx={{ py: 8, backgroundColor: '#1e1e1e' }}>
-        <Container maxWidth="lg">
-          <Fade in timeout={1000}>
-            <Grid container spacing={6}>
-              <Grid item xs={12}>
-                <Typography variant="h4" sx={{ 
+      {/* Become a Member Banner - Full Width */}
+      <Box sx={{ 
+        backgroundColor: '#D05A34', 
+        py: 3, 
                   mb: 4, 
-                  fontWeight: 'bold',
-                  position: 'relative',
-                  display: 'inline-block',
-                  '&::after': {
-                    content: '""',
-                    position: 'absolute',
-                    bottom: -8,
-                    left: 0,
-                    width: '60px',
-                    height: '3px',
-                    backgroundColor: 'var(--primary-color)'
-                  }
-                }}>
-                  Membership
+        width: '100%'
+      }}>
+        <Container maxWidth="lg">
+          <Typography
+            sx={{
+              color: 'white',
+              fontSize: '1.1rem',
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              textAlign: 'center'
+            }}
+          >
+            BECOME A MEMBER
                 </Typography>
-                <Typography variant="body1" sx={{ mb: 4, fontSize: '1.1rem', lineHeight: 1.8 }}>
-                  At Anyen Iyak, we share a deep love for cultural heritage. That's why we're committed to preserving Akwa Ibom art and culture so they are not just remembered but passed on.
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 4, fontSize: '1.1rem', lineHeight: 1.8 }}>
-                  Whether you're a student discovering your roots, a creative looking for inspiration or a company that values cultural preservation, our membership is an invitation for you to belong. Membership provides access to programs, networks, and initiatives that help preserve and grow Nigeria's creative and cultural economy.
-                </Typography>
-                <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold', color: 'var(--primary-color)' }}>
-                  Become a Member today!
-                </Typography>
-                <Typography variant="h6" sx={{ mb: 3, fontWeight: 'bold' }}>
-                  Key Membership Categories
-                </Typography>
-                <Grid container spacing={2} sx={{ mb: 4 }}>
-                  {[
-                    'Kids Membership (Ages 5-16)',
-                    'Student Membership',
-                    'Individual Membership',
-                    'Family Membership',
-                    'Corporate Membership',
-                    'Anyen Iyak Circle (Elite Membership)'
-                  ].map((category, index) => (
-                    <Grid item xs={12} sm={6} key={index}>
-                      <Box sx={{ 
-                        p: 2, 
-                        backgroundColor: 'rgba(184, 134, 11, 0.1)',
-                        borderLeft: '3px solid var(--primary-color)',
-                        borderRadius: '2px',
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          backgroundColor: 'rgba(184, 134, 11, 0.15)',
-                          transform: 'translateX(5px)'
-                        }
-                      }}>
-                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                          {category}
-                        </Typography>
-                      </Box>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Grid>
-            </Grid>
-          </Fade>
         </Container>
       </Box>
 
-      {/* Regular Memberships Section */}
-      <Box sx={{ 
-        py: 8, 
-        backgroundColor: '#121212',
-        position: 'relative',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '5px',
-          background: 'linear-gradient(90deg, var(--primary-color) 0%, transparent 100%)'
-        }
-      }}>
-        <Container maxWidth="lg">
-          <Fade in timeout={800}>
-            <Typography variant="h4" sx={{ 
-              mb: 6, 
-              fontWeight: 'bold',
-              position: 'relative',
-              display: 'inline-block',
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                bottom: -8,
-                left: 0,
-                width: '60px',
-                height: '3px',
-                backgroundColor: 'var(--primary-color)'
-              }
-            }}>
-              Individual & Family Memberships
+      {/* Description Text */}
+      <Container maxWidth="lg" sx={{ mb: 6 }}>
+        <Typography
+          sx={{
+            fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+            fontSize: '0.9rem',
+            color: 'white',
+            textAlign: 'center',
+            lineHeight: 1.6
+          }}
+        >
+          At Anyen Iyak, We Share A Deep Love For Cultural Heritage That's Why We're Committed To Preserving Akwa Ibom Art And Culture So They Are Not Just Remembered But Passed On. 
+          Whether You're An Artist, Collector, Educator, Student, Or Simply Someone Who Appreciates The Beauty And Power Of Art, There's A Membership Level That's Right For You. Being A Member Of Our Tot Society
+          Membership Provides Access To Programs, Networks, And Initiatives That Help Preserve And Grow Akwa Ibom's Creative And Cultural Economy.
             </Typography>
-          </Fade>
-          
+      </Container>
+
+      {/* Section Title */}
+      <Container maxWidth="lg" sx={{ mb: 4 }}>
+        <Typography
+          variant="h4"
+          sx={{
+            fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+            fontWeight: 600,
+            fontSize: { xs: '1.25rem', md: '1.5rem' },
+            color: 'white',
+            textAlign: 'left',
+            textTransform: 'uppercase',
+            letterSpacing: '2px',
+          }}
+        >
+          INDIVIDUAL AND FAMILY MEMBERSHIPS
+        </Typography>
+      </Container>
+
+      {/* Membership Cards */}
+      <Container maxWidth="xl" sx={{ pb: 8, px: { xs: 2, sm: 3, md: 4 } }}>
           <Grid container spacing={4}>
             {membershipTypes.map((membership, index) => (
-              <Grid item xs={12} sm={6} md={3} key={membership.id}>
-                <Zoom in timeout={800 + (index * 200)}>
-                  <Card sx={{ 
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <Box
+                sx={{
+                  backgroundColor: '#2a2a2a',
+                  borderRadius: 0,
+                  p: 3,
+                  pt: 5,
                     height: '100%', 
-                    backgroundColor: '#1e1e1e',
-                    border: '1px solid #333',
-                    transition: 'all 0.3s ease',
-                    borderRadius: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
                     position: 'relative',
-                    overflow: 'visible',
-                    '&:hover': {
-                      transform: 'translateY(-8px)',
-                      boxShadow: '0 15px 30px rgba(0,0,0,0.2)',
-                      '& .MuiBox-root': {
-                        transform: 'scale(1.1)'
-                      }
-                    }
+                  mt: 1
+                }}
+              >
+                {/* Icon - Positioned outside card (floating) */}
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'center', 
+                  mb: 2,
+                  position: 'relative',
+                  top: '-85px',
+                  zIndex: 2
                   }}>
                     <Box sx={{ 
-                      position: 'absolute',
-                      top: -20,
-                      left: 20,
-                      bgcolor: membership.color,
-                      width: 60,
-                      height: 60,
-                      borderRadius: '50%',
+                    p: 2,
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'black',
-                      transition: 'transform 0.3s ease',
-                      boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
+                    justifyContent: 'center'
                     }}>
                       {membership.icon}
                     </Box>
-                    <CardContent sx={{ pt: 5 }}>
-                      <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
+                </Box>
+
+                {/* Title */}
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                    fontWeight: 600,
+                    fontSize: '1rem',
+                    color: 'white',
+                    textAlign: 'center',
+                    textTransform: 'uppercase',
+                    mb: 1,
+                    mt: -10,
+                  }}
+                >
                         {membership.title}
                       </Typography>
-                      <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 2 }}>
+
+                {/* Subtitle */}
+                <Typography
+                  sx={{
+                    fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                    fontSize: '0.8rem',
+                    color: '#ccc',
+                    textAlign: 'center',
+                    mb: 2
+                  }}
+                >
                         {membership.subtitle}
                       </Typography>
-                      <Typography variant="h6" sx={{ 
-                        mb: 3, 
-                        color: 'var(--primary-color)',
-                        fontWeight: 'bold' 
-                      }}>
+
+                {/* Price */}
+                <Typography
+                  sx={{
+                    fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                    fontSize: '1.1rem',
+                    color: '#D05A34',
+                    textAlign: 'center',
+                    fontWeight: 600,
+                    mb: 3
+                  }}
+                >
                         {membership.price}
                       </Typography>
-                      <Divider sx={{ mb: 2 }} />
-                      <List sx={{ mb: 2 }}>
-                        {membership.benefits.map((benefit, index) => (
-                          <ListItem key={index} alignItems="flex-start" sx={{ px: 0, py: 1 }}>
-                            <ListItemIcon sx={{ minWidth: 36, color: 'var(--primary-color)' }}>
-                              <CheckCircleOutlineIcon />
-                            </ListItemIcon>
-                            <ListItemText 
-                              primary={benefit} 
-                              primaryTypographyProps={{ variant: 'body2' }} 
-                            />
-                          </ListItem>
+
+                {/* HR Line */}
+                <Box sx={{ 
+                  borderTop: '1px solid #444',
+                  mb: 3
+                }} />
+
+                {/* Features */}
+                <Box sx={{ flexGrow: 1, mb: 3 }}>
+                  {membership.benefits.map((benefit, featureIndex) => (
+                    <Box key={featureIndex} sx={{ display: 'flex', alignItems: 'flex-start', mb: 1.5 }}>
+                      <CheckCircleOutlineIcon sx={{
+                        color: '#D05A34',
+                        fontSize: '18px',
+                        mt: 0.25,
+                        mr: 1.5,
+                        flexShrink: 0
+                      }} />
+                      <Typography
+                        sx={{
+                          fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                          fontSize: '0.75rem',
+                          color: 'white',
+                          lineHeight: 1.4
+                        }}
+                      >
+                        {benefit}
+                      </Typography>
+                    </Box>
                         ))}
-                      </List>
-                    </CardContent>
-                    <CardActions sx={{ p: 3, pt: 0 }}>
+                </Box>
+
+                {/* Join Button with Home page style */}
+                <Box sx={{ display: 'flex', alignItems: 'stretch', gap: 1 }}>
                       <Button 
-                        variant="outlined" 
-                        fullWidth
-                        endIcon={<ArrowForwardIcon />}
                         onClick={() => handleOpen(membership.id)}
                         sx={{ 
-                          borderColor: 'var(--primary-color)',
-                          color: 'var(--primary-color)',
+                      backgroundColor: '#D05A34',
+                      color: 'white',
+                      textTransform: 'uppercase',
+                      fontWeight: 600,
+                      px: 3,
+                      py: 1.5,
+                      fontSize: '0.9rem',
+                      borderRadius: 0,
+                      minHeight: '48px',
+                      flex: 1,
                           '&:hover': {
-                            backgroundColor: 'rgba(184, 134, 11, 0.1)',
-                            borderColor: 'var(--primary-color)',
+                        backgroundColor: '#B8472A'
                           }
                         }}
                       >
-                        Join Today
+                    JOIN TODAY
                       </Button>
-                    </CardActions>
-                  </Card>
-                </Zoom>
+                  <Box
+                    sx={{
+                      backgroundColor: '#D05A34',
+                      minHeight: '48px',
+                      width: '48px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '#B8472A'
+                      }
+                    }}
+                    onClick={() => handleOpen(membership.id)}
+                  >
+                    <ArrowForwardIcon sx={{ color: 'white', fontSize: '28px', transform: 'rotate(-45deg)' }} />
+                  </Box>
+                </Box>
+              </Box>
               </Grid>
             ))}
           </Grid>
         </Container>
-      </Box>
 
       {/* Premium Memberships Section */}
-      <Box sx={{ 
-        py: 8, 
-        backgroundColor: '#1e1e1e',
-        position: 'relative',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '5px',
-          background: 'linear-gradient(90deg, var(--primary-color) 0%, transparent 100%)'
-        }
-      }}>
-        <Container maxWidth="lg">
-          <Fade in timeout={800}>
-            <Typography variant="h4" sx={{ 
-              mb: 6, 
-              fontWeight: 'bold',
-              position: 'relative',
-              display: 'inline-block',
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                bottom: -8,
-                left: 0,
-                width: '60px',
-                height: '3px',
-                backgroundColor: 'var(--primary-color)'
-              }
-            }}>
-              Premium Memberships
+      <Container maxWidth="lg" sx={{ mb: 4 }}>
+        <Typography
+          variant="h4"
+          sx={{
+            fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+            fontWeight: 600,
+            fontSize: { xs: '1.25rem', md: '1.5rem' },
+            color: 'white',
+            textAlign: 'left',
+            textTransform: 'uppercase',
+            letterSpacing: '2px',
+          }}
+        >
+          PREMIUM MEMBERSHIPS
             </Typography>
-          </Fade>
-          
-          <Grid container spacing={6}>
-            {premiumMemberships.map((membership, index) => (
-              <Grid item xs={12} md={6} key={membership.id}>
-                <Fade in timeout={1000 + (index * 300)}>
-                  <Paper sx={{ 
-                    p: 4, 
+      </Container>
+
+      {/* Premium Membership Cards */}
+      <Container maxWidth="xl" sx={{ pb: 8, px: { xs: 2, sm: 3, md: 4 } }}>
+        <Grid container spacing={4}>
+          {/* Empty space on the left to balance the layout */}
+          <Grid item xs={0} sm={0} md={1}></Grid>
+
+          {/* First premium card - starts from edge, larger size */}
+          <Grid item xs={12} sm={6} md={4.5}>
+            <Box
+              sx={{
+                backgroundColor: '#2a2a2a',
+                borderRadius: 0,
+                p: 3,
                     height: '100%',
-                    backgroundColor: '#121212',
-                    borderTop: `4px solid ${membership.color}`,
-                    borderRadius: 2,
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      transform: 'translateY(-8px)',
-                      boxShadow: '0 15px 30px rgba(0,0,0,0.2)'
-                    }
-                  }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'relative'
+              }}
+            >
+              {/* Top section with icon and title/subtitle */}
+      <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'flex-start',
+                mb: 2
+              }}>
+                {/* Icon */}
                       <Box sx={{ 
-                        mr: 2,
-                        bgcolor: membership.color,
                         width: 60,
                         height: 60,
+                  backgroundColor: '#D05A34',
+                  borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                  mr: 2,
+                  flexShrink: 0
+                      }}>
+                  {premiumMemberships[0].icon}
+                      </Box>
+
+                {/* Title and Subtitle next to icon */}
+                <Box sx={{ flex: 1 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      color: 'white',
+                      textTransform: 'uppercase',
+                      mt: 1,
+                      mb: 0.5,
+                      lineHeight: 1.2
+                    }}
+                  >
+                    {premiumMemberships[0].title}
+                        </Typography>
+
+                  <Typography
+                    sx={{
+                      fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                      fontSize: '0.8rem',
+                      color: '#ccc',
+                      lineHeight: 1.2
+                    }}
+                  >
+                    {premiumMemberships[0].subtitle}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    
+              {/* Price under the icon */}
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  sx={{
+                    fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                    fontSize: '1.1rem',
+                    color: '#D05A34',
+                    fontWeight: 600
+                  }}
+                >
+                  {premiumMemberships[0].price}
+                    </Typography>
+              </Box>
+
+              {/* HR Line */}
+              <Box sx={{ 
+                borderTop: '1px solid #444',
+                mb: 3
+              }} />
+
+              {/* Features */}
+              <Box sx={{ flexGrow: 1, mb: 3 }}>
+                {premiumMemberships[0].benefits.map((benefit, featureIndex) => (
+                  <Box key={featureIndex} sx={{ display: 'flex', alignItems: 'flex-start', mb: 1.5 }}>
+                    <CheckCircleOutlineIcon sx={{
+                      color: '#D05A34',
+                      fontSize: '18px',
+                      mt: 0.25,
+                      mr: 1.5,
+                      flexShrink: 0
+                    }} />
+                    <Typography
+                      sx={{
+                        fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                        fontSize: '0.75rem',
+                        color: 'white',
+                        lineHeight: 1.4
+                      }}
+                    >
+                      {benefit}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+
+              {/* Join Button with Home page style */}
+              <Box sx={{ display: 'flex', alignItems: 'stretch', gap: 1 }}>
+                    <Button 
+                  onClick={() => handleOpen(premiumMemberships[0].id)}
+                      sx={{ 
+                    backgroundColor: '#D05A34',
+                    color: 'white',
+                    textTransform: 'uppercase',
+                    fontWeight: 600,
+                    px: 3,
+                        py: 1.5,
+                    fontSize: '0.9rem',
+                    borderRadius: 0,
+                    minHeight: '48px',
+                    flex: 1,
+                        '&:hover': {
+                      backgroundColor: '#B8472A'
+                        }
+                      }}
+                    >
+                  JOIN TODAY
+                    </Button>
+                <Box
+                  sx={{
+                    backgroundColor: '#D05A34',
+                    minHeight: '48px',
+                    width: '48px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      backgroundColor: '#B8472A'
+                    }
+                  }}
+                  onClick={() => handleOpen(premiumMemberships[0].id)}
+                >
+                  <ArrowForwardIcon sx={{ color: 'white', fontSize: '28px', transform: 'rotate(-45deg)' }} />
+      </Box>
+              </Box>
+            </Box>
+          </Grid>
+
+          {/* Empty space to push second card to the right */}
+          <Grid item xs={0} sm={0} md={1}></Grid>
+
+          {/* Second premium card - aligned with last individual card position */}
+          <Grid item xs={12} sm={6} md={4.5}>
+            <Box
+              sx={{
+                backgroundColor: '#2a2a2a',
+                borderRadius: 0,
+                p: 3,
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+        position: 'relative'
+              }}
+            >
+              {/* Top section with icon and title/subtitle */}
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'flex-start',
+                mb: 2
+              }}>
+                {/* Icon */}
+                      <Box sx={{ 
+                        width: 60,
+                        height: 60,
+                  backgroundColor: '#D05A34',
                         borderRadius: '50%',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: 'black'
-                      }}>
-                        {membership.icon}
-                      </Box>
-                      <Box>
-                        <Typography variant="h5" component="div" sx={{ fontWeight: 'bold' }}>
-                          {membership.title}
-                        </Typography>
-                        <Typography variant="subtitle1" color="text.secondary">
-                          {membership.subtitle}
-                        </Typography>
+                  mr: 2,
+                  flexShrink: 0
+                }}>
+                  {premiumMemberships[1].icon}
+                </Box>
+
+                {/* Title and Subtitle next to icon */}
+                <Box sx={{ flex: 1 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      color: 'white',
+                      textTransform: 'uppercase',
+                      mt: 1,
+                      mb: 0.5,
+                      lineHeight: 1.2
+                    }}
+                  >
+                    {premiumMemberships[1].title}
+              </Typography>
+
+                  <Typography
+                    sx={{
+                      fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                      fontSize: '0.8rem',
+                      color: '#ccc',
+                      lineHeight: 1.2
+                    }}
+                  >
+                    {premiumMemberships[1].subtitle}
+              </Typography>
                       </Box>
                     </Box>
                     
-                    <Typography variant="h5" sx={{ 
-                      mb: 3, 
-                      color: 'var(--primary-color)',
-                      fontWeight: 'bold' 
-                    }}>
-                      {membership.price}
+              {/* Price under the icon */}
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  sx={{
+                    fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                    fontSize: '1.1rem',
+                    color: '#D05A34',
+                    fontWeight: 600
+                  }}
+                >
+                  {premiumMemberships[1].price}
                     </Typography>
-                    
-                    <Divider sx={{ mb: 3 }} />
-                    
-                    <List sx={{ mb: 3 }}>
-                      {membership.benefits.map((benefit, index) => (
-                        <ListItem key={index} alignItems="flex-start" sx={{ px: 0, py: 1 }}>
-                          <ListItemIcon sx={{ minWidth: 36, color: 'var(--primary-color)' }}>
-                            <CheckCircleOutlineIcon />
-                          </ListItemIcon>
-                          <ListItemText 
-                            primary={benefit} 
-                            primaryTypographyProps={{ variant: 'body1' }} 
-                          />
-                        </ListItem>
-                      ))}
-                    </List>
-                    
-                    <Button 
-                      variant="contained" 
-                      size="large"
-                      fullWidth
-                      endIcon={<ArrowForwardIcon />}
-                      onClick={() => handleOpen(membership.id)}
-                      sx={{ 
-                        backgroundColor: 'var(--primary-color)',
-                        color: 'black',
-                        fontWeight: 'bold',
-                        py: 1.5,
-                        '&:hover': {
-                          backgroundColor: '#8B6914',
-                        }
+              </Box>
+
+              {/* HR Line */}
+              <Box sx={{ 
+                borderTop: '1px solid #444',
+                mb: 3
+              }} />
+
+              {/* Features */}
+              <Box sx={{ flexGrow: 1, mb: 3 }}>
+                {premiumMemberships[1].benefits.map((benefit, featureIndex) => (
+                  <Box key={featureIndex} sx={{ display: 'flex', alignItems: 'flex-start', mb: 1.5 }}>
+                    <CheckCircleOutlineIcon sx={{
+                      color: '#D05A34',
+                      fontSize: '18px',
+                      mt: 0.25,
+                      mr: 1.5,
+                      flexShrink: 0
+                    }} />
+                    <Typography
+                      sx={{
+                        fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                        fontSize: '0.75rem',
+                        color: 'white',
+                        lineHeight: 1.4
                       }}
                     >
-                      Join Today
-                    </Button>
-                  </Paper>
-                </Fade>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
+                      {benefit}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
 
-      {/* Call to Action Section */}
-      <Box sx={{ 
-        py: 8, 
-        backgroundColor: '#121212',
-        textAlign: 'center',
-        position: 'relative'
-      }}>
-        <Container maxWidth="md">
-          <Fade in timeout={1000}>
-            <Box>
-              <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
-                JOIN US
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 4, fontSize: '1.1rem', maxWidth: '800px', mx: 'auto' }}>
-                Becoming a member of Anyen Iyak Foundation for Art and Culture means actively participating in the preservation and advancement of Nigerian art and culture. Whether as an individual, student, or corporate entity, your membership contributes to a vibrant creative ecosystem while unlocking exclusive benefits.
-              </Typography>
+              {/* Join Button with Home page style */}
+              <Box sx={{ display: 'flex', alignItems: 'stretch', gap: 1 }}>
               <Button 
-                variant="contained" 
-                size="large"
-                endIcon={<ArrowForwardIcon />}
-                onClick={() => handleOpen('')}
+                  onClick={() => handleOpen(premiumMemberships[1].id)}
                 sx={{ 
-                  backgroundColor: 'var(--primary-color)',
-                  color: 'black',
-                  fontWeight: 'bold',
-                  px: 4,
+                    backgroundColor: '#D05A34',
+                    color: 'white',
+                    textTransform: 'uppercase',
+                    fontWeight: 600,
+                    px: 3,
                   py: 1.5,
+                    fontSize: '0.9rem',
+                    borderRadius: 0,
+                    minHeight: '48px',
+                    flex: 1,
                   '&:hover': {
-                    backgroundColor: '#8B6914',
+                      backgroundColor: '#B8472A'
                   }
                 }}
               >
-                Apply for Membership
+                  JOIN TODAY
               </Button>
+                <Box
+                  sx={{
+                    backgroundColor: '#D05A34',
+                    minHeight: '48px',
+                    width: '48px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      backgroundColor: '#B8472A'
+                    }
+                  }}
+                  onClick={() => handleOpen(premiumMemberships[1].id)}
+                >
+                  <ArrowForwardIcon sx={{ color: 'white', fontSize: '28px', transform: 'rotate(-45deg)' }} />
             </Box>
-          </Fade>
-        </Container>
       </Box>
+            </Box>
+              </Grid>
+
+          {/* Empty space on the right to balance the layout */}
+          <Grid item xs={0} sm={0} md={1}></Grid>
+          </Grid>
+        </Container>
+
+      {/* Call to Action Section */}
+
 
       {/* Membership Form Modal */}
       <Modal

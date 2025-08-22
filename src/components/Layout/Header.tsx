@@ -17,7 +17,7 @@ const Header: React.FC<HeaderProps> = () => {
   const theme = useTheme();
   const location = useLocation();
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null);
-  const logoSrc = '/logos/new-black.PNG';
+  const logoSrc = '/logos/logo.svg';
   const [scrolled, setScrolled] = useState(false);
 
   // Add scroll effect
@@ -48,8 +48,8 @@ const Header: React.FC<HeaderProps> = () => {
     // { title: 'Mission', path: '/mission' },
     { title: 'People', path: '/people' },
     { title: 'Projects', path: '/programs' },
-    { title: 'News', path: '/news' },
-    { title: 'Membership', path: '/membership' },
+    // { title: 'News', path: '/news' },
+    // { title: 'Membership', path: '/membership' },
     // { title: 'Shop', path: '/shop' },
   ];
 
@@ -57,7 +57,7 @@ const Header: React.FC<HeaderProps> = () => {
     <AppBar 
       position="sticky" 
       sx={{ 
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: 'white',
         boxShadow: scrolled ? '0 4px 20px rgba(0,0,0,0.1)' : 'none',
         borderBottom: `1px solid ${theme.palette.divider}`,
         transition: 'all 0.3s ease'
@@ -92,7 +92,8 @@ const Header: React.FC<HeaderProps> = () => {
           display: { xs: 'none', md: 'flex' }, 
           gap: '2rem', 
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-end',
+          marginRight: '50px',
           flex: 1
         }}>
           <Slide direction="down" in timeout={800}>
@@ -106,7 +107,7 @@ const Header: React.FC<HeaderProps> = () => {
                     position: 'relative',
                     transition: 'all 0.3s ease',
                     padding: '5px 0',
-                    color: location.pathname === item.path ? 'var(--primary-color)' : theme.palette.text.primary,
+                    color: location.pathname === item.path ? 'var(--primary-color)' : 'black',
                     borderBottom: location.pathname === item.path ? '2px solid var(--primary-color)' : 'none'
                   }}
                 >
@@ -156,7 +157,7 @@ const Header: React.FC<HeaderProps> = () => {
                   style={{
                     display: 'block',
                     padding: '12px 16px',
-                    color: location.pathname === item.path ? 'var(--primary-color)' : theme.palette.text.primary,
+                    color: location.pathname === item.path ? 'var(--primary-color)' : 'black',
                     textDecoration: 'none',
                     borderLeft: location.pathname === item.path ? '3px solid var(--primary-color)' : 'none',
                     backgroundColor: location.pathname === item.path ? 'rgba(184, 134, 11, 0.1)' : 'transparent'

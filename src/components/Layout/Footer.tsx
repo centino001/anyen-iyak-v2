@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
   const [showAlert, setShowAlert] = useState(false);
   
   // Use black logo on blue background (light mode), white logo on black background (dark mode)
-  const logoSrc = theme.palette.mode === 'light' ? '/logos/new-black.PNG' : '/logos/new-black.PNG';
+  const logoSrc = theme.palette.mode === 'light' ? '/logos/logo.svg' : '/logos/logo.svg';
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,6 +86,12 @@ const Footer: React.FC = () => {
       url: 'https://instagram.com/anyen_iyak_foundation',
       color: '#e4405f' 
     },
+    { 
+      name: 'Gmail', 
+      icon: <EmailIcon />, 
+      url: 'mailto:anyeniyak@gmail.com',
+      color: '#ea4335' 
+    },
     // { 
     //   name: 'WhatsApp', 
     //   icon: <WhatsAppIcon />, 
@@ -101,230 +107,220 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ 
-      backgroundColor: theme.palette.mode === 'light' ? 'var(--primary-color)' : '#000000',
-      color: theme.palette.mode === 'light' ? '#000000' : '#FFFFFF',
-      py: 6,
-      px: 4,
-      position: 'relative',
-      '&::before': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: '5px',
-        background: 'linear-gradient(90deg, transparent 0%, var(--primary-color) 50%, transparent 100%)'
-      }
-    }}>
-      <Box sx={{ maxWidth: '1800px', margin: '0 auto', px: 2 }}>
-        <Grid container spacing={6} alignItems="center">
-          {/* Logo and Address */}
-          <Grid item xs={12} md={4}>
-            <Zoom in timeout={800}>
-              <Box
-                component="img"
-                src={logoSrc}
-                alt="Anyen Iyak Logo"
-                sx={{ 
-                  height: '200px',
-                  width: 'auto',
-                  maxWidth: '200px',
-                  objectFit: 'contain',
-                  mb: 2,
-                  transition: 'transform 0.5s ease',
-                  '&:hover': {
-                    transform: 'scale(1.05)'
-                  }
-                }}
-              />
-            </Zoom>
-            <Fade in timeout={1000}>
-              <Typography variant="body2" sx={{ mt: 2, lineHeight: 1.6 }}>
-                Anyen lyak Foundation for Art & Culture<br />
-                Plot 94-Unit A, Ewet Housing Estate<br />
-                Uyo, Akwa Ibom State<br />
-                Nigeria.
-              </Typography>
-            </Fade>
-          </Grid>
-
-          {/* Social Media Section */}
-          <Grid item xs={12} md={4}>
-            <Fade in timeout={800}>
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography variant="h6" sx={{ 
-                  mb: 3, 
-                  fontWeight: 'bold',
-                  position: 'relative',
-                  display: 'inline-block',
-                  '&::after': {
-                    content: '""',
-                    position: 'absolute',
-                    bottom: -8,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: '60px',
-                    height: '3px',
-                    backgroundColor: theme.palette.mode === 'light' ? '#000000' : '#FFFFFF',
-                  }
-                }}>
-                  Connect With Us
-                </Typography>
-                <Box sx={{ 
-                  display: 'flex', 
-                  justifyContent: 'center', 
-                  gap: 2,
-                  flexWrap: 'wrap'
-                }}>
-                  {socialLinks.map((social, index) => (
-                    <Zoom in timeout={1000 + (index * 100)} key={social.name}>
-                      <IconButton
-                        component="a"
-                        href={social.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                          color: theme.palette.mode === 'light' ? '#000000' : '#FFFFFF',
-                          backgroundColor: 'rgba(255,255,255,0.1)',
-                          transition: 'all 0.3s ease',
-                          '&:hover': {
-                            backgroundColor: social.color,
-                            color: '#FFFFFF',
-                            transform: 'translateY(-3px) scale(1.1)',
-                            boxShadow: `0 8px 20px ${social.color}40`
-                          }
-                        }}
-                      >
-                        {social.icon}
-                      </IconButton>
-                    </Zoom>
-                  ))}
-                </Box>
-              </Box>
-            </Fade>
-          </Grid>
-
-          {/* Email Subscription Section */}
-          <Grid item xs={12} md={4}>
-            <Fade in timeout={1200}>
-              <Box>
-                <Typography variant="h6" sx={{ 
-                  mb: 2, 
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                  position: 'relative',
-                  display: 'inline-block',
-                  width: '100%',
-                  '&::after': {
-                    content: '""',
-                    position: 'absolute',
-                    bottom: -8,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: '60px',
-                    height: '3px',
-                    backgroundColor: theme.palette.mode === 'light' ? '#000000' : '#FFFFFF',
-                  }
-                }}>
-                  Stay Updated
-                </Typography>
-                <Typography variant="body2" sx={{ 
-                  mb: 3, 
-                  textAlign: 'center',
-                  opacity: 0.8 
-                }}>
-                  Subscribe to our newsletter for the latest updates on our programs, events, and cultural initiatives.
-                </Typography>
-                <Box 
-                  component="form" 
-                  onSubmit={handleSubscribe}
+    <>
+      {/* Main Footer Content - White Background */}
+      <Box sx={{ 
+        backgroundColor: 'white',
+        color: 'black',
+        py: 6,
+        px: 4,
+        position: 'relative'
+      }}>
+        <Box sx={{ maxWidth: '1800px', margin: '0 auto', px: 2 }}>
+          <Grid container spacing={4} alignItems="flex-start">
+            {/* Logo Section */}
+            <Grid item xs={12} md={3}>
+              <Zoom in timeout={800}>
+                <Box
+                  component="img"
+                  src={logoSrc}
+                  alt="Anyen Iyak Logo"
                   sx={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    gap: 2 
+                    height: '120px',
+                    width: 'auto',
+                    maxWidth: '120px',
+                    objectFit: 'contain',
+                    mb: 2,
+                    transition: 'transform 0.5s ease',
+                    '&:hover': {
+                      transform: 'scale(1.05)'
+                    }
                   }}
-                >
-                  <TextField
-                    fullWidth
-                    type="email"
-                    placeholder="Enter your email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        backgroundColor: 'rgba(255,255,255,0.1)',
-                        '& fieldset': {
-                          borderColor: 'rgba(255,255,255,0.3)',
-                        },
-                        '&:hover fieldset': {
-                          borderColor: 'rgba(255,255,255,0.5)',
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: theme.palette.mode === 'light' ? '#000000' : '#FFFFFF',
-                        },
-                      },
-                      '& .MuiInputBase-input': {
-                        color: theme.palette.mode === 'light' ? '#000000' : '#FFFFFF',
-                        '&::placeholder': {
-                          color: theme.palette.mode === 'light' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.6)',
-                        }
-                      }
-                    }}
-                  />
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    disabled={subscribeStatus === 'loading'}
-                    startIcon={<EmailIcon />}
-                    sx={{
-                      backgroundColor: theme.palette.mode === 'light' ? '#000000' : '#FFFFFF',
-                      color: theme.palette.mode === 'light' ? '#FFFFFF' : '#000000',
-                      fontWeight: 'bold',
-                      py: 1.5,
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        backgroundColor: theme.palette.mode === 'light' ? '#333333' : '#E0E0E0',
-                        transform: 'translateY(-2px)',
-                        boxShadow: '0 8px 20px rgba(0,0,0,0.3)'
-                      },
-                      '&:disabled': {
-                        backgroundColor: 'rgba(255,255,255,0.3)',
-                        color: 'rgba(255,255,255,0.6)'
-                      }
+                />
+              </Zoom>
+            </Grid>
+
+            {/* Contact Information */}
+            <Grid item xs={12} md={3}>
+              <Fade in timeout={1000}>
+                <Box>
+                  <Typography variant="h6" sx={{ 
+                    mb: 2, 
+                    fontWeight: 'bold',
+                    textTransform: 'uppercase',
+                    fontSize: '0.875rem',
+                    letterSpacing: '1px'
+                  }}>
+                    Address
+                  </Typography>
+                  <Typography variant="body2" sx={{ lineHeight: 1.6, fontSize: '0.875rem' }}>
+                    Plot 94-Unit A, Ewet Housing Estate<br />
+                    Uyo, Akwa Ibom State<br />
+                    Nigeria.
+                  </Typography>
+                 
+                </Box>
+              </Fade>
+            </Grid>
+
+            {/* Social Media Section */}
+            <Grid item xs={12} md={3}>
+              <Fade in timeout={800}>
+                <Box>
+                  <Typography variant="h6" sx={{ 
+                    mb: 2, 
+                    fontWeight: 'bold',
+                    textTransform: 'uppercase',
+                    fontSize: '0.875rem',
+                    letterSpacing: '1px'
+                  }}>
+                    Socials
+                  </Typography>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    gap: 2,
+                    flexWrap: 'wrap'
+                  }}>
+                    {socialLinks.map((social, index) => (
+                      <Zoom in timeout={1000 + (index * 100)} key={social.name}>
+                        <IconButton
+                          component="a"
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          sx={{
+                            color: 'black',
+                            backgroundColor: 'rgba(0,0,0,0.1)',
+                            transition: 'all 0.3s ease',
+                            width: '40px',
+                            height: '40px',
+                            '&:hover': {
+                              backgroundColor: social.color,
+                              color: '#FFFFFF',
+                              transform: 'translateY(-3px) scale(1.1)',
+                              boxShadow: `0 8px 20px ${social.color}40`
+                            }
+                          }}
+                        >
+                          {social.icon}
+                        </IconButton>
+                      </Zoom>
+                    ))}
+                  </Box>
+                </Box>
+              </Fade>
+            </Grid>
+
+            {/* Email Subscription Section */}
+            <Grid item xs={12} md={3}>
+              <Fade in timeout={1200}>
+                <Box>
+                  <Typography variant="h6" sx={{ 
+                    mb: 2, 
+                    fontWeight: 'bold',
+                    textTransform: 'uppercase',
+                    fontSize: '0.875rem',
+                    letterSpacing: '1px'
+                  }}>
+                    Sign Up For Our Newsletter
+                  </Typography>
+                  <Box 
+                    component="form" 
+                    onSubmit={handleSubscribe}
+                    sx={{ 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: 2 
                     }}
                   >
-                    {subscribeStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}
-                  </Button>
+                    <TextField
+                      fullWidth
+                      type="email"
+                      placeholder="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      size="small"
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          backgroundColor: '#f5f5f5',
+                          borderRadius: 0,
+                          '& fieldset': {
+                            borderColor: 'rgba(0,0,0,0.3)',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(0,0,0,0.5)',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'black',
+                          },
+                        },
+                        '& .MuiInputBase-input': {
+                          color: 'black',
+                          fontSize: '0.875rem',
+                          '&::placeholder': {
+                            color: 'rgba(0,0,0,0.6)',
+                          }
+                        }
+                      }}
+                    />
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      disabled={subscribeStatus === 'loading'}
+                      sx={{
+                        backgroundColor: 'black',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        py: 1,
+                        fontSize: '0.875rem',
+                        textTransform: 'uppercase',
+                        borderRadius: 0,
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          backgroundColor: '#333333',
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 8px 20px rgba(0,0,0,0.3)'
+                        },
+                        '&:disabled': {
+                          backgroundColor: 'rgba(0,0,0,0.3)',
+                          color: 'rgba(0,0,0,0.6)'
+                        }
+                      }}
+                    >
+                      {subscribeStatus === 'loading' ? 'Subscribing...' : 'Submit'}
+                    </Button>
+                  </Box>
                 </Box>
-              </Box>
-            </Fade>
+              </Fade>
+            </Grid>
           </Grid>
+        </Box>
+      </Box>
 
-          {/* Copyright */}
-          <Grid item xs={12}>
-            <Fade in timeout={1400}>
-              <Box sx={{ 
-                borderTop: `1px solid ${theme.palette.mode === 'light' ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.1)'}`, 
-                pt: 3, 
-                mt: 3 
-              }}>
-                <Typography variant="body2" sx={{ 
-                  textAlign: 'center',
-                  animation: 'pulse 3s infinite ease-in-out',
-                  '@keyframes pulse': {
-                    '0%': { opacity: 0.8 },
-                    '50%': { opacity: 1 },
-                    '100%': { opacity: 0.8 }
-                  }
-                }}>
-                  © {new Date().getFullYear()} Anyen Iyak Foundation for Art and Culture. All rights reserved.
-                </Typography>
-              </Box>
-            </Fade>
-          </Grid>
-        </Grid>
+      {/* Copyright Section - Black Background */}
+      <Box sx={{
+        backgroundColor: 'black',
+        color: 'white',
+        py: 2,
+        px: 4,
+      }}>
+        <Box sx={{ maxWidth: '1800px', margin: '0 auto', px: 2 }}>
+          <Fade in timeout={1400}>
+            <Typography variant="body2" sx={{ 
+              textAlign: 'center',
+              fontSize: '0.875rem',
+              animation: 'pulse 3s infinite ease-in-out',
+              '@keyframes pulse': {
+                '0%': { opacity: 0.8 },
+                '50%': { opacity: 1 },
+                '100%': { opacity: 0.8 }
+              }
+            }}>
+              © {new Date().getFullYear()} Anyen Iyak Foundation For Art And Culture. All Rights Reserved.
+            </Typography>
+          </Fade>
+        </Box>
       </Box>
 
       {/* Success/Error Snackbar */}
@@ -344,7 +340,7 @@ const Footer: React.FC = () => {
             : 'Failed to subscribe. Please try again later.'}
         </Alert>
       </Snackbar>
-    </Box>
+    </>
   );
 };
 

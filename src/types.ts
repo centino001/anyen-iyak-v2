@@ -1,16 +1,19 @@
 export interface Person {
   _id: string;
   name: string;
-  role: string;
+  title: string;
+  role?: string;
   department: string;
-  image: string;
+  image?: string;
+  cloudinaryPublicId?: string;
   bio: string;
-  email?: string;
   phone?: string;
+  order: number;
+  isLeadership: boolean;
+  slug: string;
   socialLinks?: {
-    linkedin?: string;
     twitter?: string;
-    website?: string;
+    linkedin?: string;
   };
 }
 
@@ -18,14 +21,28 @@ export interface Program {
   _id: string;
   title: string;
   description: string;
-  image: string;
+  shortDescription: string;
+  image?: string;
+  cloudinaryPublicId?: string;
   startDate: string;
-  endDate: string;
-  status: 'active' | 'completed' | 'upcoming';
+  endDate?: string;
+  isActive: boolean;
+  goals?: string[];
+  requirements?: string[];
+  applicationUrl?: string;
+  slug: string;
   category: string;
-  location: string;
-  capacity: number;
-  currentParticipants: number;
+  // Fundraising fields
+  requiresDonation: boolean;
+  fundraisingGoal?: number;
+  currentFunding?: number;
+  donationDescription?: string;
+  contributors?: Array<{
+    name: string;
+    amount: number;
+    isAnonymous: boolean;
+    contributedAt: string;
+  }>;
 }
 
 export interface News {
@@ -49,6 +66,18 @@ export interface Grant {
   status: 'open' | 'closed' | 'upcoming';
   category: string;
   applicationProcess: string;
+}
+
+export interface Volunteer {
+  _id: string;
+  portfolioUrl: string;
+  firstName: string;
+  surname: string;
+  phoneNumber: string;
+  socialMediaLink: string;
+  volunteerRole: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CountResponse {

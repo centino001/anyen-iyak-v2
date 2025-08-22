@@ -1,503 +1,838 @@
-import React from 'react';
-import { Box, Container, Grid, Typography, Button, Card, CardContent, CardMedia, CircularProgress, Fade, Grow, Slide, Zoom, Stack } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Link } from 'react-router-dom';
-import useDataFetch from '../hooks/useDataFetch';
-import EmptyState from '../components/EmptyState';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import ArticleIcon from '@mui/icons-material/Article';
-import ImageWithFallback from '../components/ImageWithFallback';
-
-interface Program {
-  _id: string;
-  title: string;
-  shortDescription: string;
-  image?: string;
-  slug: string;
-}
-
-interface NewsArticle {
-  _id: string;
-  title: string;
-  excerpt: string;
-  image?: string;
-  publishDate: string;
-  author: string;
-  slug: string;
-}
+import React, { useState, useEffect } from "react";
+import { Box, Typography, Button, Grid, Card, CardContent, Chip } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { getImageUrl } from "../config/images";
+import { ImagePresets } from "../utils/cloudinaryOptimizer";
+import { fetchPrograms } from "../utils/api";
+import { Program } from "../types";
 
 const Home: React.FC = () => {
-  const { data: programs, loading: programsLoading } = useDataFetch<Program>('/programs');
-  const { data: news, loading: newsLoading } = useDataFetch<NewsArticle>('/news');
+  const [programs, setPrograms] = useState<Program[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-  const renderFeaturedPrograms = () => {
-    if (programsLoading) {
-      return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4, minHeight: '300px', alignItems: 'center' }}>
-          <CircularProgress size={60} sx={{ color: 'var(--primary-color)' }} />
-        </Box>
-      );
-    }
+  useEffect(() => {
+    const loadPrograms = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchPrograms();
+        setPrograms(data);
+      } catch (err) {
+        console.error('Failed to load programs:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    if (!programs || programs.length === 0) {
-      return (
-        <Fade in timeout={800}>
-          <Box>
-            <EmptyState 
-              message="No programs available at the moment."
-              icon={<AssignmentIcon sx={{ fontSize: 64 }} />}
-            />
-          </Box>
-        </Fade>
-      );
-    }
+    loadPrograms();
+  }, []);
 
-    return (
-      <Grid container spacing={4}>
-        {programs.slice(0, 3).map((program, index) => (
-          <Grid item xs={12} md={4} key={program._id}>
-            <Grow in timeout={800 + (index * 200)}>
-              <Card sx={{ 
-                height: '100%', 
-                boxShadow: 'none', 
-                border: '1px solid #E5E5E5',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  transform: 'translateY(-8px)',
-                  boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-                }
-              }}>
-                <CardMedia
-                  component="div"
-                  sx={{
-                    height: 350,
-                    width: '100%',
-                    backgroundColor: '#E5E5E5',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden',
-                    padding: '10px',
-                    borderRadius: 1
-                  }}
-                >
-                  <ImageWithFallback
-                    src={program.image}
-                    alt={program.title}
-                    fallbackIcon={<AssignmentIcon sx={{ fontSize: 60, color: 'text.secondary' }} />}
-                    sx={{ 
-                      width: '100%', 
-                      height: '100%',
-                      transition: 'transform 0.5s ease',
-                      '&:hover': {
-                        transform: 'scale(1.05)'
-                      }
-                    }}
-                  />
-                </CardMedia>
-                <CardContent>
-                  <Typography variant="h6" sx={{ 
-                    mb: 2,
-                    fontWeight: 'bold',
-                    position: 'relative',
-                    display: 'inline-block',
-                    '&::after': {
-                      content: '""',
-                      position: 'absolute',
-                      bottom: -4,
-                      left: 0,
-                      width: '40px',
-                      height: '2px',
-                      backgroundColor: 'var(--primary-color)',
-                      transition: 'width 0.3s ease',
-                    },
-                    '&:hover::after': {
-                      width: '100%'
-                    }
-                  }}>
-                    {program.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                    {program.shortDescription}
-                  </Typography>
-                  <Button
-                    component={Link}
-                    to={`/programs/${program.slug}`}
-                    endIcon={<ArrowForwardIcon />}
-                    sx={{ 
-                      color: 'var(--primary-color)',
-                      transition: 'transform 0.3s ease',
-                      '&:hover': {
-                        transform: 'translateX(5px)',
-                        backgroundColor: 'transparent'
-                      }
-                    }}
-                  >
-                    Read More
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grow>
-          </Grid>
-        ))}
-      </Grid>
-    );
+  const handleDonateClick = () => {
+    // For now, just scroll to donate section or navigate to donate page
+    // window.open("https://your-donation-link.com", "_blank");
   };
 
-  const renderNewsUpdates = () => {
-    if (newsLoading) {
-      return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4, minHeight: '300px', alignItems: 'center' }}>
-          <CircularProgress size={60} sx={{ color: 'var(--primary-color)' }} />
-        </Box>
-      );
-    }
-
-    if (!news || news.length === 0) {
-      return (
-        <Fade in timeout={800}>
-          <Box>
-            <EmptyState 
-              message="No news articles available at the moment."
-              icon={<ArticleIcon sx={{ fontSize: 64 }} />}
-            />
-          </Box>
-        </Fade>
-      );
-    }
-
-    return (
-      <Grid container spacing={4}>
-        {news.slice(0, 4).map((article, index) => (
-          <Grid item xs={12} md={6} key={article._id}>
-            <Fade in timeout={800 + (index * 200)}>
-              <Card sx={{ 
-                display: 'flex', 
-                boxShadow: 'none', 
-                backgroundColor: 'transparent',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  transform: 'translateY(-5px)',
-                  boxShadow: '0 5px 15px rgba(0,0,0,0.08)',
-                }
-              }}>
-                <Box sx={{ 
-                  width: 250, 
-                  height: 250, 
-                  backgroundColor: '#E5E5E5',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  overflow: 'hidden',
-                  padding: '10px',
-                  borderRadius: 1
-                }}>
-                  <ImageWithFallback 
-                    src={article.image} 
-                    alt={article.title}
-                    fallbackIcon={<ArticleIcon sx={{ fontSize: 60, color: 'text.secondary' }} />}
-                    sx={{ 
-                      width: '100%', 
-                      height: '100%',
-                      transition: 'transform 0.5s ease',
-                      '&:hover': {
-                        transform: 'scale(1.05)'
-                      }
-                    }}
-                  />
-                </Box>
-                <CardContent sx={{ flex: 1 }}>
-                  <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                    {new Date(article.publishDate).toLocaleDateString()}
-                  </Typography>
-                  <Typography variant="h6" sx={{ 
-                    mb: 2,
-                    fontWeight: 'bold',
-                    position: 'relative',
-                    display: 'inline-block',
-                    '&::after': {
-                      content: '""',
-                      position: 'absolute',
-                      bottom: -4,
-                      left: 0,
-                      width: '40px',
-                      height: '2px',
-                      backgroundColor: 'var(--primary-color)',
-                      transition: 'width 0.3s ease',
-                    },
-                    '&:hover::after': {
-                      width: '100%'
-                    }
-                  }}>
-                    {article.title}
-                  </Typography>
-                  <Button
-                    component={Link}
-                    to={`/news/${article.slug}`}
-                    endIcon={<ArrowForwardIcon />}
-                    sx={{ 
-                      color: 'var(--primary-color)',
-                      transition: 'transform 0.3s ease',
-                      '&:hover': {
-                        transform: 'translateX(5px)',
-                        backgroundColor: 'transparent'
-                      }
-                    }}
-                  >
-                    Read More
-                  </Button>
-                </CardContent>
-              </Card>
-            </Fade>
-          </Grid>
-        ))}
-      </Grid>
-    );
+  const handleProgramClick = (program: Program) => {
+    navigate(`/programs/${program.slug}`);
   };
 
-  return (
-    <Box>
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-NG', {
+      style: 'currency',
+      currency: 'NGN',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+      return (
+    <Box sx={{ width: "100%", minHeight: "calc(100vh - 70px)" }}>
       {/* Hero Section */}
-      <Box sx={{ 
-        height: '80vh',
-        backgroundImage: 'url(/images/aif.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center 25%',
-        display: 'flex',
-        alignItems: 'center',
-        position: 'relative',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.4)',
-          zIndex: 1
-        }
-      }}>
-        <Container 
-          maxWidth={false} 
-          sx={{ 
-            px: { xs: 2, sm: 3 }, 
-            position: 'relative', 
-            zIndex: 2, 
-            pt: '300px',
-            ml: '5px',
-            mr: 'auto',
-            width: 'auto'
+      <Box
+        sx={{
+          position: "relative",
+          height: "calc(100vh - 70px)",
+          width: "100%",
+          backgroundImage: `url(${ImagePresets.hero('https://res.cloudinary.com/dgsctl247/image/upload/v1754786067/aif_hzhjf7.jpg')})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          display: "flex",
+          alignItems: "center",
+          paddingLeft: { xs: "20px", md: "60px" },
+          paddingRight: { xs: "20px", md: "60px" },
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1,
+          },
+        }}
+      >
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            maxWidth: { xs: "100%", md: "800px" },
+            color: "white",
           }}
         >
-          <Slide direction="right" in timeout={1000}>
-            <Box sx={{ maxWidth: '1200px', pl: '20px', textAlign: 'left' }}>
-              <Typography variant="h1" sx={{ 
-                fontSize: { xs: '2.0rem', md: '3.0rem' },
-                mb: 3,
-                color: 'white',
-                textAlign: 'justify',
-                textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-                fontFamily: 'var(--font-family)',
-                fontWeight: 300
-              }}>
-                Like the eyes of a fish that never closes in life or death,{'\n'}
-                We see our Past, as we bring it to the Present in order to carry it forth to the Future.
-              </Typography>
-              <Typography variant="h5" sx={{ 
-                mb: 4, 
-                fontSize: { xs: '1.5rem', md: '2.5rem' },
-                color: 'white',
-                fontWeight: 'bolder',
-                textShadow: '1px 1px 3px rgba(0,0,0,0.5)',
-                fontFamily: 'var(--font-family)'
-              }}>
-                Our eyes will never be shut in life or death.
-              </Typography>
+          <Typography
+            sx={{
+              fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+              fontWeight: 300,
+              fontSize: {
+                xs: "1.5rem",
+                sm: "2rem",
+                md: "2.75rem",
+                lg: "3.25rem",
+              },
+              lineHeight: { xs: 1.2, md: 1.3 },
+              marginBottom: { xs: 2, md: 3 },
+              textShadow: "2px 2px 4px rgba(0,0,0,0.8)",
+              letterSpacing: "0.5px",
+            }}
+          >
+            Like The Eyes Of A Fish That Never Closes In Life Or Death, We See
+            Our Past As We Bring It To The Present In Order To Carry It Forth To
+            The Future.
+          </Typography>
 
-            </Box>
-          </Slide>
-        </Container>
+          <Typography
+            sx={{
+              fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+              fontWeight: 400,
+              fontSize: {
+                xs: "1.1rem",
+                sm: "1.5rem",
+                md: "2rem",
+                lg: "2.25rem",
+              },
+              lineHeight: { xs: 1.3, md: 1.4 },
+              marginBottom: { xs: 3, md: 4 },
+              textShadow: "2px 2px 4px rgba(0,0,0,0.8)",
+              letterSpacing: "0.3px",
+            }}
+          >
+            Our Eyes Will Never Be Shut In Life Or Death.
+          </Typography>
+
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={handleDonateClick}
+              sx={{
+                backgroundColor: "#D05A34",
+                color: "white",
+                fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                fontWeight: 600,
+                fontSize: { xs: "0.9rem", md: "1rem" },
+                padding: { xs: "14px 28px", md: "16px 32px" },
+                borderRadius: "4px",
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+                boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
+                border: "none",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  backgroundColor: "#FF6B35",
+                  transform: "translateY(-1px)",
+                  boxShadow: "0 6px 12px rgba(0,0,0,0.4)",
+                },
+              }}
+            >
+              DONATE TO US
+            </Button>
+            <Box
+              sx={{
+                backgroundColor: "#D05A34",
+                color: "white",
+                padding: { xs: "14px 16px", md: "16px 18px" },
+                borderRadius: "4px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  backgroundColor: "#FF6B35",
+                  transform: "translateY(-1px)",
+                  boxShadow: "0 6px 12px rgba(0,0,0,0.4)",
+                },
+              }}
+              onClick={handleDonateClick}
+            >
+              <Box
+                component="span"
+                sx={{
+                  fontSize: "1.2rem",
+                  transform: "rotate(-45deg)",
+                  display: "inline-block",
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                →
+              </Box>
+        </Box>
+          </Box>
+        </Box>
       </Box>
 
       {/* Featured Programs Section */}
-      <Box sx={{ 
-        py: 8, 
-        backgroundColor: '#1e1e1e',
-        position: 'relative',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '5px',
-          background: 'linear-gradient(90deg, var(--primary-color) 0%, transparent 100%)'
-        }
-      }}>
-        <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 } }}>
-          <Fade in timeout={800}>
-            <Typography variant="h4" sx={{ 
-              mb: 4, 
-              fontWeight: 'bold',
-              position: 'relative',
-              display: 'inline-block',
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                bottom: -8,
-                left: 0,
-                width: '60px',
-                height: '3px',
-                backgroundColor: 'var(--primary-color)'
-              }
-            }}>
-              Featured Programs
-            </Typography>
-          </Fade>
-          {renderFeaturedPrograms()}
-        </Container>
-      </Box>
+      <Box sx={{ backgroundColor: "#121212", py: 8 }}>
+        <Box sx={{ maxWidth: "1600px", mx: "auto", px: { xs: 2, md: 2 }, ml: { xs: 2, md: 20 } }}>
+          <Typography
+            variant="h4"
+            component="h2"
+            sx={{
+              fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+              fontWeight: 600,
+              fontSize: { xs: "1.5rem", md: "2rem" },
+              color: "white",
+              textAlign: "center",
+              marginBottom: 6,
+              textTransform: "uppercase",
+              letterSpacing: "2px",
+            }}
+          >
+            Featured Programs
+          </Typography>
 
-      {/* News & Updates Section */}
-      <Box sx={{ 
-        py: 8, 
-        backgroundColor: '#121212',
-        position: 'relative',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '5px',
-          background: 'linear-gradient(90deg, var(--primary-color) 0%, transparent 100%)'
-        }
-      }}>
-        <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 } }}>
-          <Fade in timeout={800}>
-            <Typography variant="h4" sx={{ 
-              mb: 4, 
-              fontWeight: 'bold',
-              position: 'relative',
-              display: 'inline-block',
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                bottom: -8,
-                left: 0,
-                width: '60px',
-                height: '3px',
-                backgroundColor: 'var(--primary-color)'
-              }
-            }}>
-              News & Updates
-            </Typography>
-          </Fade>
-          {renderNewsUpdates()}
-        </Container>
-      </Box>
-
-      {/* Impact Section */}
-      <Box sx={{ py: 8, backgroundColor: '#1e1e1e' }}>
-        <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 } }}>
-          <Grid container spacing={6} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <Zoom in timeout={1000}>
-                <Box sx={{ 
-                  height: 400,
-                  backgroundColor: '#E5E5E5',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 2,
-                  overflow: 'hidden',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                  transition: 'transform 0.5s ease',
-                  '&:hover': {
-                    transform: 'scale(1.02)'
-                  }
-                }}>
-                  <img 
-                    src="/images/john.jpg" 
-                    alt="Ibibio Dancer" 
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover'
+          {loading ? (
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <Typography sx={{ color: 'white', fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif' }}>
+                Loading programs...
+              </Typography>
+            </Box>
+          ) : programs.length > 0 ? (
+            <Grid container spacing={3}>
+              {programs.map((program) => (
+                <Grid 
+                  item 
+                  xs={12} 
+                  sm={programs.length === 1 ? 12 : programs.length === 2 ? 6 : programs.length === 3 ? 4 : 3}
+                  key={program._id}
+                >
+                  <Card
+                    onClick={() => handleProgramClick(program)}
+                    sx={{
+                      backgroundColor: "#3a3a3a",
+                      borderRadius: "8px",
+                      overflow: "hidden",
+                      transition: "transform 0.3s ease",
+                      cursor: "pointer",
+                      height: "100%",
+                      "&:hover": {
+                        transform: "translateY(-5px)",
+                      },
                     }}
-                  />
-                </Box>
-              </Zoom>
+                  >
+                    <Box
+                      sx={{
+                        height: "300px",
+                        backgroundImage: program.image ? `url(${program.image})` : "url(/images/featured_programs.svg)",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        position: "relative",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          top: 12,
+                          left: 12,
+                          backgroundColor: "#D05A34",
+                          color: "white",
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                          fontSize: "0.75rem",
+                          fontWeight: 600,
+                          fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                        }}
+                      >
+                        {program.requiresDonation ? "FUNDRAISING" : "ACTIVE"}
+                      </Box>
+                    </Box>
+                    <CardContent sx={{ p: 4 }}>
+                      <Typography
+                        sx={{ 
+                          color: "#D05A34",
+                          fontSize: "0.875rem",
+                          fontWeight: 600,
+                          marginBottom: 1,
+                          fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                        }}
+                      >
+                        {formatDate(program.startDate)}
+                      </Typography>
+                      
+                      {program.requiresDonation && (
+                        <Typography
+                          sx={{ 
+                            color: "#007bff",
+                            fontSize: "1.25rem",
+                            fontWeight: 700,
+                            marginBottom: 1,
+                            fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                          }}
+                        >
+                          {formatCurrency(program.currentFunding || 0)}
+                          {program.fundraisingGoal && ` / ${formatCurrency(program.fundraisingGoal)}`}
+                        </Typography>
+                      )}
+                      
+                      <Typography
+                        sx={{ 
+                          color: "white",
+                          fontSize: "1rem",
+                          fontWeight: 600,
+                          lineHeight: 1.4,
+                          fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                        }}
+                      >
+                        {program.title}
+                      </Typography>
+                      
+                      <Typography
+                        sx={{ 
+                          color: "#cccccc",
+                          fontSize: "0.875rem",
+                          lineHeight: 1.4,
+                          marginTop: 1,
+                          fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                          whiteSpace: 'pre-wrap'
+                        }}
+                      >
+                        {program.shortDescription}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
             </Grid>
-            <Grid item xs={12} md={6}>
-              <Slide direction="left" in timeout={1000}>
+          ) : (
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <Typography sx={{ color: 'white', fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif' }}>
+                No programs available at the moment.
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      </Box>
+
+      {/* News and Updates Section */}
+      <Box sx={{ backgroundColor: "#121212", py: 8 }}>
+        <Box sx={{ width: "100%" }}>
+          <Typography
+            variant="h4"
+            component="h2"
+            sx={{
+              fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+              fontWeight: 600,
+              fontSize: { xs: "1.5rem", md: "2rem" },
+              color: "white",
+              textAlign: "center",
+              marginBottom: 6,
+              textTransform: "uppercase",
+              letterSpacing: "2px",
+              maxWidth: "1200px",
+              mx: "auto",
+              px: { xs: 2, md: 4 },
+            }}
+          >
+            News and Updates
+          </Typography>
+
+          <Box
+            sx={{
+              backgroundColor: "#3a3a3a",
+              borderRadius: 0,
+              padding: { xs: 4, md: 6, lg: 8, xl: 10 },
+              transition: "transform 0.3s ease",
+              transform: "scale(var(--zoom-scale, 1))",
+              transformOrigin: "center",
+              "&:hover": {
+                transform: "translateY(-5px) scale(var(--zoom-scale, 1))",
+              },
+              "@media (max-width: 1200px)": {
+                transform: "scale(0.9)",
+                "&:hover": {
+                  transform: "translateY(-5px) scale(0.9)",
+                },
+              },
+              "@media (max-width: 900px)": {
+                transform: "scale(0.8)",
+                "&:hover": {
+                  transform: "translateY(-5px) scale(0.8)",
+                },
+              },
+              "@media (max-width: 600px)": {
+                transform: "scale(0.7)",
+                "&:hover": {
+                  transform: "translateY(-5px) scale(0.7)",
+                },
+              },
+            }}
+          >
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", lg: "1fr 1.2fr" },
+                gap: 6,
+                alignItems: "start",
+              }}
+            >
+              {/* Left Column - Text Content */}
+          <Box>
+                <Typography
+                  sx={{
+                    color: "#D05A34",
+                    fontSize: "0.875rem",
+                    fontWeight: 600,
+                    marginBottom: 2,
+                    textTransform: "uppercase",
+                    letterSpacing: "1px",
+                    fontFamily:
+                      'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                  }}
+                >
+                  TVC News
+                </Typography>
+
+                <Typography
+                  variant="h3"
+                  sx={{
+                    color: "white",
+                    fontSize: { xs: "1.75rem", md: "2.25rem" },
+                    fontWeight: 400,
+                    lineHeight: 1.3,
+                    marginBottom: 3,
+                    fontFamily:
+                      'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                  }}
+                >
+                  Where Imagination Meets Cultural Pride- And Where The Next
+                  Generation Of African Creatives Begin.
+                </Typography>
+
+                <Typography
+                    sx={{ 
+                    color: "#cccccc",
+                    fontSize: "1rem",
+                    lineHeight: 1.6,
+                    marginBottom: 4,
+                    fontFamily:
+                      'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                  }}
+                >
+                  As Part Of Our Broader Mission To Democratise Access To Arts
+                  Education, We're Proud To Introduce, AAAC Kids- A
+                  Groundbreaking Initiative Designed To Empower Children Across
+                  Africa Through Visual And Creative Arts.
+                  </Typography>
+
+                <Box
+                  component="button"
+                  onClick={() => {}}
+                  sx={{
+                    backgroundColor: "#D05A34",
+                    color: "white",
+                    border: "none",
+                    padding: "12px 24px",
+                    borderRadius: "4px",
+                    fontSize: "0.875rem",
+                    fontWeight: 600,
+                    textTransform: "uppercase",
+                    letterSpacing: "1px",
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                    fontFamily:
+                      'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                    "&:hover": {
+                      backgroundColor: "#FF6B35",
+                      transform: "translateY(-1px)",
+                    },
+                    }}
+                  >
+                    Read More
+                </Box>
+              </Box>
+
+              {/* Right Column - Image */}
+              <Box
+          sx={{ 
+                  height: { xs: "300px", md: "400px" },
+                  borderRadius: "8px",
+                  overflow: "hidden",
+                  position: "relative",
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    backgroundImage: "url(/images/news.svg)",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
+              </Box>
+            </Box>
+      </Box>
+      </Box>
+
+      {/* Contribute to Our Mission Section */}
+      <Box sx={{ backgroundColor: "#121212", py: 8 }}>
+        <Box sx={{ width: "100%" }}>
+          <Box
+            sx={{
+              backgroundColor: "#3a3a3a",
+              borderRadius: 0,
+              padding: { xs: 4, md: 6, lg: 8, xl: 10 },
+              transition: "transform 0.3s ease",
+              transform: "scale(var(--zoom-scale, 1))",
+              transformOrigin: "center",
+              "&:hover": {
+                transform: "translateY(-5px) scale(var(--zoom-scale, 1))",
+              },
+              "@media (max-width: 1200px)": {
+                transform: "scale(0.9)",
+                "&:hover": {
+                  transform: "translateY(-5px) scale(0.9)",
+                },
+              },
+              "@media (max-width: 900px)": {
+                transform: "scale(0.8)",
+                "&:hover": {
+                  transform: "translateY(-5px) scale(0.8)",
+                },
+              },
+              "@media (max-width: 600px)": {
+                transform: "scale(0.7)",
+                "&:hover": {
+                  transform: "translateY(-5px) scale(0.7)",
+                },
+              },
+            }}
+          >
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", lg: "1fr 1.2fr" },
+                gap: 6,
+                alignItems: "center",
+              }}
+            >
+              {/* Left Column - Text Content */}
                 <Box>
-                  <Typography variant="h4" sx={{ 
-                    mb: 3, 
-                    fontWeight: 'bold',
-                    position: 'relative',
-                    display: 'inline-block',
-                    '&::after': {
-                      content: '""',
-                      position: 'absolute',
-                      bottom: -8,
-                      left: 0,
-                      width: '60px',
-                      height: '3px',
-                      backgroundColor: 'var(--primary-color)'
-                    }
-                  }}>
-                    Contribute to OUR MISSION
+                <Typography
+                  variant="h3"
+                  sx={{
+                    color: "white",
+                    fontSize: { xs: "1.75rem", md: "2.25rem" },
+                    fontWeight: 600,
+                    lineHeight: 1.3,
+                    marginBottom: 3,
+                    textTransform: "uppercase",
+                    letterSpacing: "2px",
+                    fontFamily:
+                      'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                  }}
+                >
+                  Contribute to Our Mission
                   </Typography>
-                  <Typography variant="body1" sx={{ mb: 4, lineHeight: 1.8 }}>
-                  Support our mission to preserve and promote art and culture, foster artistic development and unify the African Art and culture ecosystem.
+
+                <Typography
+                  sx={{
+                    color: "#e2e8f0",
+                    fontSize: "1rem",
+                    lineHeight: 1.6,
+                    marginBottom: 4,
+                    fontFamily:
+                      'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                  }}
+                >
+                  Support Our Mission To Preserve And Promote The Cultural
+                  Heritage, Art And Languages Of The Indigenous Peoples Of Akwa
+                  Ibom State, Nigeria.
                   </Typography>
-                  <Stack spacing={2} direction="column" sx={{ mb: 3 }}>
-                    <Button
-                      variant="outlined"
-                      component={Link}
-                      to="/membership"
-                      endIcon={<ArrowForwardIcon />}
+
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <Box sx={{ display: "flex", alignItems: "stretch", gap: 2 }}>
+                    <Box
+                      component="button"
+                      onClick={() => {}}
                       sx={{ 
-                        borderColor: 'var(--primary-color)',
-                        color: 'var(--primary-color)',
-                        transition: 'all 0.3s ease',
-                        justifyContent: 'flex-start',
-                        '&:hover': {
-                          borderColor: 'var(--primary-color)',
-                          backgroundColor: 'rgba(184, 134, 11, 0.05)',
-                          transform: 'translateX(5px)'
-                        }
+                        backgroundColor: "#3a3a3a",
+                        color: "white",
+                        border: "2px solid #D05A34",
+                        padding: "12px 24px",
+                        borderRadius: "4px",
+                        fontSize: "0.875rem",
+                        fontWeight: 600,
+                        textTransform: "uppercase",
+                        letterSpacing: "1px",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                        fontFamily:
+                          'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                        minHeight: "48px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        "&:hover": {
+                          transform: "translateY(-1px)",
+                        },
                       }}
                     >
                       Become a Member
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      component={Link}
-                      to="/donate"
-                      endIcon={<ArrowForwardIcon />}
+                    </Box>
+                    <Box
+                      sx={{
+                        color: "white",
+                        //  padding: "5px 5px",
+                        border: "2px solid #D05A34",
+                        borderRadius: "4px",
+                        display: "flex",
+                        minHeight: "48px",
+                        width: "48px",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(-1px)",
+                        },
+                      }}
+                      onClick={() => {}}
+                    >
+                      <Box
+                        component="img"
+                        src="/images/arrow_forward.svg"
+                        alt="Arrow Forward"
+                        sx={{
+                          width: "28px",
+                          height: "28px",
+                          //  transform: "rotate(45deg)",
+                          filter: "brightness(0) invert(1)",
+                        }}
+                      />
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ display: "flex", alignItems: "stretch", gap: 2 }}>
+                    <Box
+                      component="button"
+                      onClick={() => {}}
                       sx={{ 
-                        borderColor: 'var(--primary-color)',
-                        color: 'var(--primary-color)',
-                        transition: 'all 0.3s ease',
-                        justifyContent: 'flex-start',
-                        '&:hover': {
-                          borderColor: 'var(--primary-color)',
-                          backgroundColor: 'rgba(184, 134, 11, 0.05)',
-                          transform: 'translateX(5px)'
-                        }
+                        backgroundColor: "#3a3a3a",
+                        color: "white",
+                        border: "2px solid #D05A34",
+                        padding: "12px 24px",
+                        borderRadius: "4px",
+                        fontSize: "0.875rem",
+                        fontWeight: 600,
+                        textTransform: "uppercase",
+                        letterSpacing: "1px",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                        fontFamily:
+                          'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                        minHeight: "48px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        "&:hover": {
+                          transform: "translateY(-1px)",
+                        },
                       }}
                     >
-                      Donate
-                    </Button>
-                  </Stack>
+                      DONATE
+                    </Box>
+                    <Box
+                      sx={{
+                        color: "white",
+                        //  padding: "12px 16px",
+                        border: "2px solid #D05A34",
+                        borderRadius: "4px",
+                        display: "flex",
+                        minHeight: "48px",
+                        width: "48px",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(-1px)",
+                        },
+                      }}
+                      onClick={() => {}}
+                    >
+                      <Box
+                        component="img"
+                        src="/images/arrow_forward.svg"
+                        alt="Arrow Forward"
+                        sx={{
+                          width: "28px",
+                          height: "28px",
+                          //  transform: "rotate(-45deg)",
+                          filter: "brightness(0) invert(1)",
+                        }}
+                      />
+                    </Box>
+                  </Box>
                 </Box>
-              </Slide>
-            </Grid>
-          </Grid>
-        </Container>
+              </Box>
+
+              {/* Right Column - Image */}
+              <Box
+                sx={{
+                  height: { xs: "300px", md: "400px" },
+                  borderRadius: "8px",
+                  overflow: "hidden",
+                  position: "relative",
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    backgroundImage: `url(${ImagePresets.hero('https://res.cloudinary.com/dgsctl247/image/upload/v1754788170/john_1_jkqzqh.jpg')})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
+              </Box>
+            </Box>
+          </Box>
+        </Box>
       </Box>
+
+      {/* Our Valued Collaborators Section */}
+      <Box sx={{ backgroundColor: "#121212" }}>
+        <Box sx={{ width: "100%" }}>
+          <Typography
+            variant="h4"
+            component="h2"
+            sx={{
+              fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+              fontWeight: 600,
+              fontSize: { xs: "1.5rem", md: "2rem" },
+              color: "white",
+              textAlign: "center",
+              marginBottom: 6,
+              textTransform: "uppercase",
+              letterSpacing: "2px",
+              maxWidth: "1200px",
+              mx: "auto",
+              px: { xs: 2, md: 4 },
+            }}
+          >
+            Our Valued Collaborators
+          </Typography>
+
+          <Box
+            sx={{
+              backgroundColor: "#3a3a3a",
+              borderRadius: 0,
+              height: "180px",
+              //  padding: { xs: "5px 4", md: "5px 6", lg: "5px 8", xl: "5px 10" },
+              transform: "scale(var(--zoom-scale, 1))",
+              transformOrigin: "center",
+              "@media (max-width: 1200px)": {
+                transform: "scale(0.9)",
+              },
+              "@media (max-width: 900px)": {
+                transform: "scale(0.8)",
+              },
+              "@media (max-width: 600px)": {
+                transform: "scale(0.7)",
+              },
+            }}
+          >
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "repeat(2, 1fr)",
+                  sm: "repeat(3, 1fr)",
+                  md: "repeat(4, 1fr)",
+                  lg: "repeat(8, 1fr)",
+                },
+                gap: 4,
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              {[
+                { name: "Creathe", src: "/collaborators/creathe.svg" },
+                { name: "RUNAM", src: "/collaborators/RUNAM.svg" },
+                { name: "AAAC", src: "/collaborators/AAAC_White.svg" },
+                {
+                  name: "Embassy of Sweden",
+                  src: "/collaborators/Embassy_of_Sweden_Abuja_logo.svg",
+                },
+                { name: "Ekpuk", src: "/collaborators/ekpuk.svg" },
+                {
+                  name: "Yemisi Shyllon Museum",
+                  src: "/collaborators/Yemisi_Shyllon_Museum_of_Art_Logo.svg",
+                },
+                {
+                  name: "Ibom Heritage",
+                  src: "/collaborators/ibom_heritage.svg",
+                },
+                { name: "Truth", src: "/collaborators/truth.svg" },
+              ].map((collaborator, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    padding: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={collaborator.src}
+                    alt={collaborator.name}
+                    sx={{
+                      maxWidth: "100%",
+                      maxHeight: "1000px",
+                      width: "auto",
+                      height: "auto",
+                      //  filter: "brightness(0) invert(1)",
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        //  filter: "brightness(0) invert(1) sepia(1) hue-rotate(25deg) saturate(2)",
+                        transform: "scale(1.15)",
+                      },
+                    }}
+                  />
+                </Box>
+              ))}
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
     </Box>
   );
 };

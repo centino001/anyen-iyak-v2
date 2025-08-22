@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, BoxProps, useTheme } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
+import CloudinaryImage from './CloudinaryImage';
 
 interface ImageWithFallbackProps extends Omit<BoxProps, 'component'> {
   src: string | undefined;
@@ -56,6 +57,22 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
     );
   }
 
+  // Check if it's a Cloudinary URL and use CloudinaryImage for better optimization
+  const isCloudinaryUrl = src && (src.includes('cloudinary.com') || src.includes('res.cloudinary.com'));
+  
+  if (isCloudinaryUrl) {
+    return (
+      <CloudinaryImage
+        src={src}
+        alt={alt}
+        fallbackIcon={fallbackIcon}
+        sx={sx}
+        {...props}
+      />
+    );
+  }
+
+  // Fall back to regular img for non-Cloudinary URLs
   return (
     <Box
       component="img"

@@ -1,274 +1,441 @@
-import React, { useState } from 'react';
-import { Box, Container, Grid, Typography, Card, CardContent, Tabs, Tab, Button, useTheme, CircularProgress, Fade, Grow, Zoom } from '@mui/material';
-import { Link } from 'react-router-dom';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import PersonIcon from '@mui/icons-material/Person';
-import useDataFetch from '../hooks/useDataFetch';
-import EmptyState from '../components/EmptyState';
-import ImageWithFallback from '../components/ImageWithFallback';
-
-interface Person {
-  _id: string;
-  name: string;
-  title: string;
-  department: string;
-  image?: string;
-  slug: string;
-  order: number;
-  isLeadership: boolean;
-}
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Container, Grid, Divider, IconButton } from '@mui/material';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import { fetchPeopleByDepartment } from '../utils/api';
+import { Person } from '../types';
 
 const People: React.FC = () => {
-  const theme = useTheme();
-  const [selectedDepartment, setSelectedDepartment] = useState(0);
-  const { data: people, loading, error } = useDataFetch<Person>('/people');
-
-  // Debug: Log people data to see if images are included
-  React.useEffect(() => {
-    if (people && people.length > 0) {
-      console.log('People data received:', people);
-      console.log('Sample person with image:', people.find(p => p.image));
-      console.log('People without images:', people.filter(p => !p.image).length);
-    }
-  }, [people]);
+  const [people, setPeople] = useState<{ [key: string]: Person[] }>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const departments = [
-    'All',
     'Board of Directors',
-    'Executive Leadership',
+    'Executive Leadership', 
     'Expert Advisors',
+    'Champions',
     'Core Team'
   ];
 
-  const handleDepartmentChange = (event: React.SyntheticEvent, newValue: number) => {
-    setSelectedDepartment(newValue);
-  };
+  useEffect(() => {
+    const loadPeople = async () => {
+      try {
+        setLoading(true);
+        const peopleData: { [key: string]: Person[] } = {};
+        
+        // Fetch people for each department
+        for (const dept of departments) {
+          try {
+            const deptPeople = await fetchPeopleByDepartment(dept);
+            if (deptPeople && deptPeople.length > 0) {
+              peopleData[dept] = deptPeople;
+            }
+          } catch (err) {
+            console.error(`Failed to fetch people for ${dept}:`, err);
+          }
+        }
+        
+        setPeople(peopleData);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load people');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const filteredPeople = selectedDepartment === 0 
-    ? people 
-    : people?.filter(person => person.department === departments[selectedDepartment]);
+    loadPeople();
+  }, []);
 
-  const renderContent = () => {
-    if (loading) {
-      return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 8, minHeight: '50vh', alignItems: 'center' }}>
-          <CircularProgress size={60} sx={{ color: 'var(--primary-color)' }} />
-        </Box>
-      );
-    }
-
-    if (error) {
-      return (
-        <Fade in timeout={800}>
-          <Box>
-            <EmptyState 
-              message="Error loading team members. Please try again later."
-              icon={<PersonIcon sx={{ fontSize: 64, color: 'error.main' }} />}
-            />
-          </Box>
-        </Fade>
-      );
-    }
-
-    if (!filteredPeople || filteredPeople.length === 0) {
-      return (
-        <Fade in timeout={800}>
-          <Box>
-            <EmptyState 
-              message={selectedDepartment === 0 
-                ? "No team members available at the moment." 
-                : `No team members in ${departments[selectedDepartment]} department.`}
-              icon={<PersonIcon sx={{ fontSize: 64 }} />}
-            />
-          </Box>
-        </Fade>
-      );
+  const renderTeamSection = (title: string, members: Person[]) => {
+    // Don't render section if no members
+    if (!members || members.length === 0) {
+      return null;
     }
 
     return (
-      <Grid container spacing={4}>
-        {filteredPeople.map((person, index) => (
-          <Grid item xs={12} sm={6} md={4} key={person._id}>
-            <Grow 
-              in 
-              timeout={500 + (index * 100)}
-              style={{ transformOrigin: '0 0 0' }}
-            >
-              <Card 
+    <Box sx={{
+      backgroundColor: '#121212',
+      color: 'white',
+      py: 8
+    }}>
+      <Container maxWidth="lg">
+        <Typography
+          variant="h3"
+          component="h2"
+          sx={{
+            fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+            fontWeight: 600,
+            fontSize: { xs: '1.75rem', md: '2.25rem' },
+            textAlign: 'center',
+            marginBottom: 6,
+            textTransform: 'uppercase',
+            letterSpacing: '2px',
+          }}
+        >
+          {title}
+        </Typography>
+
+        <Grid container spacing={4} justifyContent="center">
+          {members.map((member, index) => (
+              <Grid item xs={12} md={4} key={member._id || index}>
+              <Box
                 sx={{ 
+                  backgroundColor: '#3a3a3a',
+                  borderRadius: '8px',
+                  padding: 3,
+                  textAlign: 'center',
                   height: '100%',
-                  boxShadow: 'none',
-                  transition: 'all 0.3s ease',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'transform 0.3s ease',
                   '&:hover': {
-                    transform: 'translateY(-8px)',
-                    boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                    transform: 'translateY(-5px)',
                   },
                 }}
-                component={Link}
-                to={`/people/${person.slug}`}
-                style={{ textDecoration: 'none' }}
               >
-                <Box sx={{ 
-                  height: 550,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  overflow: 'hidden',
-                  padding: '10px',
-                  borderRadius: 2,
-                  transition: 'all 0.3s ease',
-                }}>
+                {/* Profile Image */}
                   <Box 
                     sx={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      display: 'flex', 
-                      alignItems: 'flex-start', 
-                      justifyContent: 'center',
-                      paddingTop: '10px',
-                      transition: 'all 0.3s ease',
+                    width: '120px',
+                    height: '120px',
+                    borderRadius: '50%',
+                    margin: '0 auto 20px',
+                      backgroundImage: member.image ? `url(${member.image})` : 'url(/people/first_person.svg)',
+                    backgroundSize: 'cover',
+                      backgroundPosition: 'center top',
+                    border: '3px solid #D05A34',
+                  }}
+                />
+
+                {/* Name */}
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                    fontWeight: 600,
+                    fontSize: '1.1rem',
+                      marginBottom: 1,
+                    color: 'white',
+                  }}
+                >
+                  {member.name}
+                </Typography>
+
+                {/* Role - Only show if exists */}
+                {member.role && (
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                      fontSize: '0.9rem',
+                      fontWeight: 500,
+                      marginBottom: 2,
+                      color: '#D05A34',
+                      fontStyle: 'italic'
                     }}
                   >
-                    <ImageWithFallback
-                      src={person.image}
-                      alt={`${person.name}`}
-                      fallbackIcon={<PersonIcon sx={{ fontSize: 60, color: 'white.100' }} />}
-                      sx={{ 
-                        width: '100%', 
-                        height: '100%',
-                        transition: 'transform 0.5s ease',
-                        '&:hover': {
-                          transform: 'scale(1.03)'
-                        }
-                      }}
-                    />
-                  </Box>
-                </Box>
-                <CardContent sx={{ p: 3 }}>
-                  <Typography variant="h6" sx={{ 
-                    mb: 1, 
-                    color: 'text.primary',
-                    fontWeight: 'bold',
-                    position: 'relative',
-                    display: 'inline-block',
-                    '&::after': {
-                      content: '""',
-                      position: 'absolute',
-                      bottom: -4,
-                      left: 0,
-                      width: '40px',
-                      height: '2px',
-                      backgroundColor: 'var(--primary-color)',
-                      transition: 'width 0.3s ease',
-                    },
-                    '&:hover::after': {
-                      width: '100%'
-                    }
-                  }}>
-                    {person.name}
+                    {member.role}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                    {person.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2, fontWeight: 'bold' }}>
-                    {person.department}
-                  </Typography>
-                  <Button
-                    endIcon={<ArrowForwardIcon />}
+                )}
+
+                {/* Bio */}
+                <Typography
+                  variant="body2"
                     sx={{ 
-                      color: 'var(--primary-color)',
-                      transition: 'transform 0.3s ease',
-                      '&:hover': {
-                        transform: 'translateX(5px)',
-                        backgroundColor: 'transparent'
-                      }
-                    }}
-                  >
-                    View Profile
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grow>
+                    fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                    fontSize: '0.875rem',
+                    lineHeight: 1.6,
+                    color: '#e0e0e0',
+                    flex: 1,
+                    whiteSpace: 'pre-wrap'
+                  }}
+                >
+                  {member.bio}
+                </Typography>
+
+                {/* LinkedIn Profile Link */}
+                {member.socialLinks?.linkedin && (
+                  <>
+                    <Divider sx={{ my: 2, borderColor: 'rgba(255,255,255,0.2)' }} />
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                      <LinkedInIcon sx={{ color: '#0077b5', fontSize: '1.2rem' }} />
+                      <Typography
+                        component="a"
+                        href={member.socialLinks.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          color: '#0077b5',
+                          textDecoration: 'none',
+                          fontSize: '0.875rem',
+                          fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                          '&:hover': {
+                            textDecoration: 'underline'
+                          }
+                        }}
+                      >
+                        LinkedIn Profile
+                      </Typography>
+                    </Box>
+                  </>
+                )}
+              </Box>
           </Grid>
         ))}
       </Grid>
+      </Container>
+    </Box>
     );
   };
 
-  return (
-    <Box>
-      {/* Hero Section */}
+  if (loading) {
+    return (
       <Box sx={{ 
-        height: '40vh',
-        backgroundColor: '#121212',
-        backgroundImage: 'linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7))',
-        display: 'flex',
-        alignItems: 'center',
-        position: 'relative',
-        color: '#FFFFFF'
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '100vh',
+        backgroundColor: '#f8f9fa'
       }}>
-        <Container maxWidth="lg">
-          <Box sx={{ maxWidth: '800px' }}>
-            <Typography variant="h1" sx={{ 
-              fontSize: { xs: '2.5rem', md: '3.5rem' },
-              fontWeight: 'bold',
-              mb: 3
-            }}>
-              Our People
-            </Typography>
-            <Typography variant="h5" sx={{ mb: 4 }}>
-              Meet the dedicated individuals who bring our mission to life.
-            </Typography>
-          </Box>
-        </Container>
+        <Typography variant="h6" sx={{ color: '#666', fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif' }}>
+          Loading people...
+        </Typography>
       </Box>
+    );
+  }
 
-      {/* Department Tabs */}
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: '#121212' }}>
-        <Container maxWidth="lg">
-          <Fade in timeout={1000}>
-            <Tabs 
-              value={selectedDepartment} 
-              onChange={handleDepartmentChange}
-              variant="scrollable"
-              scrollButtons="auto"
+  if (error) {
+    return (
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '100vh',
+        backgroundColor: '#f8f9fa'
+      }}>
+        <Typography variant="h6" color="error" sx={{ fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif' }}>
+          Error: {error}
+        </Typography>
+      </Box>
+    );
+  }
+
+  // Check if there are any people at all
+  const hasAnyPeople = Object.values(people).some(deptPeople => deptPeople && deptPeople.length > 0);
+
+  if (!hasAnyPeople) {
+    return (
+      <Box sx={{ width: '100%', minHeight: '100vh' }}>
+        {/* Image Grid Section */}
+        <Box sx={{ 
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
+          gridTemplateRows: { xs: 'repeat(5, 200px)', md: 'repeat(2, 300px)' },
+          gap: 0,
+          height: { xs: '1000px', md: '600px' }
+        }}>
+          {/* Top Left - Landing */}
+          <Box
+            sx={{
+              backgroundImage: 'url(/images/landing.svg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              position: 'relative',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                zIndex: 1,
+              },
+            }}
+          />
+          
+          {/* Top Right - Newspaper Room */}
+          <Box
+            sx={{
+              backgroundImage: 'url(/images/newspaper_room.svg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+          
+          {/* Bottom Left - Potter */}
+          <Box
+            sx={{
+              backgroundImage: 'url(/images/potter.svg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+          
+          {/* Bottom Right - Split between Potter 2 and Lightroom */}
+          <Box sx={{ 
+            display: 'grid',
+            gridTemplateRows: '1fr 1fr',
+            gap: 0
+          }}>
+            <Box
               sx={{
-                '& .MuiTab-root': {
-                  textTransform: 'none',
-                  fontSize: '1rem',
-                  fontWeight: 500,
-                  color: '#b8860b',
-                  transition: 'all 0.3s ease',
-                  '&.Mui-selected': {
-                    color: '#b8860b',
-                    fontWeight: 700,
-                  },
-                  '&:hover': {
-                    backgroundColor: 'rgba(184, 134, 11, 0.15)',
-                    color: '#b8860b'
-                  }
-                },
-                '& .MuiTabs-indicator': {
-                  backgroundColor: '#b8860b',
-                  height: '3px',
-                  borderRadius: '3px'
-                },
+                backgroundImage: 'url(/images/potter_2.svg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            />
+            <Box
+              sx={{
+                backgroundImage: 'url(/images/lightroom.svg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            />
+          </Box>
+        </Box>
+
+        {/* Empty State */}
+        <Box sx={{ py: 8, textAlign: 'center', backgroundColor: '#121212', color: 'white' }}>
+          <Container maxWidth="md">
+            <Typography
+              variant="h4"
+              sx={{
+                fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                fontWeight: 600,
+                color: 'white',
+                mb: 2
               }}
             >
-              {departments.map((dept, index) => (
-                <Tab key={index} label={dept} />
-              ))}
-            </Tabs>
-          </Fade>
-        </Container>
+              No Team Members Available
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                color: '#cccccc',
+                mb: 4,
+                fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif'
+              }}
+            >
+              There are currently no team members available. Check back later.
+            </Typography>
+          </Container>
+        </Box>
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={{ width: '100%', minHeight: '100vh' }}>
+      {/* Image Grid Section */}
+      <Box sx={{ 
+        display: 'grid',
+        gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
+        gridTemplateRows: { xs: 'repeat(5, 200px)', md: 'repeat(2, 300px)' },
+        gap: 0,
+        height: { xs: '1000px', md: '600px' }
+      }}>
+        {/* Top Left - Landing */}
+        <Box
+          sx={{
+            backgroundImage: 'url(/images/landing.svg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            position: 'relative',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              zIndex: 1,
+            },
+          }}
+        />
+        
+        {/* Top Right - Newspaper Room */}
+        <Box
+          sx={{
+            backgroundImage: 'url(/images/newspaper_room.svg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+        
+        {/* Bottom Left - Potter */}
+        <Box
+          sx={{
+            backgroundImage: 'url(/images/potter.svg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+        
+        {/* Bottom Right - Split between Potter 2 and Lightroom */}
+        <Box sx={{ 
+          display: 'grid',
+          gridTemplateRows: '1fr 1fr',
+          gap: 0
+        }}>
+          <Box
+            sx={{
+              backgroundImage: 'url(/images/potter_2.svg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+          <Box
+            sx={{
+              backgroundImage: 'url(/images/lightroom.svg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+          </Box>
       </Box>
 
-      {/* Staff Grid */}
-      <Box sx={{ py: 8, backgroundColor: '#121212' }}>
+      {/* Orange Section - Only show if there are people */}
+      {hasAnyPeople && (
+      <Box sx={{
+        backgroundColor: '#D05A34',
+        color: 'white',
+        py: 4,
+        textAlign: 'center'
+      }}>
         <Container maxWidth="lg">
-          {renderContent()}
+          <Typography
+            variant="h4"
+              sx={{
+              fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+              fontWeight: 400,
+              fontSize: { xs: '1.25rem', md: '1.5rem' },
+              textTransform: 'uppercase',
+              letterSpacing: '2px',
+            }}
+          >
+            Meet The Dedicated Individuals Who Bring Our Mission To Life
+          </Typography>
         </Container>
       </Box>
+      )}
+
+      {/* Render each department section only if it has people */}
+      {people['Board of Directors'] && people['Board of Directors'].length > 0 && 
+        renderTeamSection("Board Of Directors", people['Board of Directors'])}
+
+      {people['Executive Leadership'] && people['Executive Leadership'].length > 0 && 
+        renderTeamSection("Executive Leadership", people['Executive Leadership'])}
+
+      {people['Expert Advisors'] && people['Expert Advisors'].length > 0 && 
+        renderTeamSection("Expert Advisors", people['Expert Advisors'])}
+
+      {people['Champions'] && people['Champions'].length > 0 && 
+        renderTeamSection("Champions", people['Champions'])}
+
+      {people['Core Team'] && people['Core Team'].length > 0 && 
+        renderTeamSection("Core Team", people['Core Team'])}
     </Box>
   );
 };

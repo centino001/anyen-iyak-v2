@@ -1,153 +1,199 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Card, CardContent, Button, CircularProgress, useTheme } from '@mui/material';
-import { Link } from 'react-router-dom';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import ArticleIcon from '@mui/icons-material/Article';
-import useDataFetch from '../hooks/useDataFetch';
-import EmptyState from '../components/EmptyState';
-import ImageWithFallback from '../components/ImageWithFallback';
-
-interface NewsArticle {
-  _id: string;
-  title: string;
-  excerpt: string;
-  category: string;
-  image?: string;
-  publishDate: string;
-  author: string;
-  slug: string;
-  isPublished: boolean;
-  content: string; // Added content field
-}
+import { Box, Container, Typography, Grid } from '@mui/material';
 
 const News: React.FC = () => {
-  const { data: news, loading, error } = useDataFetch<NewsArticle>('/news');
-  const theme = useTheme();
+  // Array of news images - you can replace with actual news images
+  const newsImages = [
+    '/programs/museum.svg',
+    '/programs/museum_photo.svg',
+    '/programs/museum_chair.svg',
+  ];
 
-  const renderContent = () => {
-    if (loading) {
       return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-          <CircularProgress />
-        </Box>
-      );
-    }
-
-    if (error) {
-      return (
-        <EmptyState 
-          message="Error loading news articles. Please try again later."
-          icon={<ArticleIcon sx={{ fontSize: 64, color: 'error.main' }} />}
+    <Box>
+      {/* Top Image Grid - Same as Programs page */}
+      <Box sx={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gridTemplateRows: '1fr 1fr',
+        height: { xs: '400px', md: '500px' },
+        gap: 0
+      }}>
+        {/* Top Left - Landing */}
+        <Box
+          sx={{
+            backgroundImage: 'url(/images/landing.svg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
         />
-      );
-    }
-
-    if (!news || news.length === 0) {
-      return (
-        <EmptyState 
-          message="No news articles available at the moment. Please check back later."
-          icon={<ArticleIcon sx={{ fontSize: 64 }} />}
+        
+        {/* Top Right - Newspaper Room */}
+        <Box
+          sx={{
+            backgroundImage: 'url(/images/newspaper_room.svg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
         />
-      );
-    }
-
-    return (
-      <Grid container spacing={4}>
-        {news.map((article) => (
-          <Grid item xs={12} md={6} key={article._id}>
-            <Card 
+        
+        {/* Bottom Left - Potter */}
+        <Box
               sx={{ 
-                display: 'flex',
-                height: '100%',
-                boxShadow: 'none',
-                border: '1px solid #E5E5E5',
-                transition: 'transform 0.2s',
-                '&:hover': {
-                  transform: 'translateY(-4px)',
-                },
+            backgroundImage: 'url(/images/potter.svg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
               }}
-              component={Link}
-              to={`/news/${article.slug}`}
-              style={{ textDecoration: 'none' }}
-            >
+        />
+        
+        {/* Bottom Right - Split between Potter 2 and Lightroom */}
               <Box sx={{ 
-                width: 300,
-                height: 350,
-                backgroundColor: '#E5E5E5',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden',
-                padding: '10px',
-                borderRadius: 1
-              }}>
-                <ImageWithFallback 
-                  src={article.image} 
-                  alt={article.title}
-                  fallbackIcon={<ArticleIcon sx={{ fontSize: 60, color: 'grey.400' }} />}
-                  sx={{ width: '100%', height: '100%' }}
+          display: 'grid',
+          gridTemplateRows: '1fr 1fr',
+          gap: 0
+        }}>
+          <Box
+            sx={{
+              backgroundImage: 'url(/images/potter_2.svg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+          <Box
+            sx={{
+              backgroundImage: 'url(/images/lightroom.svg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
                 />
               </Box>
-              <CardContent sx={{ flex: 1, p: 3 }}>
-                <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
-                  {new Date(article.publishDate).toLocaleDateString()} | {article.category}
-                </Typography>
-                <Typography variant="h6" sx={{ mb: 1, color: 'text.primary' }}>
-                  {article.title}
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 3 }}>
-                  {article.excerpt}
-                </Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Typography variant="caption" color="text.secondary">
-                    By {article.author}
-                  </Typography>
-                  <Button
-                    endIcon={<ArrowForwardIcon />}
-                    sx={{ color: 'var(--primary-color)' }}
-                  >
-                    Read More
-                  </Button>
                 </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    );
-  };
 
-  return (
-    <Box>
-      {/* Hero Section */}
+      {/* Orange Section */}
       <Box sx={{ 
-        height: '40vh',
-        backgroundColor: 'var(--primary-color)',
-        display: 'flex',
-        alignItems: 'center',
-        position: 'relative',
-        color: theme.palette.mode === 'light' ? '#000000' : '#FFFFFF'
+        backgroundColor: '#D05A34',
+        color: 'white',
+        py: 4,
+        textAlign: 'center'
       }}>
         <Container maxWidth="lg">
-          <Box sx={{ maxWidth: '800px' }}>
-            <Typography variant="h1" sx={{ 
-              fontSize: { xs: '2.5rem', md: '3.5rem' },
-              fontWeight: 'bold',
-              mb: 3
-            }}>
-              News & Updates
+          <Typography
+            variant="h4"
+            sx={{
+              fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+              fontWeight: 400,
+              fontSize: { xs: '1.25rem', md: '1.5rem' },
+              textTransform: 'uppercase',
+              letterSpacing: '2px',
+            }}
+          >
+            Stay Updated With Our Latest News And Events
             </Typography>
-            <Typography variant="h5" sx={{ mb: 4 }}>
-              Stay informed about our latest initiatives and impact.
-            </Typography>
-          </Box>
         </Container>
       </Box>
 
-      {/* News Grid */}
-      <Box sx={{ py: 8 }}>
+      {/* News Grid Section */}
+      <Box sx={{
+        backgroundColor: 'white',
+        py: 8
+      }}>
         <Container maxWidth="lg">
-          {renderContent()}
+          <Grid container spacing={3}>
+            {/* Create 8 news cards in a 2x2 grid */}
+            {[...Array(8)].map((_, index) => {
+              const imageIndex = index % newsImages.length;
+              
+              return (
+                <Grid item xs={12} sm={6} md={6} key={index}>
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      height: '300px',
+                      borderRadius: '8px',
+                      overflow: 'hidden',
+                      backgroundImage: `url(${newsImages[imageIndex]})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      transition: 'transform 0.3s ease',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        transform: 'scale(1.02)',
+                      },
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%)',
+                        zIndex: 1,
+                      },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        zIndex: 2,
+                        padding: 3,
+                      }}
+                    >
+                      {/* Title */}
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                          fontWeight: 600,
+                          fontSize: { xs: '0.875rem', md: '1rem' },
+                          color: 'white',
+                          textTransform: 'uppercase',
+                          letterSpacing: '1px',
+                          mb: 1,
+                          textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                        }}
+                      >
+                        Anyen Iyak Foundation News Update
+                      </Typography>
+
+                      {/* Subtitle */}
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                          fontSize: { xs: '0.75rem', md: '0.875rem' },
+                          color: 'white',
+                          mb: 2,
+                          textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                        }}
+                      >
+                        Latest Updates From Our Foundation Activities
+                      </Typography>
+
+                      {/* Date */}
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+                          fontSize: { xs: '0.7rem', md: '0.75rem' },
+                          color: 'white',
+                          textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                        }}
+                      >
+                        {new Date().toLocaleDateString('en-GB', { 
+                          day: '2-digit', 
+                          month: '2-digit', 
+                          year: 'numeric' 
+                        })}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+              );
+            })}
+          </Grid>
         </Container>
       </Box>
     </Box>

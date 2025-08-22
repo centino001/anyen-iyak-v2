@@ -16,10 +16,6 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Switch,
   FormControlLabel,
   Snackbar,
@@ -66,6 +62,10 @@ interface FormData {
   goals: string[];
   requirements: string[];
   applicationUrl: string;
+  // Fundraising fields
+  requiresDonation: boolean;
+  fundraisingGoal: string;
+  donationDescription: string;
 }
 
 const INITIAL_FORM_DATA: FormData = {
@@ -79,6 +79,10 @@ const INITIAL_FORM_DATA: FormData = {
   goals: [],
   requirements: [],
   applicationUrl: '',
+  // Fundraising fields
+  requiresDonation: false,
+  fundraisingGoal: '',
+  donationDescription: '',
 };
 
 const ProgramManagement = () => {
@@ -102,7 +106,11 @@ const ProgramManagement = () => {
     severity: 'success' as 'success' | 'error',
   });
 
-  const { data: programs, loading, error } = useDataFetch<Program>('/programs/admin/all', { isAdminRoute: true });
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
+const { data: programs, loading, error } = useDataFetch<Program>('/programs/admin/all', { 
+  isAdminRoute: true, 
+  refreshTrigger 
+});
 
   const showSnackbar = (message: string, severity: 'success' | 'error') => {
     setSnackbar({ open: true, message, severity });
@@ -122,6 +130,10 @@ const ProgramManagement = () => {
         goals: program.goals,
         requirements: program.requirements,
         applicationUrl: program.applicationUrl || '',
+        // Fundraising fields with fallback for existing programs
+        requiresDonation: (program as any).requiresDonation || false,
+        fundraisingGoal: (program as any).fundraisingGoal?.toString() || '',
+        donationDescription: (program as any).donationDescription || '',
       });
       if (program.image) {
         setImagePreview(program.image);
@@ -196,6 +208,18 @@ const ProgramManagement = () => {
         return;
       }
 
+      // Validate fundraising fields if donation is required
+      if (formData.requiresDonation) {
+        if (!formData.fundraisingGoal || Number(formData.fundraisingGoal) <= 0) {
+          showSnackbar('Fundraising goal is required and must be greater than 0', 'error');
+          return;
+        }
+        if (!formData.donationDescription.trim()) {
+          showSnackbar('Donation description is required when fundraising is enabled', 'error');
+          return;
+        }
+      }
+
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
         if (Array.isArray(value)) {
@@ -232,8 +256,10 @@ const ProgramManagement = () => {
         `Program ${selectedProgram ? 'updated' : 'created'} successfully`,
         'success'
       );
+      console.log('Program saved successfully. Image URL:', selectedImage ? 'Image uploaded' : 'No image');
       handleClose();
-      window.location.reload();
+      // Refresh data instead of page reload
+      setRefreshTrigger(prev => !prev);
     } catch (error) {
       console.error('Error saving program:', error);
       showSnackbar(error instanceof Error ? error.message : 'Error saving program', 'error');
@@ -256,6 +282,8 @@ const ProgramManagement = () => {
       }
 
       showSnackbar('Program deleted successfully', 'success');
+      // Refresh data after deletion
+      setRefreshTrigger(prev => !prev);
     } catch (error) {
       console.error('Error deleting program:', error);
       showSnackbar('Error deleting program', 'error');
@@ -296,7 +324,9 @@ const ProgramManagement = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {programs.map((program) => (
+            {programs.map((program) => {
+              console.log('Program image:', program.title, program.image);
+              return (
               <TableRow key={program._id}>
                 <TableCell>
                   <Box sx={{ 
@@ -307,12 +337,24 @@ const ProgramManagement = () => {
                     padding: '5px',
                     backgroundColor: '#E5E5E5'
                   }}>
-                    <ImageWithFallback 
-                      src={program.image} 
-                      alt={program.title}
-                      fallbackIcon={<ImageIcon sx={{ color: 'grey.400' }} />}
-                      sx={{ width: '100%', height: '100%' }}
-                    />
+                    {program.image ? (
+                      <ImageWithFallback 
+                        src={program.image} 
+                        alt={program.title}
+                        fallbackIcon={<ImageIcon sx={{ color: 'grey.400' }} />}
+                        sx={{ width: '100%', height: '100%' }}
+                      />
+                    ) : (
+                      <Box sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        height: '100%',
+                        color: 'grey.400'
+                      }}>
+                        <ImageIcon />
+                      </Box>
+                    )}
                   </Box>
                 </TableCell>
                 <TableCell>{program.title}</TableCell>
@@ -328,7 +370,8 @@ const ProgramManagement = () => {
                   </IconButton>
                 </TableCell>
               </TableRow>
-            ))}
+            );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
@@ -410,24 +453,30 @@ const ProgramManagement = () => {
               value={formData.shortDescription}
               onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
               multiline
-              rows={2}
+              rows={3}
               fullWidth
               required
+              inputProps={{
+                style: { whiteSpace: 'pre-wrap' }
+              }}
+              sx={{
+                '& .MuiInputBase-input': {
+                  whiteSpace: 'pre-wrap',
+                  fontFamily: 'monospace'
+                }
+              }}
+              helperText="Use Enter for line breaks. Formatting will be preserved."
             />
 
-            <FormControl fullWidth required>
-              <InputLabel>Category</InputLabel>
-              <Select
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                label="Category"
-              >
-                <MenuItem value="Higher Learning">Higher Learning</MenuItem>
-                <MenuItem value="Arts and Culture">Arts and Culture</MenuItem>
-                <MenuItem value="Public Knowledge">Public Knowledge</MenuItem>
-                <MenuItem value="Humanities in Place">Humanities in Place</MenuItem>
-              </Select>
-            </FormControl>
+            <TextField
+              label="Category"
+              value={formData.category}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              fullWidth
+              required
+              placeholder="e.g., Higher Learning, Arts and Culture, Public Knowledge, etc."
+              helperText="Enter the program category manually"
+            />
 
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
@@ -448,6 +497,60 @@ const ProgramManagement = () => {
               onChange={(e) => setFormData({ ...formData, applicationUrl: e.target.value })}
               fullWidth
             />
+
+            {/* Fundraising Section */}
+            <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 1, p: 2, mt: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                Fundraising Settings
+              </Typography>
+              
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={formData.requiresDonation}
+                    onChange={(e) => setFormData({ ...formData, requiresDonation: e.target.checked })}
+                  />
+                }
+                label="Requires Donation/Funding"
+              />
+
+              {formData.requiresDonation && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+                  <TextField
+                    label="Fundraising Goal (₦)"
+                    type="number"
+                    value={formData.fundraisingGoal}
+                    onChange={(e) => setFormData({ ...formData, fundraisingGoal: e.target.value })}
+                    fullWidth
+                    required
+                    InputProps={{
+                      inputProps: { min: 0, step: 1000 }
+                    }}
+                    helperText="Enter the target amount to be raised in Nigerian Naira"
+                  />
+
+                  <TextField
+                    label="Donation Description"
+                    value={formData.donationDescription}
+                    onChange={(e) => setFormData({ ...formData, donationDescription: e.target.value })}
+                    multiline
+                    rows={4}
+                    fullWidth
+                    required
+                    inputProps={{
+                      style: { whiteSpace: 'pre-wrap' }
+                    }}
+                    sx={{
+                      '& .MuiInputBase-input': {
+                        whiteSpace: 'pre-wrap',
+                        fontFamily: 'monospace'
+                      }
+                    }}
+                    helperText="Use Enter for line breaks. Formatting will be preserved. Explain what the funds will be used for."
+                  />
+                </Box>
+              )}
+            </Box>
 
             <FormControlLabel
               control={

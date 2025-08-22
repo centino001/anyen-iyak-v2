@@ -37,31 +37,16 @@ import { useAdmin } from '../../contexts/AdminContext';
 import useDataFetch from '../../hooks/useDataFetch';
 import useFormSubmit from '../../hooks/useFormSubmit';
 import ImageWithFallback from '../../components/ImageWithFallback';
+import { Person } from '../../types';
 
-interface Person {
-  _id: string;
-  name: string;
-  title: string;
-  department: string;
-  image?: string;
-  bio: string;
-  email: string;
-  phone?: string;
-  order: number;
-  isLeadership: boolean;
-  slug: string;
-  socialLinks?: {
-    twitter?: string;
-    linkedin?: string;
-  };
-}
+
 
 interface FormData {
   name: string;
   title: string;
+  role: string;
   department: string;
   bio: string;
-  email: string;
   phone: string;
   order: number;
   isLeadership: boolean;
@@ -74,9 +59,9 @@ interface FormData {
 const INITIAL_FORM_DATA: FormData = {
   name: '',
   title: '',
+  role: '',
   department: 'Core Team', // Set default department
   bio: '',
-  email: '',
   phone: '',
   order: 0,
   isLeadership: false,
@@ -90,7 +75,8 @@ const DEPARTMENTS = [
   'Executive Leadership',
   'Board of Directors',
   'Expert Advisors',
-  'Core Team'
+  'Core Team',
+  'Champions'
 ];
 
 const PeopleManagement = () => {
@@ -100,12 +86,12 @@ const PeopleManagement = () => {
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
     severity: 'success' as 'success' | 'error',
   });
-  const { submitForm, isSubmitting } = useFormSubmit();
 
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const { data: people, loading, error } = useDataFetch<Person>('/people/admin/all', { 
@@ -123,9 +109,9 @@ const PeopleManagement = () => {
       setFormData({
         name: person.name,
         title: person.title,
+        role: person.role || '',
         department: person.department,
         bio: person.bio,
-        email: person.email,
         phone: person.phone || '',
         order: person.order,
         isLeadership: person.isLeadership,
@@ -191,18 +177,16 @@ const PeopleManagement = () => {
 
   const handleSubmit = async () => {
     try {
+      setIsSubmitting(true);
+      
       // Validate required fields
       const errors = [];
       if (!formData.name) errors.push('Name is required');
       if (!formData.title) errors.push('Title is required');
       if (!formData.department) errors.push('Department is required');
       if (!formData.bio) errors.push('Bio is required');
-      if (!formData.email) errors.push('Email is required');
-
-      console.log('Form data before validation:', formData);
 
       if (errors.length > 0) {
-        console.log('Frontend validation errors:', errors);
         setSnackbar({
           open: true,
           message: `Validation failed: ${errors.join(', ')}`,
@@ -214,19 +198,19 @@ const PeopleManagement = () => {
       const formDataToSend = new FormData();
       formDataToSend.append('name', formData.name);
       formDataToSend.append('title', formData.title);
+      formDataToSend.append('role', formData.role);
       formDataToSend.append('department', formData.department);
       formDataToSend.append('bio', formData.bio);
-      formDataToSend.append('email', formData.email);
       if (formData.phone) formDataToSend.append('phone', formData.phone);
       formDataToSend.append('order', formData.order.toString());
       formDataToSend.append('isLeadership', formData.isLeadership.toString());
       formDataToSend.append('socialLinks', JSON.stringify(formData.socialLinks));
       if (selectedImage) {
         formDataToSend.append('image', selectedImage);
-        console.log('Uploading image:', selectedImage.name, selectedImage.size, selectedImage.type);
       }
 
-      console.log('FormData entries being sent:', Array.from(formDataToSend.entries()));
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/people${selectedPerson ? `/${selectedPerson._id}` : ''}`,
@@ -236,28 +220,44 @@ const PeopleManagement = () => {
             Authorization: `Bearer ${admin?.token}`,
           },
           body: formDataToSend,
+          signal: controller.signal,
         }
       );
 
-      const data = await response.json();
-      console.log('Response from server:', data);
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to save person');
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
+
+      const data = await response.json();
 
       showSnackbar(
         `Person ${selectedPerson ? 'updated' : 'created'} successfully`,
         'success'
       );
+      
+      // Close the dialog first
       handleClose();
-      window.location.reload();
-    } catch (error) {
+      
+      // Then refresh the data
+      setRefreshTrigger(prev => prev + 1);
+      
+    } catch (error: any) {
       console.error('Error saving person:', error);
-      showSnackbar(
-        error instanceof Error ? error.message : 'Failed to save person',
-        'error'
-      );
+      
+      let errorMessage = 'Failed to save person. Please try again.';
+      
+      if (error.name === 'AbortError') {
+        errorMessage = 'Request timed out. Please try again.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      showSnackbar(errorMessage, 'error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -426,6 +426,15 @@ const PeopleManagement = () => {
                 required
               />
 
+              <TextField
+                label="Role"
+                value={formData.role}
+                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                fullWidth
+                placeholder="e.g., Senior Developer, Project Manager, etc."
+                helperText="Optional: Specific role or position within the department"
+              />
+
               <FormControl fullWidth required>
                 <InputLabel id="department-label">Department</InputLabel>
                 <Select
@@ -448,19 +457,22 @@ const PeopleManagement = () => {
                 value={formData.bio}
                 onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                 multiline
-                rows={4}
+                rows={5}
                 fullWidth
                 required
+                inputProps={{
+                  style: { whiteSpace: 'pre-wrap' }
+                }}
+                sx={{
+                  '& .MuiInputBase-input': {
+                    whiteSpace: 'pre-wrap',
+                    fontFamily: 'monospace'
+                  }
+                }}
+                helperText="Use Enter for line breaks. Formatting will be preserved."
               />
 
-              <TextField
-                label="Email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                fullWidth
-                required
-              />
+
 
               <TextField
                 label="Phone"
@@ -513,11 +525,12 @@ const PeopleManagement = () => {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose} disabled={isSubmitting}>Cancel</Button>
           <Button 
             onClick={handleSubmit} 
             variant="contained"
             disabled={isSubmitting}
+            startIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : null}
           >
             {isSubmitting ? 'Saving...' : (selectedPerson ? 'Update' : 'Create')}
           </Button>

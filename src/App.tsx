@@ -7,16 +7,10 @@ import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import About from './pages/About';
 import Programs from './pages/Programs';
+import ProgramDetail from './pages/ProgramDetail';
 import News from './pages/News';
-import NewsDetail from './pages/NewsDetail';
-import Mission from './pages/Mission';
-import History from './pages/History';
 import People from './pages/People';
-import PersonDetail from './pages/PersonDetail';
-import Shop from './pages/Shop';
 import Membership from './pages/Membership';
-import Financials from './pages/Financials';
-import Donate from './pages/Donate';
 import AdminLogin from './pages/AdminLogin';
 import AdminLayout from './components/Admin/AdminLayout';
 import Dashboard from './pages/Admin/Dashboard';
@@ -28,7 +22,6 @@ import { AdminProvider } from './contexts/AdminContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
 import 'react-quill/dist/quill.snow.css';
-import ProgramDetail from './pages/ProgramDetail';
 
 interface MainLayoutProps {}
 
@@ -57,14 +50,14 @@ function App() {
         palette: {
           mode: 'dark',
           primary: {
-            main: '#b8860b',
+            main: '#FF6B35',
           },
           secondary: {
             main: '#9c27b0',
           },
         },
         typography: {
-          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+          fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
         },
         components: {
           MuiButton: {
@@ -111,15 +104,8 @@ function App() {
               <Route path="/programs" element={<Programs />} />
               <Route path="/programs/:slug" element={<ProgramDetail />} />
               <Route path="/news" element={<News />} />
-              <Route path="/news/:slug" element={<NewsDetail />} />
-              <Route path="/mission" element={<Mission />} />
-              <Route path="/history" element={<History />} />
               <Route path="/people" element={<People />} />
-              <Route path="/people/:slug" element={<PersonDetail />} />
-              <Route path="/shop" element={<Shop />} />
               <Route path="/membership" element={<Membership />} />
-              <Route path="/donate" element={<Donate />} />
-              <Route path="/financials" element={<Financials />} />
             </Route>
           </Routes>
         </Router>

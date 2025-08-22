@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #b8860b;
+  --primary-color: #FF6B35;
   --secondary-color: #9c27b0;
   --background-color: #121212;
   --text-color: #ffffff;
   --card-background: #1e1e1e;
   --divider-color: #333333;
-  --font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
 }
 
 body {
@@ -94,5 +94,5 @@ code {
 }
 
 .btn-primary:hover {
-  background-color: #8B6914;
+  background-color: #FF6B35;
 }
