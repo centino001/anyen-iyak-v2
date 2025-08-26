@@ -45,7 +45,7 @@ const About: React.FC = () => {
               textAlign: "justify"
             }}
           >
-            <strong>Anyen Iyak Foundation for Art and Culture Is A Non-Profit Organisation Dedicated To Capturing, Preserving, And Sharing The Rich Heritage Of Akwa Ibom's Indigenous People.</strong> All Through Its Projects And Initiatives, The Foundation Seeks To Support, Encourage, And Promote Akwa Ibom's Art And Culture Locally And Globally.
+            <strong>Anyen Iyak Foundation for Art and Culture Is A Non-Profit Organisation Dedicated To Capturing, Preserving, And Sharing The Rich Heritage Of Akwa Ibom's Indigenous People.</strong> All Through Its Programs And Initiatives, The Foundation Seeks To Support, Encourage, And Promote Akwa Ibom's Art And Culture Locally And Globally.
           </Typography>
 
           <Typography
@@ -370,18 +370,6 @@ const About: React.FC = () => {
               Unit D, Plot 2B, Ewet Housing Estate<br />
               Uyo 520231, Akwa Ibom<br />
               Nigeria
-            </Typography>
-
-            <Typography
-              sx={{
-                fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
-                fontSize: "0.85rem",
-                lineHeight: 1.5,
-                color: "#666",
-                mb: 3
-              }}
-            >
-              09064552825, 09037334976
             </Typography>
 
             {/* OpenStreetMap */}

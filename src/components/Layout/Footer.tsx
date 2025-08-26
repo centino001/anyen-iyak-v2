@@ -155,9 +155,9 @@ const Footer: React.FC = () => {
                     Address
                   </Typography>
                   <Typography variant="body2" sx={{ lineHeight: 1.6, fontSize: '0.875rem' }}>
-                    Plot 94-Unit A, Ewet Housing Estate<br />
-                    Uyo, Akwa Ibom State<br />
-                    Nigeria.
+                  Unit D, Plot 2B, Ewet Housing Estate<br />
+                  Uyo 520231, Akwa Ibom<br />
+                  Nigeria
                   </Typography>
                  
                 </Box>
