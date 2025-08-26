@@ -13,36 +13,36 @@ import {
   Divider,
   Paper
 } from '@mui/material';
-import { fetchPrograms } from '../utils/api';
-import { Program } from '../types';
+import { fetchProjects } from '../utils/api';
+import { Project } from '../types';
 
-const ProgramDetail: React.FC = () => {
+const ProjectDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const [program, setProgram] = useState<Program | null>(null);
+  const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadProgram = async () => {
+    const loadProject = async () => {
       try {
         setLoading(true);
-        const programs = await fetchPrograms();
-        const foundProgram = programs.find(p => p.slug === slug);
-        if (foundProgram) {
-          setProgram(foundProgram);
+        const projects = await fetchProjects();
+        const foundProject = projects.find(p => p.slug === slug);
+        if (foundProject) {
+          setProject(foundProject);
         } else {
-          setError('Program not found');
+          setError('Project not found');
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load program');
+        setError(err instanceof Error ? err.message : 'Failed to load project');
       } finally {
         setLoading(false);
       }
     };
 
     if (slug) {
-      loadProgram();
+      loadProject();
     }
   }, [slug]);
 
@@ -93,7 +93,7 @@ const ProgramDetail: React.FC = () => {
       }}>
         <Box sx={{ textAlign: 'center' }}>
           <Typography variant="h6" sx={{ mb: 2, color: '#666', fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif' }}>
-            Loading program...
+            Loading project...
           </Typography>
           <Box sx={{ 
             width: '40px', 
@@ -113,7 +113,7 @@ const ProgramDetail: React.FC = () => {
     );
   }
 
-  if (error || !program) {
+  if (error || !project) {
     return (
       <Box sx={{ 
         display: 'flex', 
@@ -124,17 +124,17 @@ const ProgramDetail: React.FC = () => {
       }}>
         <Box sx={{ textAlign: 'center' }}>
           <Typography variant="h6" color="error" sx={{ mb: 2, fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif' }}>
-            {error || 'Program not found'}
+            {error || 'Project not found'}
           </Typography>
           <Button 
             variant="contained" 
-            onClick={() => navigate('/programs')}
+            onClick={() => navigate('/projects')}
             sx={{ 
               backgroundColor: '#007bff',
               fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif'
             }}
           >
-            Back to Programs
+            Back to Projects
           </Button>
         </Box>
       </Box>
@@ -146,8 +146,8 @@ const ProgramDetail: React.FC = () => {
       <Container maxWidth="xl" sx={{ py: 4 }}>
         <Grid container spacing={4}>
           {/* Main Content - Left Side */}
-          <Grid item xs={12} lg={8}>
-            {/* Program Header */}
+          <Grid item xs={12} lg={project.requiresDonation ? 8 : 12}>
+            {/* Project Header */}
             <Box sx={{ mb: 4 }}>
               <Typography
                 variant="h1"
@@ -156,19 +156,20 @@ const ProgramDetail: React.FC = () => {
                   fontWeight: 700,
                   fontSize: { xs: '2rem', md: '3rem' },
                   mb: 2,
-                  color: '#1a1a1a'
+                  color: '#1a1a1a',
+                  textAlign: 'justify'
                 }}
               >
-                {program.title}
+                {project.title}
               </Typography>
 
-              {/* Program Image */}
-              {program.image && (
+              {/* Project Image */}
+              {project.image && (
                 <Box
                   sx={{
                     width: '100%',
                     height: '400px',
-                    backgroundImage: `url(${program.image})`,
+                    backgroundImage: `url(${project.image})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     borderRadius: '12px',
@@ -179,7 +180,7 @@ const ProgramDetail: React.FC = () => {
             </Box>
 
             {/* Funding Progress */}
-            {program.requiresDonation && (
+            {project.requiresDonation && (
               <Box sx={{ mb: 4 }}>
                 <Typography
                   variant="h2"
@@ -188,25 +189,27 @@ const ProgramDetail: React.FC = () => {
                     fontWeight: 700,
                     fontSize: { xs: '2rem', md: '3rem' },
                     color: '#007bff',
-                    mb: 1
+                    mb: 1,
+                    textAlign: 'justify'
                   }}
                 >
-                  {formatCurrency(program.currentFunding || 0)}
+                  {formatCurrency(project.currentFunding || 0)}
                 </Typography>
                 <Typography
                   variant="h5"
                   sx={{
                     fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
                     color: '#666',
-                    mb: 3
+                    mb: 3,
+                    textAlign: 'justify'
                   }}
                 >
-                  Raised of {program.fundraisingGoal ? formatCurrency(program.fundraisingGoal) : 'goal'}
+                  Raised of {project.fundraisingGoal ? formatCurrency(project.fundraisingGoal) : 'goal'}
                 </Typography>
               </Box>
             )}
 
-            {/* Program Description */}
+            {/* Project Description */}
             <Box sx={{ mb: 4 }}>
               <Typography
                 variant="h4"
@@ -215,7 +218,8 @@ const ProgramDetail: React.FC = () => {
                   fontWeight: 600,
                   fontSize: '1.5rem',
                   mb: 2,
-                  color: '#1a1a1a'
+                  color: '#1a1a1a',
+                  textAlign: 'justify'
                 }}
               >
                 Our goal
@@ -228,13 +232,14 @@ const ProgramDetail: React.FC = () => {
                   lineHeight: 1.7,
                   color: '#333',
                   mb: 2,
-                  whiteSpace: 'pre-wrap'
+                  whiteSpace: 'pre-wrap',
+                  textAlign: 'justify'
                 }}
               >
-                {program.description}
+                {project.description}
               </Typography>
               
-              {program.shortDescription && (
+              {project.shortDescription && (
                 <Typography
                   variant="body1"
                   sx={{
@@ -242,16 +247,17 @@ const ProgramDetail: React.FC = () => {
                     fontSize: '1.125rem',
                     lineHeight: 1.7,
                     color: '#333',
-                    whiteSpace: 'pre-wrap'
+                    whiteSpace: 'pre-wrap',
+                    textAlign: 'justify'
                   }}
                 >
-                  {program.shortDescription}
+                  {project.shortDescription}
                 </Typography>
               )}
             </Box>
 
             {/* Contributors Section */}
-            {program.requiresDonation && program.contributors && program.contributors.length > 0 && (
+            {project.requiresDonation && project.contributors && project.contributors.length > 0 && (
               <Box sx={{ mb: 4 }}>
                 <Typography
                   variant="h4"
@@ -260,7 +266,8 @@ const ProgramDetail: React.FC = () => {
                     fontWeight: 600,
                     fontSize: '1.5rem',
                     mb: 2,
-                    color: '#1a1a1a'
+                    color: '#1a1a1a',
+                    textAlign: 'justify'
                   }}
                 >
                   Contributions
@@ -271,14 +278,15 @@ const ProgramDetail: React.FC = () => {
                   sx={{
                     fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
                     color: '#666',
-                    mb: 3
+                    mb: 3,
+                    textAlign: 'justify'
                   }}
                 >
-                  {program.contributors.length}
+                  {project.contributors.length}
                 </Typography>
 
                 <Grid container spacing={2}>
-                  {program.contributors.slice(0, 5).map((contributor, index) => (
+                  {project.contributors.slice(0, 5).map((contributor, index) => (
                     <Grid item xs={12} sm={6} key={index}>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                         <Avatar sx={{ width: 32, height: 32, mr: 2, backgroundColor: '#007bff' }}>
@@ -290,7 +298,8 @@ const ProgramDetail: React.FC = () => {
                             sx={{
                               fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
                               fontWeight: 600,
-                              color: '#1a1a1a'
+                              color: '#1a1a1a',
+                              textAlign: 'justify'
                             }}
                           >
                             {contributor.isAnonymous ? 'Anonymous' : contributor.name}
@@ -299,7 +308,8 @@ const ProgramDetail: React.FC = () => {
                             variant="body2"
                             sx={{
                               fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
-                              color: '#666'
+                              color: '#666',
+                              textAlign: 'justify'
                             }}
                           >
                             {formatCurrency(contributor.amount)}
@@ -310,7 +320,7 @@ const ProgramDetail: React.FC = () => {
                   ))}
                 </Grid>
 
-                {program.contributors.length > 5 && (
+                {project.contributors.length > 5 && (
                   <Button
                     variant="text"
                     sx={{
@@ -328,7 +338,7 @@ const ProgramDetail: React.FC = () => {
           </Grid>
 
           {/* Floating Donation Card - Right Side */}
-          {program.requiresDonation && (
+          {project.requiresDonation && (
             <Grid item xs={12} lg={4}>
               <Box sx={{ position: 'sticky', top: 24 }}>
                 <Card
@@ -348,20 +358,22 @@ const ProgramDetail: React.FC = () => {
                           fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
                           fontWeight: 700,
                           color: '#007bff',
-                          mb: 1
+                          mb: 1,
+                          textAlign: 'justify'
                         }}
                       >
-                        {formatCurrency(program.currentFunding || 0)}
+                        {formatCurrency(project.currentFunding || 0)}
                       </Typography>
                       <Typography
                         variant="body1"
                         sx={{
                           fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
                           color: '#666',
-                          mb: 2
+                          mb: 2,
+                          textAlign: 'justify'
                         }}
                       >
-                        Raised of {program.fundraisingGoal ? formatCurrency(program.fundraisingGoal) : 'goal'}
+                        Raised of {project.fundraisingGoal ? formatCurrency(project.fundraisingGoal) : 'goal'}
                       </Typography>
                     </Box>
 
@@ -395,7 +407,7 @@ const ProgramDetail: React.FC = () => {
                         sx={{
                           fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
                           color: '#666',
-                          textAlign: 'center',
+                          textAlign: 'justify',
                           mb: 1
                         }}
                       >
@@ -406,7 +418,7 @@ const ProgramDetail: React.FC = () => {
                         sx={{
                           fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
                           color: '#666',
-                          textAlign: 'center',
+                          textAlign: 'justify',
                           mb: 1
                         }}
                       >
@@ -417,7 +429,7 @@ const ProgramDetail: React.FC = () => {
                         sx={{
                           fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
                           color: '#666',
-                          textAlign: 'center'
+                          textAlign: 'justify'
                         }}
                       >
                         100% goes to program recipients
@@ -454,4 +466,4 @@ const ProgramDetail: React.FC = () => {
   );
 };
 
-export default ProgramDetail; 
+export default ProjectDetail; 

@@ -6,8 +6,8 @@ import Footer from './components/Layout/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import About from './pages/About';
-import Programs from './pages/Programs';
-import ProgramDetail from './pages/ProgramDetail';
+import Projects from './pages/Projects';
+import ProjectDetail from './pages/ProjectDetail';
 import News from './pages/News';
 import People from './pages/People';
 import Membership from './pages/Membership';
@@ -15,7 +15,7 @@ import AdminLogin from './pages/AdminLogin';
 import AdminLayout from './components/Admin/AdminLayout';
 import Dashboard from './pages/Admin/Dashboard';
 import NewsManagement from './pages/Admin/NewsManagement';
-import ProgramManagement from './pages/Admin/ProgramManagement';
+import ProjectManagement from './pages/Admin/ProjectManagement';
 import PeopleManagement from './pages/Admin/PeopleManagement';
 import SubscriberManagement from './pages/Admin/SubscriberManagement';
 import { AdminProvider } from './contexts/AdminContext';
@@ -92,7 +92,7 @@ function App() {
             >
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="news" element={<NewsManagement />} />
-              <Route path="programs" element={<ProgramManagement />} />
+              <Route path="projects" element={<ProjectManagement />} />
               <Route path="people" element={<PeopleManagement />} />
               <Route path="subscribers" element={<SubscriberManagement />} />
             </Route>
@@ -101,8 +101,8 @@ function App() {
             <Route element={<MainLayout />}>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
-              <Route path="/programs" element={<Programs />} />
-              <Route path="/programs/:slug" element={<ProgramDetail />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/projects/:slug" element={<ProjectDetail />} />
               <Route path="/news" element={<News />} />
               <Route path="/people" element={<People />} />
               <Route path="/membership" element={<Membership />} />

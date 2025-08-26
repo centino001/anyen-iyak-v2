@@ -10,29 +10,29 @@ import {
   Chip,
   Button
 } from '@mui/material';
-import { fetchPrograms } from '../utils/api';
-import { Program } from '../types';
+import { fetchProjects } from '../utils/api';
+import { Project } from '../types';
 
-const Programs: React.FC = () => {
-  const [programs, setPrograms] = useState<Program[]>([]);
+const Projects: React.FC = () => {
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loadPrograms = async () => {
+    const loadProjects = async () => {
       try {
         setLoading(true);
-        const data = await fetchPrograms();
-        setPrograms(data);
+        const data = await fetchProjects();
+        setProjects(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load programs');
+        setError(err instanceof Error ? err.message : 'Failed to load projects');
       } finally {
         setLoading(false);
       }
     };
 
-    loadPrograms();
+    loadProjects();
   }, []);
 
   const formatCurrency = (amount: number) => {
@@ -71,8 +71,8 @@ const Programs: React.FC = () => {
     return `${diffInMonths} month${diffInMonths > 1 ? 's' : ''} ago`;
   };
 
-  const handleCardClick = (program: Program) => {
-    navigate(`/programs/${program.slug}`);
+  const handleCardClick = (project: Project) => {
+    navigate(`/projects/${project.slug}`);
   };
 
   if (loading) {
@@ -86,7 +86,7 @@ const Programs: React.FC = () => {
       }}>
         <Box sx={{ textAlign: 'center' }}>
           <Typography variant="h6" sx={{ mb: 2, color: '#666', fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif' }}>
-            Loading programs...
+            Loading projects...
           </Typography>
           <Box sx={{ 
             width: '40px', 
@@ -134,7 +134,7 @@ const Programs: React.FC = () => {
     );
   }
 
-  if (programs.length === 0) {
+  if (projects.length === 0) {
     return (
       <Box sx={{ width: '100%', minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
         {/* Image Grid Section */}
@@ -218,7 +218,7 @@ const Programs: React.FC = () => {
                 mb: 2
               }}
             >
-              No Programs Available
+              No Projects Available
             </Typography>
             <Typography
               variant="body1"
@@ -228,7 +228,7 @@ const Programs: React.FC = () => {
                 fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif'
               }}
             >
-              There are currently no programs available. Check back later or contact an administrator to add new programs.
+              There are currently no projects available. Check back later or contact an administrator to add new projects.
             </Typography>
             <Box sx={{ fontSize: '4rem', opacity: 0.3, mb: 2 }}>🎨</Box>
           </Container>
@@ -308,23 +308,23 @@ const Programs: React.FC = () => {
         </Box>
       </Box>
 
-      {/* Programs Grid Section */}
+      {/* Projects Grid Section */}
       <Box sx={{ py: 6 }}>
         <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
  
 
-          {/* Programs Grid */}
+          {/* Projects Grid */}
           <Grid container spacing={3}>
-            {programs.map((program) => (
+            {projects.map((project) => (
               <Grid 
                 item 
                 xs={12} 
-                sm={programs.length === 1 ? 12 : 6} 
-                md={programs.length === 1 ? 12 : 6} 
-                key={program._id}
+                sm={projects.length === 1 ? 12 : 6} 
+                md={projects.length === 1 ? 12 : 6} 
+                key={project._id}
               >
                 <Card
-                  onClick={() => handleCardClick(program)}
+                  onClick={() => handleCardClick(project)}
                   sx={{
                     height: '100%',
                     borderRadius: '12px',
@@ -336,18 +336,18 @@ const Programs: React.FC = () => {
                     '&:hover': {
                       transform: 'translateY(-8px)',
                       boxShadow: '0 16px 32px rgba(0, 0, 0, 0.15)',
-                      '& .program-image': {
+                      '& .project-image': {
                         transform: 'scale(1.05)'
                       }
                     }
                   }}
                 >
-                  {/* Program Image */}
+                  {/* Project Image */}
                   <Box
-                    className="program-image"
+                    className="project-image"
                     sx={{
                       height: '300px',
-                      backgroundImage: program.image ? `url(${program.image})` : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      backgroundImage: project.image ? `url(${project.image})` : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       position: 'relative',
@@ -364,7 +364,7 @@ const Programs: React.FC = () => {
                       }
                     }}
                   >
-                    {!program.image && (
+                    {!project.image && (
                     <Box
                       sx={{
                         position: 'absolute',
@@ -383,7 +383,7 @@ const Programs: React.FC = () => {
                   </Box>
 
                   <CardContent sx={{ p: 3 }}>
-                    {/* Program Title */}
+                    {/* Project Title */}
                       <Typography
                         variant="h6"
                         sx={{
@@ -395,7 +395,7 @@ const Programs: React.FC = () => {
                         color: '#1a1a1a'
                         }}
                       >
-                      {program.title}
+                      {project.title}
                       </Typography>
 
                     {/* Category */}
@@ -407,11 +407,11 @@ const Programs: React.FC = () => {
                         fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif'
                         }}
                       >
-                      {program.category}
+                      {project.category}
                       </Typography>
 
                     {/* Funding Information - Only show if requires donation */}
-                    {program.requiresDonation && (
+                    {project.requiresDonation && (
                       <Box sx={{ mb: 3 }}>
                         <Typography
                           variant="h5"
@@ -423,9 +423,9 @@ const Programs: React.FC = () => {
                             mb: 0.5
                           }}
                         >
-                          {formatCurrency(program.currentFunding || 0)}
+                          {formatCurrency(project.currentFunding || 0)}
                         </Typography>
-                        {program.fundraisingGoal && (
+                        {project.fundraisingGoal && (
                       <Typography
                         variant="body2"
                         sx={{
@@ -434,14 +434,14 @@ const Programs: React.FC = () => {
                               fontWeight: 500
                         }}
                       >
-                            / {formatCurrency(program.fundraisingGoal)} goal
+                            / {formatCurrency(project.fundraisingGoal)} goal
                       </Typography>
                         )}
                     </Box>
                     )}
 
-                    {/* Program Status - Only show if requires donation */}
-                    {program.requiresDonation && (
+                    {/* Project Status - Only show if requires donation */}
+                    {project.requiresDonation && (
                       <Box sx={{ mb: 2 }}>
                         <Chip
                           label="Fundraising"
@@ -471,9 +471,9 @@ const Programs: React.FC = () => {
                         mb: 3
                       }}
                     >
-                      {program.requiresDonation && program.contributors && program.contributors.length > 0
-                        ? `Last contribution ${getTimeAgo(program.contributors[0].contributedAt)}`
-                        : `Started ${formatDate(program.startDate)}`
+                      {project.requiresDonation && project.contributors && project.contributors.length > 0
+                        ? `Last contribution ${getTimeAgo(project.contributors[0].contributedAt)}`
+                        : `Started ${formatDate(project.startDate)}`
                       }
                     </Typography>
                   </CardContent>
@@ -491,7 +491,7 @@ const Programs: React.FC = () => {
                 fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif'
               }}
             >
-              {programs.length} / {programs.length} programs shown
+              {projects.length} / {projects.length} projects shown
             </Typography>
           </Box>
         </Container>
@@ -500,4 +500,4 @@ const Programs: React.FC = () => {
   );
 };
 
-export default Programs; 
+export default Projects; 

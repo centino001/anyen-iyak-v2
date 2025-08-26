@@ -47,7 +47,7 @@ const Header: React.FC<HeaderProps> = () => {
     { title: 'About', path: '/about' },
     // { title: 'Mission', path: '/mission' },
     { title: 'People', path: '/people' },
-    { title: 'Projects', path: '/programs' },
+    { title: 'Projects', path: '/projects' },
     // { title: 'News', path: '/news' },
     // { title: 'Membership', path: '/membership' },
     // { title: 'Shop', path: '/shop' },
@@ -76,12 +76,13 @@ const Header: React.FC<HeaderProps> = () => {
               component="img"
               src={logoSrc}
               alt="Anyen Iyak Logo"
+              className="hover-scale"
               sx={{ 
                 height: scrolled ? '60px' : '80px',
                 width: 'auto',
                 maxWidth: scrolled ? '100px' : '120px',
                 objectFit: 'contain',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             />
           </Link>

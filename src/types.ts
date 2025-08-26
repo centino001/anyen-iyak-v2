@@ -6,7 +6,6 @@ export interface Person {
   department: string;
   image?: string;
   cloudinaryPublicId?: string;
-  bio: string;
   phone?: string;
   order: number;
   isLeadership: boolean;
@@ -17,7 +16,7 @@ export interface Person {
   };
 }
 
-export interface Program {
+export interface Project {
   _id: string;
   title: string;
   description: string;

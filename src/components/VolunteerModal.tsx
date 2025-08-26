@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -34,6 +34,16 @@ const VolunteerModal: React.FC<VolunteerModalProps> = ({ open, onClose }) => {
     socialMediaLink: '',
     volunteerRole: ''
   });
+  
+  const [animateIn, setAnimateIn] = useState(false);
+  
+  useEffect(() => {
+    if (open) {
+      setAnimateIn(true);
+    } else {
+      setAnimateIn(false);
+    }
+  }, [open]);
 
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState<{
@@ -174,6 +184,8 @@ const VolunteerModal: React.FC<VolunteerModalProps> = ({ open, onClose }) => {
                 onChange={(e) => handleInputChange('firstName', e.target.value)}
                 required
                 disabled={loading}
+                className={`scroll-reveal ${animateIn ? 'revealed' : ''}`}
+                style={{ animationDelay: '0.1s' }}
                 sx={{ mb: 2 }}
               />
             </Grid>
@@ -185,6 +197,8 @@ const VolunteerModal: React.FC<VolunteerModalProps> = ({ open, onClose }) => {
                 onChange={(e) => handleInputChange('surname', e.target.value)}
                 required
                 disabled={loading}
+                className={`scroll-reveal ${animateIn ? 'revealed' : ''}`}
+                style={{ animationDelay: '0.2s' }}
                 sx={{ mb: 2 }}
               />
             </Grid>
@@ -198,6 +212,8 @@ const VolunteerModal: React.FC<VolunteerModalProps> = ({ open, onClose }) => {
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 required
                 disabled={loading}
+                className={`scroll-reveal ${animateIn ? 'revealed' : ''}`}
+                style={{ animationDelay: '0.3s' }}
                 sx={{ mb: 2 }}
                 helperText="Your email address for communication"
               />
@@ -211,6 +227,8 @@ const VolunteerModal: React.FC<VolunteerModalProps> = ({ open, onClose }) => {
                 onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
                 required
                 disabled={loading}
+                className={`scroll-reveal ${animateIn ? 'revealed' : ''}`}
+                style={{ animationDelay: '0.4s' }}
                 sx={{ mb: 2 }}
               />
             </Grid>
@@ -223,6 +241,8 @@ const VolunteerModal: React.FC<VolunteerModalProps> = ({ open, onClose }) => {
                 onChange={(e) => handleInputChange('portfolioUrl', e.target.value)}
                 required
                 disabled={loading}
+                className={`scroll-reveal ${animateIn ? 'revealed' : ''}`}
+                style={{ animationDelay: '0.5s' }}
                 sx={{ mb: 2 }}
                 helperText="Link to your portfolio in Google Drive"
               />
@@ -236,6 +256,8 @@ const VolunteerModal: React.FC<VolunteerModalProps> = ({ open, onClose }) => {
                 onChange={(e) => handleInputChange('socialMediaLink', e.target.value)}
                 required
                 disabled={loading}
+                className={`scroll-reveal ${animateIn ? 'revealed' : ''}`}
+                style={{ animationDelay: '0.6s' }}
                 sx={{ mb: 2 }}
                 helperText="Your LinkedIn, Twitter, or other professional profile"
               />
@@ -249,6 +271,8 @@ const VolunteerModal: React.FC<VolunteerModalProps> = ({ open, onClose }) => {
                 onChange={(e) => handleInputChange('volunteerRole', e.target.value)}
                 required
                 disabled={loading}
+                className={`scroll-reveal ${animateIn ? 'revealed' : ''}`}
+                style={{ animationDelay: '0.7s' }}
                 sx={{ mb: 2 }}
                 helperText="Type in the role you are interested in"
               />
@@ -279,10 +303,13 @@ const VolunteerModal: React.FC<VolunteerModalProps> = ({ open, onClose }) => {
         <Button
           onClick={handleClose}
           disabled={loading}
+          className="hover-lift"
           sx={{
             color: '#666',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             '&:hover': {
-              backgroundColor: 'rgba(0,0,0,0.05)'
+              backgroundColor: 'rgba(0,0,0,0.05)',
+              transform: 'translateY(-2px)'
             }
           }}
         >
@@ -292,6 +319,7 @@ const VolunteerModal: React.FC<VolunteerModalProps> = ({ open, onClose }) => {
           onClick={handleSubmit}
           variant="contained"
           disabled={loading}
+          className="hover-lift hover-glow"
           sx={{
             backgroundColor: '#D05A34',
             color: 'white',
@@ -301,8 +329,11 @@ const VolunteerModal: React.FC<VolunteerModalProps> = ({ open, onClose }) => {
             textTransform: 'none',
             fontSize: '1rem',
             fontWeight: 600,
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             '&:hover': {
-              backgroundColor: '#B0452A'
+              backgroundColor: '#B0452A',
+              transform: 'translateY(-2px)',
+              boxShadow: '0 10px 25px rgba(255, 107, 53, 0.3)'
             },
             '&:disabled': {
               backgroundColor: '#ccc'

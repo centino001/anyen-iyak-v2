@@ -125,13 +125,14 @@ const Footer: React.FC = () => {
                   component="img"
                   src={logoSrc}
                   alt="Anyen Iyak Logo"
+                  className="hover-scale animate-float"
                   sx={{ 
                     height: '120px',
                     width: 'auto',
                     maxWidth: '120px',
                     objectFit: 'contain',
                     mb: 2,
-                    transition: 'transform 0.5s ease',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     '&:hover': {
                       transform: 'scale(1.05)'
                     }
@@ -188,17 +189,18 @@ const Footer: React.FC = () => {
                           href={social.url}
                           target="_blank"
                           rel="noopener noreferrer"
+                          className="hover-lift hover-glow"
                           sx={{
                             color: 'black',
                             backgroundColor: 'rgba(0,0,0,0.1)',
-                            transition: 'all 0.3s ease',
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                             width: '40px',
                             height: '40px',
                             '&:hover': {
                               backgroundColor: social.color,
                               color: '#FFFFFF',
-                              transform: 'translateY(-3px) scale(1.1)',
-                              boxShadow: `0 8px 20px ${social.color}40`
+                              transform: 'translateY(-5px) scale(1.1)',
+                              boxShadow: `0 12px 25px ${social.color}60`
                             }
                           }}
                         >
@@ -268,6 +270,7 @@ const Footer: React.FC = () => {
                       type="submit"
                       variant="contained"
                       disabled={subscribeStatus === 'loading'}
+                      className="hover-lift hover-glow"
                       sx={{
                         backgroundColor: 'black',
                         color: 'white',
@@ -276,11 +279,11 @@ const Footer: React.FC = () => {
                         fontSize: '0.875rem',
                         textTransform: 'uppercase',
                         borderRadius: 0,
-                        transition: 'all 0.3s ease',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                         '&:hover': {
                           backgroundColor: '#333333',
-                          transform: 'translateY(-2px)',
-                          boxShadow: '0 8px 20px rgba(0,0,0,0.3)'
+                          transform: 'translateY(-3px)',
+                          boxShadow: '0 12px 25px rgba(0,0,0,0.4)'
                         },
                         '&:disabled': {
                           backgroundColor: 'rgba(0,0,0,0.3)',

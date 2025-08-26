@@ -45,7 +45,7 @@ const About: React.FC = () => {
               textAlign: "justify"
             }}
           >
-            <strong>Anyen Iyak Foundation for Art and Culture Is A Non-Profit Organisation Dedicated To Capturing, Preserving, And Sharing The Rich Heritage Of Akwa Ibom's Indigenous People.</strong> All Through Its Programs And Initiatives, The Foundation Seeks To Support, Encourage, And Promote Akwa Ibom's Art And Culture Locally And Globally.
+            <strong>Anyen Iyak Foundation for Art and Culture Is A Non-Profit Organisation Dedicated To Capturing, Preserving, And Sharing The Rich Heritage Of Akwa Ibom's Indigenous People.</strong> All Through Its Projects And Initiatives, The Foundation Seeks To Support, Encourage, And Promote Akwa Ibom's Art And Culture Locally And Globally.
           </Typography>
 
           <Typography

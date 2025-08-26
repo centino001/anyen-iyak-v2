@@ -59,8 +59,8 @@ const useDataFetch = <T>(endpoint: string, options: FetchOptions = {}): FetchSta
           data = result;
         } else if (result.data) {
           data = result.data;
-        } else if (result.programs) {
-          data = result.programs;
+          } else if (result.projects) {
+    data = result.projects;
         } else if (result.news) {
           data = result.news;
         } else if (result.people) {
