@@ -35,6 +35,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import ImageWithFallback from '../../components/ImageWithFallback';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 interface Project {
   _id: string;
   title: string;
@@ -236,8 +238,8 @@ const { data: projects, loading, error } = useDataFetch<Project>('/projects/admi
       }
 
       const url = selectedProject
-        ? `${process.env.REACT_APP_API_URL}/projects/${selectedProject._id}`
-        : `${process.env.REACT_APP_API_URL}/projects`;
+        ? `${API_BASE_URL}/projects/${selectedProject._id}`
+        : `${API_BASE_URL}/projects`;
 
       const response = await fetch(url, {
         method: selectedProject ? 'PUT' : 'POST',
@@ -270,7 +272,7 @@ const { data: projects, loading, error } = useDataFetch<Project>('/projects/admi
     if (!window.confirm('Are you sure you want to delete this project?')) return;
 
     try {
-              const response = await fetch(`${process.env.REACT_APP_API_URL}/projects/${id}`, {
+              const response = await fetch(`${API_BASE_URL}/projects/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${admin?.token}`,

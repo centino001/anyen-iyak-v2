@@ -39,6 +39,8 @@ import useFormSubmit from '../../hooks/useFormSubmit';
 import ImageWithFallback from '../../components/ImageWithFallback';
 import { Person } from '../../types';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 
 
 interface FormData {
@@ -210,7 +212,7 @@ const PeopleManagement = () => {
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/people${selectedPerson ? `/${selectedPerson._id}` : ''}`,
+        `${API_BASE_URL}/people${selectedPerson ? `/${selectedPerson._id}` : ''}`,
         {
           method: selectedPerson ? 'PUT' : 'POST',
           headers: {
@@ -262,7 +264,7 @@ const PeopleManagement = () => {
     if (!window.confirm('Are you sure you want to delete this person?')) return;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/people/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/people/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${admin?.token}`,

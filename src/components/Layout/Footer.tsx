@@ -20,6 +20,8 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EmailIcon from '@mui/icons-material/Email';
 import XIcon from '@mui/icons-material/X';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 const Footer: React.FC = () => {
   const theme = useTheme();
   const [email, setEmail] = useState('');
@@ -36,7 +38,7 @@ const Footer: React.FC = () => {
     setSubscribeStatus('loading');
     
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/subscribers/subscribe`, {
+      const response = await fetch(`${API_BASE_URL}/subscribers/subscribe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

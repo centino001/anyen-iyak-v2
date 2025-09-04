@@ -40,6 +40,8 @@ import useDataFetch from '../../hooks/useDataFetch';
 import useFormSubmit from '../../hooks/useFormSubmit';
 import ImageWithFallback from '../../components/ImageWithFallback';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 interface NewsArticle {
   _id: string;
   title: string;
@@ -204,7 +206,7 @@ const NewsManagement = () => {
       }
 
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/news${selectedArticle ? `/${selectedArticle._id}` : ''}`,
+        `${API_BASE_URL}/news${selectedArticle ? `/${selectedArticle._id}` : ''}`,
         {
           method: selectedArticle ? 'PUT' : 'POST',
           headers: {
@@ -239,7 +241,7 @@ const NewsManagement = () => {
     if (!window.confirm('Are you sure you want to delete this news article?')) return;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/news/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/news/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${admin?.token}`,
