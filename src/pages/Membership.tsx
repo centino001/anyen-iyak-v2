@@ -83,7 +83,7 @@ const membershipTypes = [
     benefits: [
       'Free year-round admission to the foundation\'s exhibitions and events',
       'Invitations to exclusive exhibition openings and member-only events',
-      'Monthly e-newsletter with updates on programs and activities',
+      'Monthly e-newsletter with updates on projects and activities',
       '5% discount at the foundation\'s shop and workspace'
     ],
     color: '#FF6B35'
@@ -97,7 +97,7 @@ const membershipTypes = [
     benefits: [
       'Admission for up to 4 family members to all exhibitions and events',
       'Special family-friendly workshops and interactive activities',
-      'Discounts on art programs and classes for both children and adults',
+      'Discounts on art projects and classes for both children and adults',
       'Exclusive invitations to family-oriented events',
       '10% discount at the foundation\'s shop and café'
     ],
@@ -149,7 +149,7 @@ const premiumMemberships = [
     ),
     benefits: [
       'All benefits of supporting membership',
-      'Monthly e-newsletter with updates on programs and activities',
+      'Monthly e-newsletter with updates on projects and activities',
       'Invitation to the annual patrons\' dinner',
       'Opportunities to attend art/research trips for free or at discounted rates',
       'Prominent recognition on AIFAC platforms and event materials',
@@ -388,7 +388,7 @@ const Membership: React.FC = () => {
         >
           At Anyen Iyak, We Share A Deep Love For Cultural Heritage That's Why We're Committed To Preserving Akwa Ibom Art And Culture So They Are Not Just Remembered But Passed On. 
           Whether You're An Artist, Collector, Educator, Student, Or Simply Someone Who Appreciates The Beauty And Power Of Art, There's A Membership Level That's Right For You. Being A Member Of Our Tot Society
-          Membership Provides Access To Programs, Networks, And Initiatives That Help Preserve And Grow Akwa Ibom's Creative And Cultural Economy.
+          Membership Provides Access To Projects, Networks, And Initiatives That Help Preserve And Grow Akwa Ibom's Creative And Cultural Economy.
             </Typography>
       </Container>
 

@@ -25,12 +25,12 @@ interface CountResponse {
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { data: newsCountData } = useDataFetch<CountResponse>('/news/count');
-  const { data: programsCountData } = useDataFetch<CountResponse>('/programs/count');
+  const { data: projectsCountData } = useDataFetch<CountResponse>('/projects/count');
   const { data: peopleCountData } = useDataFetch<CountResponse>('/people/count');
 
   // Extract counts from response data
   const newsCount = newsCountData && newsCountData.length > 0 ? newsCountData[0].count : 0;
-  const programsCount = programsCountData && programsCountData.length > 0 ? programsCountData[0].count : 0;
+      const projectsCount = projectsCountData && projectsCountData.length > 0 ? projectsCountData[0].count : 0;
   const peopleCount = peopleCountData && peopleCountData.length > 0 ? peopleCountData[0].count : 0;
 
   const stats = [
@@ -42,10 +42,10 @@ const Dashboard: React.FC = () => {
       color: '#1976d2',
     },
     {
-      title: 'Programs',
-      count: programsCount.toString(),
+      title: 'Projects',
+      count: projectsCount.toString(),
       icon: <AssignmentIcon sx={{ fontSize: 40 }} />,
-      path: '/admin/programs',
+      path: '/admin/projects',
       color: '#2e7d32',
     },
     {
@@ -100,15 +100,15 @@ const Dashboard: React.FC = () => {
                 Content Management
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Create and manage news articles, programs, and team member profiles.
+                Create and manage news articles, projects, and team member profiles.
               </Typography>
             </CardContent>
             <CardActions>
               <Button size="small" onClick={() => navigate('/admin/news')}>
                 Manage News
               </Button>
-              <Button size="small" onClick={() => navigate('/admin/programs')}>
-                Manage Programs
+              <Button size="small" onClick={() => navigate('/admin/projects')}>
+                Manage Projects
               </Button>
               <Button size="small" onClick={() => navigate('/admin/people')}>
                 Manage People

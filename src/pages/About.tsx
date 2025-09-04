@@ -372,18 +372,6 @@ const About: React.FC = () => {
               Nigeria
             </Typography>
 
-            <Typography
-              sx={{
-                fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
-                fontSize: "0.85rem",
-                lineHeight: 1.5,
-                color: "#666",
-                mb: 3
-              }}
-            >
-              09064552825, 09037334976
-            </Typography>
-
             {/* OpenStreetMap */}
             <Box
               sx={{

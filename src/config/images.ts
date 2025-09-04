@@ -13,8 +13,8 @@ export const IMAGES = {
     lightroom: `${CLOUDINARY_BASE}/v1234567890/anyen-iyak/lightroom.jpg`, // Replace with actual URL
   },
   
-  // Museum/Program Images
-  programs: {
+  // Museum/Project Images
+  projects: {
     museum: `${CLOUDINARY_BASE}/v1234567890/anyen-iyak/museum.jpg`, // Replace with actual URL
     museumPhoto: `${CLOUDINARY_BASE}/v1234567890/anyen-iyak/museum-photo.jpg`, // Replace with actual URL
     museumChair: `${CLOUDINARY_BASE}/v1234567890/anyen-iyak/museum-chair.jpg`, // Replace with actual URL
@@ -27,15 +27,15 @@ export const IMAGES = {
     potter: '/images/potter.svg',
     potter2: '/images/potter_2.svg',
     lightroom: '/images/lightroom.svg',
-    museum: '/programs/museum.svg',
-    museumPhoto: '/programs/museum_photo.svg',
-    museumChair: '/programs/museum_chair.svg',
+    museum: '/projects/museum.svg',
+    museumPhoto: '/projects/museum_photo.svg',
+    museumChair: '/projects/museum_chair.svg',
   }
 };
 
 // Helper function to get image URL with fallback
-export const getImageUrl = (category: keyof typeof IMAGES.hero | keyof typeof IMAGES.programs, fallbackKey: keyof typeof IMAGES.fallback) => {
-  const cloudinaryUrl = category in IMAGES.hero ? IMAGES.hero[category as keyof typeof IMAGES.hero] : IMAGES.programs[category as keyof typeof IMAGES.programs];
+export const getImageUrl = (category: keyof typeof IMAGES.hero | keyof typeof IMAGES.projects, fallbackKey: keyof typeof IMAGES.fallback) => {
+  const cloudinaryUrl = category in IMAGES.hero ? IMAGES.hero[category as keyof typeof IMAGES.hero] : IMAGES.projects[category as keyof typeof IMAGES.projects];
   
   // If Cloudinary URL contains placeholder version number, use fallback
   if (cloudinaryUrl.includes('v1234567890')) {

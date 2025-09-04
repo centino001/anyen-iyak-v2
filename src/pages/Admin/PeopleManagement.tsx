@@ -39,6 +39,8 @@ import useFormSubmit from '../../hooks/useFormSubmit';
 import ImageWithFallback from '../../components/ImageWithFallback';
 import { Person } from '../../types';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 
 
 interface FormData {
@@ -46,7 +48,6 @@ interface FormData {
   title: string;
   role: string;
   department: string;
-  bio: string;
   phone: string;
   order: number;
   isLeadership: boolean;
@@ -61,7 +62,6 @@ const INITIAL_FORM_DATA: FormData = {
   title: '',
   role: '',
   department: 'Core Team', // Set default department
-  bio: '',
   phone: '',
   order: 0,
   isLeadership: false,
@@ -111,7 +111,6 @@ const PeopleManagement = () => {
         title: person.title,
         role: person.role || '',
         department: person.department,
-        bio: person.bio,
         phone: person.phone || '',
         order: person.order,
         isLeadership: person.isLeadership,
@@ -184,7 +183,7 @@ const PeopleManagement = () => {
       if (!formData.name) errors.push('Name is required');
       if (!formData.title) errors.push('Title is required');
       if (!formData.department) errors.push('Department is required');
-      if (!formData.bio) errors.push('Bio is required');
+  
 
       if (errors.length > 0) {
         setSnackbar({
@@ -200,7 +199,7 @@ const PeopleManagement = () => {
       formDataToSend.append('title', formData.title);
       formDataToSend.append('role', formData.role);
       formDataToSend.append('department', formData.department);
-      formDataToSend.append('bio', formData.bio);
+
       if (formData.phone) formDataToSend.append('phone', formData.phone);
       formDataToSend.append('order', formData.order.toString());
       formDataToSend.append('isLeadership', formData.isLeadership.toString());
@@ -213,7 +212,7 @@ const PeopleManagement = () => {
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/people${selectedPerson ? `/${selectedPerson._id}` : ''}`,
+        `${API_BASE_URL}/people${selectedPerson ? `/${selectedPerson._id}` : ''}`,
         {
           method: selectedPerson ? 'PUT' : 'POST',
           headers: {
@@ -265,7 +264,7 @@ const PeopleManagement = () => {
     if (!window.confirm('Are you sure you want to delete this person?')) return;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/people/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/people/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${admin?.token}`,
@@ -452,25 +451,7 @@ const PeopleManagement = () => {
                 </Select>
               </FormControl>
 
-              <TextField
-                label="Bio"
-                value={formData.bio}
-                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                multiline
-                rows={5}
-                fullWidth
-                required
-                inputProps={{
-                  style: { whiteSpace: 'pre-wrap' }
-                }}
-                sx={{
-                  '& .MuiInputBase-input': {
-                    whiteSpace: 'pre-wrap',
-                    fontFamily: 'monospace'
-                  }
-                }}
-                helperText="Use Enter for line breaks. Formatting will be preserved."
-              />
+
 
 
 

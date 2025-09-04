@@ -11,16 +11,16 @@ export const checkBackendHealth = async (): Promise<boolean> => {
   }
 };
 
-export const fetchPrograms = async (): Promise<any[]> => {
+export const fetchProjects = async (): Promise<any[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/programs`);
+    const response = await fetch(`${API_BASE_URL}/projects`);
     if (!response.ok) {
-      throw new Error(`Failed to fetch programs: ${response.status}`);
+      throw new Error(`Failed to fetch projects: ${response.status}`);
     }
     const data = await response.json();
-    return data.programs || data;
+    return data.projects || data;
   } catch (error) {
-    console.error('Error fetching programs:', error);
+    console.error('Error fetching projects:', error);
     throw error;
   }
 };

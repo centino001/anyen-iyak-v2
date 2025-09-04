@@ -20,6 +20,8 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EmailIcon from '@mui/icons-material/Email';
 import XIcon from '@mui/icons-material/X';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 const Footer: React.FC = () => {
   const theme = useTheme();
   const [email, setEmail] = useState('');
@@ -36,7 +38,7 @@ const Footer: React.FC = () => {
     setSubscribeStatus('loading');
     
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/subscribers/subscribe`, {
+      const response = await fetch(`${API_BASE_URL}/subscribers/subscribe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -125,13 +127,14 @@ const Footer: React.FC = () => {
                   component="img"
                   src={logoSrc}
                   alt="Anyen Iyak Logo"
+                  className="hover-scale animate-float"
                   sx={{ 
                     height: '120px',
                     width: 'auto',
                     maxWidth: '120px',
                     objectFit: 'contain',
                     mb: 2,
-                    transition: 'transform 0.5s ease',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     '&:hover': {
                       transform: 'scale(1.05)'
                     }
@@ -154,9 +157,9 @@ const Footer: React.FC = () => {
                     Address
                   </Typography>
                   <Typography variant="body2" sx={{ lineHeight: 1.6, fontSize: '0.875rem' }}>
-                    Plot 94-Unit A, Ewet Housing Estate<br />
-                    Uyo, Akwa Ibom State<br />
-                    Nigeria.
+                  Unit D, Plot 2B, Ewet Housing Estate<br />
+                  Uyo 520231, Akwa Ibom<br />
+                  Nigeria
                   </Typography>
                  
                 </Box>
@@ -188,17 +191,18 @@ const Footer: React.FC = () => {
                           href={social.url}
                           target="_blank"
                           rel="noopener noreferrer"
+                          className="hover-lift hover-glow"
                           sx={{
                             color: 'black',
                             backgroundColor: 'rgba(0,0,0,0.1)',
-                            transition: 'all 0.3s ease',
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                             width: '40px',
                             height: '40px',
                             '&:hover': {
                               backgroundColor: social.color,
                               color: '#FFFFFF',
-                              transform: 'translateY(-3px) scale(1.1)',
-                              boxShadow: `0 8px 20px ${social.color}40`
+                              transform: 'translateY(-5px) scale(1.1)',
+                              boxShadow: `0 12px 25px ${social.color}60`
                             }
                           }}
                         >
@@ -268,6 +272,7 @@ const Footer: React.FC = () => {
                       type="submit"
                       variant="contained"
                       disabled={subscribeStatus === 'loading'}
+                      className="hover-lift hover-glow"
                       sx={{
                         backgroundColor: 'black',
                         color: 'white',
@@ -276,11 +281,11 @@ const Footer: React.FC = () => {
                         fontSize: '0.875rem',
                         textTransform: 'uppercase',
                         borderRadius: 0,
-                        transition: 'all 0.3s ease',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                         '&:hover': {
                           backgroundColor: '#333333',
-                          transform: 'translateY(-2px)',
-                          boxShadow: '0 8px 20px rgba(0,0,0,0.3)'
+                          transform: 'translateY(-3px)',
+                          boxShadow: '0 12px 25px rgba(0,0,0,0.4)'
                         },
                         '&:disabled': {
                           backgroundColor: 'rgba(0,0,0,0.3)',

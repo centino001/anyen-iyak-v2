@@ -3,28 +3,36 @@ import { Box, Typography, Button, Grid, Card, CardContent, Chip } from "@mui/mat
 import { useNavigate } from "react-router-dom";
 import { getImageUrl } from "../config/images";
 import { ImagePresets } from "../utils/cloudinaryOptimizer";
-import { fetchPrograms } from "../utils/api";
-import { Program } from "../types";
+import { fetchProjects } from "../utils/api";
+import { Project } from "../types";
+import useScrollAnimation from "../hooks/useScrollAnimation";
 
 const Home: React.FC = () => {
-  const [programs, setPrograms] = useState<Program[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  
+  // Scroll animations
+  const heroRef = useScrollAnimation(0.1);
+  const projectsRef = useScrollAnimation(0.1);
+  const newsRef = useScrollAnimation(0.1);
+  const missionRef = useScrollAnimation(0.1);
+  const collaboratorsRef = useScrollAnimation(0.1);
 
   useEffect(() => {
-    const loadPrograms = async () => {
+    const loadProjects = async () => {
       try {
         setLoading(true);
-        const data = await fetchPrograms();
-        setPrograms(data);
+        const data = await fetchProjects();
+        setProjects(data);
       } catch (err) {
-        console.error('Failed to load programs:', err);
+        console.error('Failed to load projects:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    loadPrograms();
+    loadProjects();
   }, []);
 
   const handleDonateClick = () => {
@@ -32,8 +40,8 @@ const Home: React.FC = () => {
     // window.open("https://your-donation-link.com", "_blank");
   };
 
-  const handleProgramClick = (program: Program) => {
-    navigate(`/programs/${program.slug}`);
+  const handleProjectClick = (project: Project) => {
+    navigate(`/projects/${project.slug}`);
   };
 
   const formatCurrency = (amount: number) => {
@@ -83,6 +91,8 @@ const Home: React.FC = () => {
         }}
       >
         <Box
+          ref={heroRef.ref}
+          className={`animate-fade-in-up ${heroRef.isVisible ? 'animate-fade-in-up' : ''}`}
           sx={{
             position: "relative",
             zIndex: 2,
@@ -91,6 +101,7 @@ const Home: React.FC = () => {
           }}
         >
           <Typography
+            className="animate-fade-in-up animate-delay-200"
             sx={{
               fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
               fontWeight: 300,
@@ -112,6 +123,7 @@ const Home: React.FC = () => {
           </Typography>
 
           <Typography
+            className="animate-fade-in-up animate-delay-400"
             sx={{
               fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
               fontWeight: 400,
@@ -130,11 +142,12 @@ const Home: React.FC = () => {
             Our Eyes Will Never Be Shut In Life Or Death.
           </Typography>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Box className="animate-fade-in-up animate-delay-600" sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Button
               variant="contained"
               size="large"
               onClick={handleDonateClick}
+              className="hover-lift hover-glow"
               sx={{
                 backgroundColor: "#D05A34",
                 color: "white",
@@ -147,17 +160,18 @@ const Home: React.FC = () => {
                 letterSpacing: "1px",
                 boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
                 border: "none",
-                transition: "all 0.3s ease",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 "&:hover": {
                   backgroundColor: "#FF6B35",
-                  transform: "translateY(-1px)",
-                  boxShadow: "0 6px 12px rgba(0,0,0,0.4)",
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 10px 25px rgba(255, 107, 53, 0.3)",
                 },
               }}
             >
               DONATE TO US
             </Button>
             <Box
+              className="hover-lift hover-glow animate-pulse-slow"
               sx={{
                 backgroundColor: "#D05A34",
                 color: "white",
@@ -168,11 +182,11 @@ const Home: React.FC = () => {
                 justifyContent: "center",
                 boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
                 cursor: "pointer",
-                transition: "all 0.3s ease",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 "&:hover": {
                   backgroundColor: "#FF6B35",
-                  transform: "translateY(-1px)",
-                  boxShadow: "0 6px 12px rgba(0,0,0,0.4)",
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 10px 25px rgba(255, 107, 53, 0.3)",
                 },
               }}
               onClick={handleDonateClick}
@@ -194,12 +208,13 @@ const Home: React.FC = () => {
         </Box>
       </Box>
 
-      {/* Featured Programs Section */}
-      <Box sx={{ backgroundColor: "#121212", py: 8 }}>
+      {/* Featured Projects Section */}
+      <Box ref={projectsRef.ref} sx={{ backgroundColor: "#121212", py: 8 }}>
         <Box sx={{ maxWidth: "1600px", mx: "auto", px: { xs: 2, md: 2 }, ml: { xs: 2, md: 20 } }}>
           <Typography
             variant="h4"
             component="h2"
+            className={`scroll-reveal ${projectsRef.isVisible ? 'revealed' : ''}`}
             sx={{
               fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
               fontWeight: 600,
@@ -211,42 +226,46 @@ const Home: React.FC = () => {
               letterSpacing: "2px",
             }}
           >
-            Featured Programs
+            Featured Projects
           </Typography>
 
           {loading ? (
             <Box sx={{ textAlign: 'center', py: 4 }}>
               <Typography sx={{ color: 'white', fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif' }}>
-                Loading programs...
+                Loading projects...
               </Typography>
             </Box>
-          ) : programs.length > 0 ? (
+          ) : projects.length > 0 ? (
             <Grid container spacing={3}>
-              {programs.map((program) => (
+              {projects.map((project, index) => (
                 <Grid 
                   item 
                   xs={12} 
-                  sm={programs.length === 1 ? 12 : programs.length === 2 ? 6 : programs.length === 3 ? 4 : 3}
-                  key={program._id}
+                  sm={projects.length === 1 ? 12 : projects.length === 2 ? 6 : projects.length === 3 ? 4 : 3}
+                  key={project._id}
+                  className={`scroll-reveal ${projectsRef.isVisible ? 'revealed' : ''}`}
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <Card
-                    onClick={() => handleProgramClick(program)}
+                    onClick={() => handleProjectClick(project)}
+                    className="hover-lift"
                     sx={{
                       backgroundColor: "#3a3a3a",
                       borderRadius: "8px",
                       overflow: "hidden",
-                      transition: "transform 0.3s ease",
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                       cursor: "pointer",
                       height: "100%",
                       "&:hover": {
-                        transform: "translateY(-5px)",
+                        transform: "translateY(-8px)",
+                        boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
                       },
                     }}
                   >
                     <Box
                       sx={{
                         height: "300px",
-                        backgroundImage: program.image ? `url(${program.image})` : "url(/images/featured_programs.svg)",
+                        backgroundImage: project.image ? `url(${project.image})` : "url(/images/featured_projects.svg)",
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                         position: "relative",
@@ -266,7 +285,7 @@ const Home: React.FC = () => {
                           fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
                         }}
                       >
-                        {program.requiresDonation ? "FUNDRAISING" : "ACTIVE"}
+                        {project.requiresDonation ? "FUNDRAISING" : "ACTIVE"}
                       </Box>
                     </Box>
                     <CardContent sx={{ p: 4 }}>
@@ -279,10 +298,10 @@ const Home: React.FC = () => {
                           fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
                         }}
                       >
-                        {formatDate(program.startDate)}
+                        {formatDate(project.startDate)}
                       </Typography>
                       
-                      {program.requiresDonation && (
+                      {project.requiresDonation && (
                         <Typography
                           sx={{ 
                             color: "#007bff",
@@ -292,8 +311,8 @@ const Home: React.FC = () => {
                             fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
                           }}
                         >
-                          {formatCurrency(program.currentFunding || 0)}
-                          {program.fundraisingGoal && ` / ${formatCurrency(program.fundraisingGoal)}`}
+                          {formatCurrency(project.currentFunding || 0)}
+                          {project.fundraisingGoal && ` / ${formatCurrency(project.fundraisingGoal)}`}
                         </Typography>
                       )}
                       
@@ -306,7 +325,7 @@ const Home: React.FC = () => {
                           fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
                         }}
                       >
-                        {program.title}
+                        {project.title}
                       </Typography>
                       
                       <Typography
@@ -319,7 +338,7 @@ const Home: React.FC = () => {
                           whiteSpace: 'pre-wrap'
                         }}
                       >
-                        {program.shortDescription}
+                        {project.shortDescription}
                       </Typography>
                     </CardContent>
                   </Card>
@@ -328,20 +347,21 @@ const Home: React.FC = () => {
             </Grid>
           ) : (
             <Box sx={{ textAlign: 'center', py: 4 }}>
-              <Typography sx={{ color: 'white', fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif' }}>
-                No programs available at the moment.
-              </Typography>
+                          <Typography sx={{ color: 'white', fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif' }}>
+              No projects available at the moment.
+            </Typography>
             </Box>
           )}
         </Box>
       </Box>
 
       {/* News and Updates Section */}
-      <Box sx={{ backgroundColor: "#121212", py: 8 }}>
+      <Box ref={newsRef.ref} sx={{ backgroundColor: "#121212", py: 8 }}>
         <Box sx={{ width: "100%" }}>
           <Typography
             variant="h4"
             component="h2"
+            className={`scroll-reveal ${newsRef.isVisible ? 'revealed' : ''}`}
             sx={{
               fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
               fontWeight: 600,
@@ -399,8 +419,9 @@ const Home: React.FC = () => {
               }}
             >
               {/* Left Column - Text Content */}
-          <Box>
+          <Box className="animate-fade-in-left animate-delay-200">
                 <Typography
+                  className="animate-fade-in-left animate-delay-300"
                   sx={{
                     color: "#D05A34",
                     fontSize: "0.875rem",
@@ -412,11 +433,12 @@ const Home: React.FC = () => {
                       'Helvetica, "Helvetica Neue", Arial, sans-serif',
                   }}
                 >
-                  TVC News
+                 sldfdsfnsdjfnsdifbis
                 </Typography>
 
                 <Typography
                   variant="h3"
+                  className="animate-fade-in-left animate-delay-400"
                   sx={{
                     color: "white",
                     fontSize: { xs: "1.75rem", md: "2.25rem" },
@@ -432,6 +454,7 @@ const Home: React.FC = () => {
                 </Typography>
 
                 <Typography
+                    className="animate-fade-in-left animate-delay-500"
                     sx={{ 
                     color: "#cccccc",
                     fontSize: "1rem",
@@ -450,6 +473,7 @@ const Home: React.FC = () => {
                 <Box
                   component="button"
                   onClick={() => {}}
+                  className="hover-lift hover-glow animate-fade-in-left animate-delay-600"
                   sx={{
                     backgroundColor: "#D05A34",
                     color: "white",
@@ -461,12 +485,13 @@ const Home: React.FC = () => {
                     textTransform: "uppercase",
                     letterSpacing: "1px",
                     cursor: "pointer",
-                    transition: "all 0.3s ease",
+                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     fontFamily:
                       'Helvetica, "Helvetica Neue", Arial, sans-serif',
                     "&:hover": {
                       backgroundColor: "#FF6B35",
-                      transform: "translateY(-1px)",
+                      transform: "translateY(-2px)",
+                      boxShadow: "0 10px 25px rgba(255, 107, 53, 0.3)",
                     },
                     }}
                   >
@@ -476,7 +501,8 @@ const Home: React.FC = () => {
 
               {/* Right Column - Image */}
               <Box
-          sx={{ 
+                className="animate-fade-in-right animate-delay-400"
+                sx={{ 
                   height: { xs: "300px", md: "400px" },
                   borderRadius: "8px",
                   overflow: "hidden",
@@ -498,35 +524,40 @@ const Home: React.FC = () => {
       </Box>
 
       {/* Contribute to Our Mission Section */}
-      <Box sx={{ backgroundColor: "#121212", py: 8 }}>
+      <Box ref={missionRef.ref} sx={{ backgroundColor: "#121212", py: 8 }}>
         <Box sx={{ width: "100%" }}>
           <Box
+            className={`scroll-reveal hover-lift ${missionRef.isVisible ? 'revealed' : ''}`}
             sx={{
               backgroundColor: "#3a3a3a",
               borderRadius: 0,
               padding: { xs: 4, md: 6, lg: 8, xl: 10 },
-              transition: "transform 0.3s ease",
+              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               transform: "scale(var(--zoom-scale, 1))",
               transformOrigin: "center",
               "&:hover": {
-                transform: "translateY(-5px) scale(var(--zoom-scale, 1))",
+                transform: "translateY(-8px) scale(var(--zoom-scale, 1))",
+                boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
               },
               "@media (max-width: 1200px)": {
                 transform: "scale(0.9)",
                 "&:hover": {
-                  transform: "translateY(-5px) scale(0.9)",
+                  transform: "translateY(-8px) scale(0.9)",
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
                 },
               },
               "@media (max-width: 900px)": {
                 transform: "scale(0.8)",
                 "&:hover": {
-                  transform: "translateY(-5px) scale(0.8)",
+                  transform: "translateY(-8px) scale(0.8)",
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
                 },
               },
               "@media (max-width: 600px)": {
                 transform: "scale(0.7)",
                 "&:hover": {
-                  transform: "translateY(-5px) scale(0.7)",
+                  transform: "translateY(-8px) scale(0.7)",
+                  boxShadow: "0 20px 40px rgba(0.8)",
                 },
               },
             }}
@@ -543,6 +574,7 @@ const Home: React.FC = () => {
                 <Box>
                 <Typography
                   variant="h3"
+                  className="animate-fade-in-left animate-delay-200"
                   sx={{
                     color: "white",
                     fontSize: { xs: "1.75rem", md: "2.25rem" },
@@ -725,11 +757,12 @@ const Home: React.FC = () => {
       </Box>
 
       {/* Our Valued Collaborators Section */}
-      <Box sx={{ backgroundColor: "#121212" }}>
+      <Box ref={collaboratorsRef.ref} sx={{ backgroundColor: "#121212" }}>
         <Box sx={{ width: "100%" }}>
           <Typography
             variant="h4"
             component="h2"
+            className={`scroll-reveal ${collaboratorsRef.isVisible ? 'revealed' : ''}`}
             sx={{
               fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
               fontWeight: 600,
@@ -801,6 +834,8 @@ const Home: React.FC = () => {
               ].map((collaborator, index) => (
                 <Box
                   key={index}
+                  className={`scroll-reveal ${collaboratorsRef.isVisible ? 'revealed' : ''}`}
+                  style={{ animationDelay: `${index * 0.1}s` }}
                   sx={{
                     padding: 2,
                     display: "flex",
@@ -813,16 +848,18 @@ const Home: React.FC = () => {
                     component="img"
                     src={collaborator.src}
                     alt={collaborator.name}
+                    className="hover-scale"
                     sx={{
                       maxWidth: "100%",
                       maxHeight: "1000px",
                       width: "auto",
                       height: "auto",
                       //  filter: "brightness(0) invert(1)",
-                      transition: "all 0.3s ease",
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                       "&:hover": {
                         //  filter: "brightness(0) invert(1) sepia(1) hue-rotate(25deg) saturate(2)",
                         transform: "scale(1.15)",
+                        filter: "brightness(1.1) drop-shadow(0 4px 8px rgba(255, 107, 53, 0.3))",
                       },
                     }}
                   />

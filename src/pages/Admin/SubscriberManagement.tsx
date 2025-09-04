@@ -38,6 +38,8 @@ import {
 import { useAdmin } from '../../contexts/AdminContext';
 import useDataFetch from '../../hooks/useDataFetch';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 interface Subscriber {
   _id: string;
   email: string;
@@ -83,7 +85,7 @@ const SubscriberManagement: React.FC = () => {
 
   const handleExport = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/subscribers/admin/export?status=${statusFilter}`, {
+      const response = await fetch(`${API_BASE_URL}/subscribers/admin/export?status=${statusFilter}`, {
         headers: {
           'Authorization': `Bearer ${admin?.token}`,
         },

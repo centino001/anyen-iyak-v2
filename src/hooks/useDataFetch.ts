@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 interface FetchState<T> {
   data: T[];
   loading: boolean;
@@ -34,7 +36,7 @@ const useDataFetch = <T>(endpoint: string, options: FetchOptions = {}): FetchSta
           }
         }
 
-        const response = await fetch(`${process.env.REACT_APP_API_URL}${endpoint}`, {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
           headers
         });
 
@@ -59,8 +61,8 @@ const useDataFetch = <T>(endpoint: string, options: FetchOptions = {}): FetchSta
           data = result;
         } else if (result.data) {
           data = result.data;
-        } else if (result.programs) {
-          data = result.programs;
+          } else if (result.projects) {
+    data = result.projects;
         } else if (result.news) {
           data = result.news;
         } else if (result.people) {

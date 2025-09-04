@@ -35,7 +35,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import ImageWithFallback from '../../components/ImageWithFallback';
 
-interface Program {
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
+interface Project {
   _id: string;
   title: string;
   description: string;
@@ -85,7 +87,7 @@ const INITIAL_FORM_DATA: FormData = {
   donationDescription: '',
 };
 
-const ProgramManagement = () => {
+const ProjectManagement = () => {
   const [ReactQuill, setReactQuill] = useState<any>(null);
   
   useEffect(() => {
@@ -96,7 +98,7 @@ const ProgramManagement = () => {
 
   const { admin } = useAdmin();
   const [open, setOpen] = useState(false);
-  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
@@ -107,7 +109,7 @@ const ProgramManagement = () => {
   });
 
   const [refreshTrigger, setRefreshTrigger] = useState(false);
-const { data: programs, loading, error } = useDataFetch<Program>('/programs/admin/all', { 
+const { data: projects, loading, error } = useDataFetch<Project>('/projects/admin/all', { 
   isAdminRoute: true, 
   refreshTrigger 
 });
@@ -116,32 +118,32 @@ const { data: programs, loading, error } = useDataFetch<Program>('/programs/admi
     setSnackbar({ open: true, message, severity });
   };
 
-  const handleOpen = (program?: Program) => {
-    if (program) {
-      setSelectedProgram(program);
+  const handleOpen = (project?: Project) => {
+    if (project) {
+      setSelectedProject(project);
       setFormData({
-        title: program.title,
-        description: program.description,
-        shortDescription: program.shortDescription,
-        category: program.category,
-        startDate: new Date(program.startDate),
-        endDate: program.endDate ? new Date(program.endDate) : null,
-        isActive: program.isActive,
-        goals: program.goals,
-        requirements: program.requirements,
-        applicationUrl: program.applicationUrl || '',
-        // Fundraising fields with fallback for existing programs
-        requiresDonation: (program as any).requiresDonation || false,
-        fundraisingGoal: (program as any).fundraisingGoal?.toString() || '',
-        donationDescription: (program as any).donationDescription || '',
+        title: project.title,
+        description: project.description,
+        shortDescription: project.shortDescription,
+        category: project.category,
+        startDate: new Date(project.startDate),
+        endDate: project.endDate ? new Date(project.endDate) : null,
+        isActive: project.isActive,
+        goals: project.goals,
+        requirements: project.requirements,
+        applicationUrl: project.applicationUrl || '',
+        // Fundraising fields with fallback for existing projects
+        requiresDonation: (project as any).requiresDonation || false,
+        fundraisingGoal: (project as any).fundraisingGoal?.toString() || '',
+        donationDescription: (project as any).donationDescription || '',
       });
-      if (program.image) {
-        setImagePreview(program.image);
+      if (project.image) {
+        setImagePreview(project.image);
       } else {
         setImagePreview('');
       }
     } else {
-      setSelectedProgram(null);
+      setSelectedProject(null);
       setFormData(INITIAL_FORM_DATA);
       setImagePreview('');
     }
@@ -151,7 +153,7 @@ const { data: programs, loading, error } = useDataFetch<Program>('/programs/admi
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedProgram(null);
+    setSelectedProject(null);
     setSelectedImage(null);
     setImagePreview('');
   };
@@ -235,12 +237,12 @@ const { data: programs, loading, error } = useDataFetch<Program>('/programs/admi
         formDataToSend.append('image', selectedImage);
       }
 
-      const url = selectedProgram
-        ? `${process.env.REACT_APP_API_URL}/programs/${selectedProgram._id}`
-        : `${process.env.REACT_APP_API_URL}/programs`;
+      const url = selectedProject
+        ? `${API_BASE_URL}/projects/${selectedProject._id}`
+        : `${API_BASE_URL}/projects`;
 
       const response = await fetch(url, {
-        method: selectedProgram ? 'PUT' : 'POST',
+        method: selectedProject ? 'PUT' : 'POST',
         headers: {
           Authorization: `Bearer ${admin?.token}`,
         },
@@ -249,28 +251,28 @@ const { data: programs, loading, error } = useDataFetch<Program>('/programs/admi
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to save program');
+        throw new Error(errorData.message || 'Failed to save project');
       }
 
       showSnackbar(
-        `Program ${selectedProgram ? 'updated' : 'created'} successfully`,
+        `Project ${selectedProject ? 'updated' : 'created'} successfully`,
         'success'
       );
-      console.log('Program saved successfully. Image URL:', selectedImage ? 'Image uploaded' : 'No image');
+      console.log('Project saved successfully. Image URL:', selectedImage ? 'Image uploaded' : 'No image');
       handleClose();
       // Refresh data instead of page reload
       setRefreshTrigger(prev => !prev);
     } catch (error) {
-      console.error('Error saving program:', error);
-      showSnackbar(error instanceof Error ? error.message : 'Error saving program', 'error');
+      console.error('Error saving project:', error);
+      showSnackbar(error instanceof Error ? error.message : 'Error saving project', 'error');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this program?')) return;
+    if (!window.confirm('Are you sure you want to delete this project?')) return;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/programs/${id}`, {
+              const response = await fetch(`${API_BASE_URL}/projects/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${admin?.token}`,
@@ -278,15 +280,15 @@ const { data: programs, loading, error } = useDataFetch<Program>('/programs/admi
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete program');
+        throw new Error('Failed to delete project');
       }
 
-      showSnackbar('Program deleted successfully', 'success');
+      showSnackbar('Project deleted successfully', 'success');
       // Refresh data after deletion
       setRefreshTrigger(prev => !prev);
     } catch (error) {
-      console.error('Error deleting program:', error);
-      showSnackbar('Error deleting program', 'error');
+      console.error('Error deleting project:', error);
+      showSnackbar('Error deleting project', 'error');
     }
   };
 
@@ -301,13 +303,13 @@ const { data: programs, loading, error } = useDataFetch<Program>('/programs/admi
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h4">Program Management</Typography>
+        <Typography variant="h4">Project Management</Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => handleOpen()}
         >
-          Add Program
+          Add Project
         </Button>
       </Box>
 
@@ -324,10 +326,10 @@ const { data: programs, loading, error } = useDataFetch<Program>('/programs/admi
             </TableRow>
           </TableHead>
           <TableBody>
-            {programs.map((program) => {
-              console.log('Program image:', program.title, program.image);
+            {projects.map((project) => {
+              console.log('Project image:', project.title, project.image);
               return (
-              <TableRow key={program._id}>
+              <TableRow key={project._id}>
                 <TableCell>
                   <Box sx={{ 
                     width: 80, 
@@ -337,10 +339,10 @@ const { data: programs, loading, error } = useDataFetch<Program>('/programs/admi
                     padding: '5px',
                     backgroundColor: '#E5E5E5'
                   }}>
-                    {program.image ? (
+                    {project.image ? (
                       <ImageWithFallback 
-                        src={program.image} 
-                        alt={program.title}
+                        src={project.image} 
+                        alt={project.title}
                         fallbackIcon={<ImageIcon sx={{ color: 'grey.400' }} />}
                         sx={{ width: '100%', height: '100%' }}
                       />
@@ -357,15 +359,15 @@ const { data: programs, loading, error } = useDataFetch<Program>('/programs/admi
                     )}
                   </Box>
                 </TableCell>
-                <TableCell>{program.title}</TableCell>
-                <TableCell>{program.category}</TableCell>
-                <TableCell>{program.isActive ? 'Yes' : 'No'}</TableCell>
-                <TableCell>{new Date(program.startDate).toLocaleDateString()}</TableCell>
+                <TableCell>{project.title}</TableCell>
+                <TableCell>{project.category}</TableCell>
+                <TableCell>{project.isActive ? 'Yes' : 'No'}</TableCell>
+                <TableCell>{new Date(project.startDate).toLocaleDateString()}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => handleOpen(program)}>
+                  <IconButton onClick={() => handleOpen(project)}>
                     <EditIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleDelete(program._id)}>
+                  <IconButton onClick={() => handleDelete(project._id)}>
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
@@ -378,7 +380,7 @@ const { data: programs, loading, error } = useDataFetch<Program>('/programs/admi
 
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
         <DialogTitle>
-          {selectedProgram ? 'Edit Program' : 'Add Program'}
+          {selectedProject ? 'Edit Project' : 'Add Project'}
         </DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
@@ -566,7 +568,7 @@ const { data: programs, loading, error } = useDataFetch<Program>('/programs/admi
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleSubmit} variant="contained">
-            {selectedProgram ? 'Update' : 'Create'}
+            {selectedProject ? 'Update' : 'Create'}
           </Button>
         </DialogActions>
       </Dialog>
@@ -584,4 +586,4 @@ const { data: programs, loading, error } = useDataFetch<Program>('/programs/admi
   );
 };
 
-export default ProgramManagement; 
+export default ProjectManagement; 

@@ -138,20 +138,7 @@ const People: React.FC = () => {
                   </Typography>
                 )}
 
-                {/* Bio */}
-                <Typography
-                  variant="body2"
-                    sx={{ 
-                    fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
-                    fontSize: '0.875rem',
-                    lineHeight: 1.6,
-                    color: '#e0e0e0',
-                    flex: 1,
-                    whiteSpace: 'pre-wrap'
-                  }}
-                >
-                  {member.bio}
-                </Typography>
+
 
                 {/* LinkedIn Profile Link */}
                 {member.socialLinks?.linkedin && (

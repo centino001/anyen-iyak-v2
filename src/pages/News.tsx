@@ -4,14 +4,14 @@ import { Box, Container, Typography, Grid } from '@mui/material';
 const News: React.FC = () => {
   // Array of news images - you can replace with actual news images
   const newsImages = [
-    '/programs/museum.svg',
-    '/programs/museum_photo.svg',
-    '/programs/museum_chair.svg',
+    '/projects/museum.svg',
+    '/projects/museum_photo.svg',
+    '/projects/museum_chair.svg',
   ];
 
       return (
     <Box>
-      {/* Top Image Grid - Same as Programs page */}
+      {/* Top Image Grid - Same as Projects page */}
       <Box sx={{
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',

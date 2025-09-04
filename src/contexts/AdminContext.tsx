@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 interface Admin {
   _id: string;
   email: string;
@@ -32,7 +34,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Verify token validity
   const verifyToken = async (token: string) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/verify`, {
+      const response = await fetch(`${API_BASE_URL}/auth/verify`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -64,7 +66,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

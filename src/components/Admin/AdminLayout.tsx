@@ -41,7 +41,7 @@ const AdminLayout: React.FC = () => {
   const menuItems = [
     { title: 'Dashboard', path: '/admin/dashboard', icon: <DashboardIcon /> },
     { title: 'News', path: '/admin/news', icon: <ArticleIcon /> },
-    { title: 'Programs', path: '/admin/programs', icon: <EventIcon /> },
+            { title: 'Projects', path: '/admin/projects', icon: <EventIcon /> },
     { title: 'People', path: '/admin/people', icon: <PeopleIcon /> },
     { title: 'Subscribers', path: '/admin/subscribers', icon: <EmailIcon /> },
   ];
